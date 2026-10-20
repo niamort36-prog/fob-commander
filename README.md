@@ -536,9 +536,9 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
   Une menace démasquée est arrêtée (« Arrêté », à genoux) : **prime** (150 / 250 / 400 $) et
   **moral** pour toute la base. Un engin démasqué peut tout de même exploser au poste, avec une
   puissance réduite (40 % de risque au niveau 1, 12 % au niveau 3).
-- **Améliorations du poste de garde** : *Point de contrôle renforcé* (500 $ : chicane de blocs de
-  béton) puis *Point de contrôle équipé* (900 $ : barrière levante animée, miroir d'inspection,
-  projecteur). La fiche du poste affiche la chance de détection et le bilan des contrôles.
+- **Améliorations du poste de garde** : *Point de contrôle renforcé* (500 $) puis *Point de
+  contrôle équipé* (900 $), qui améliorent la fouille sans changer l'apparence de la guérite.
+  La fiche du poste affiche la chance de détection et le bilan des contrôles.
 - La guérite a été redessinée : les sacs de sable de devant passent bien devant la cabane.
 
 ## Ajouter du contenu (sans toucher au code)

@@ -108,7 +108,7 @@ export class FobScene extends Phaser.Scene {
     this.buildings.sync();
     this.props.sync();
     this.gates.sync(time);
-    this.checkpoint.sync(this.ctx.sim.alpha, time);
+    this.checkpoint.sync(this.ctx.sim.alpha);
     this.agents.sync(this.ctx.sim.alpha);
     this.vehicles.sync(this.ctx.sim.alpha, time);
     this.combat.sync(this.ctx.sim.alpha);
