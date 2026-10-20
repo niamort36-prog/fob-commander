@@ -121,6 +121,17 @@ export class InfoPanel {
       rows.push([t('info.gate'), t(def.gate.vehicles ? 'info.gateVehicles' : 'info.gatePeople')]);
       rows.push([t('info.guarded'), t(this.ctx.sim.supply.gateGuarded(b.id) ? 'info.guardedYes' : 'info.guardedNo')]);
     }
+    // Poste de garde : fouille des civils à l'entrée de la base
+    if (st.checkpoint && b.state !== 'construction') {
+      const cps = this.ctx.sim.checkpoint;
+      const main = cps.post()?.id === b.id;
+      rows.push([t('info.checkpoint'), main ? t('info.checkpointMain') : t('info.checkpointSpare')]);
+      if (main) {
+        const pct = Math.round(cps.detectChance(b) * 100);
+        rows.push(['', t('info.checkpointDetect', { pct }) + (cps.manned(b) ? '' : t('info.checkpointUnmanned'))]);
+        rows.push([t('info.checkpointStats'), t('info.checkpointStatsValue', cps.state.stats)]);
+      }
+    }
     if (def.breachMin !== undefined && (def.gate || def.placement.line)) rows.push([t('info.breach'), t('info.breachMin', { min: Math.round(def.breachMin * (1 - b.wear)) })]);
     if (def.noise) rows.push([t('info.noise'), t('info.noiseRadius', { r: Math.round(noiseRadius(def, b)) })]);
     if (def.services?.sleep) {

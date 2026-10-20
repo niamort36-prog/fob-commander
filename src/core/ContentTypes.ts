@@ -55,6 +55,13 @@ export interface BuildingLevelDef {
   upkeepPerDay?: ResourceBag;
   powerSupply?: number;
   powerDemand?: number;
+  checkpoint?: CheckpointDef;
+}
+
+/** Fouille au poste de garde : chance de déceler une menace, chance qu'un engin démasqué explose malgré tout. */
+export interface CheckpointDef {
+  detect: number;
+  detonate: number;
 }
 
 export interface BuildingDef {
@@ -114,6 +121,8 @@ export interface BuildingDef {
   breachMin?: number;
   /** Peut se poser à la place d'un tronçon de ce bâtiment (une porte dans un mur hesco). */
   replaces?: string;
+  /** Poste de contrôle des civils entrant dans la base (cf. visitors.json → traffic). */
+  checkpoint?: CheckpointDef;
   visual: {
     key: string;
     style: VisualStyle;
@@ -1350,8 +1359,41 @@ export interface VisitorVisual {
   rifle?: boolean;
 }
 
+export type ThreatKind = 'gunman' | 'vest' | 'vbied';
+
+export interface BlastDef {
+  radius: number;
+  agentDamage: [number, number];
+  buildingDamage: [number, number];
+}
+
+/** Va-et-vient des civils fouillés au poste de garde, et menaces cachées parmi eux. */
+export interface TrafficDef {
+  hours: [number, number];
+  intervalMin: [number, number];
+  maxEntrants: number;
+  graceDays: number;
+  threatChance: number;
+  searchMin: { foot: number; vehicle: number };
+  stayMin: [number, number];
+  approachCells: { foot: number; vehicle: number };
+  detainMin: number;
+  detectNoPost: number;
+  unmannedMult: number;
+  vehicleChance: number;
+  vehicles: string[];
+  walkers: string[];
+  threats: Record<ThreatKind, { weight: number; foot: boolean }>;
+  vest: BlastDef & { triggerAgents: number; waitMin: number };
+  vbied: BlastDef;
+  caughtBlastMult: number;
+  reward: Record<ThreatKind, { funds: number; morale: number }>;
+  missedMorale: number;
+}
+
 export interface VisitorsDef {
   config: { walkSpeed: number; meetBuilding: string; wanderEveryMin: number; wanderRadius: number; heliVehicle: string; maxWaitHours: number };
+  traffic: TrafficDef;
   visuals: Record<string, VisitorVisual>;
 }
 

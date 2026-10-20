@@ -551,7 +551,7 @@ export class SupplySystem implements System {
       }
       // Porte gardée : arrêt pour contrôle avant de la franchir
       const gate = nav.gateAt(next.x, next.y);
-      if (gate && v.gateChecked !== gate && this.gateGuarded(gate)) {
+      if (gate && !v.civilian && v.gateChecked !== gate && this.gateGuarded(gate)) {
         if (v.gateWaitUntil === undefined) {
           v.gateWaitUntil = this.now + Math.max(1, Math.round(GATE_CHECK_MIN / this.ctx.content.balance.time.minutesPerTick));
           pushLog(this.ctx, 'info', 'log.gateCheck', { vehicle: vdef.name });

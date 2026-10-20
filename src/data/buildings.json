@@ -114,7 +114,7 @@
   {
     "id": "guard_post",
     "name": "Poste de garde",
-    "desc": "Guérite protégée par des sacs de sable, à placer près d'une porte. Une sentinelle y contrôle les entrées et sorties (arrêt des véhicules) et tire à l'abri pendant une attaque.",
+    "desc": "Guérite protégée par des sacs de sable, à placer près d'une porte. Les civils qui viennent à la base y sont fouillés (armes, ceintures explosives, voitures piégées) ; la sentinelle contrôle aussi les véhicules de la base et tire à l'abri pendant une attaque.",
     "category": "defense",
     "footprint": [
       1,
@@ -128,6 +128,40 @@
       "funds": 400
     },
     "buildTimeMin": 60,
+    "checkpoint": {
+      "detect": 0.5,
+      "detonate": 0.4
+    },
+    "levels": [
+      {
+        "name": "Point de contrôle renforcé",
+        "cost": {
+          "funds": 500
+        },
+        "buildTimeMin": 120,
+        "checkpoint": {
+          "detect": 0.7,
+          "detonate": 0.25
+        },
+        "upkeepPerDay": {
+          "funds": 4
+        }
+      },
+      {
+        "name": "Point de contrôle équipé",
+        "cost": {
+          "funds": 900
+        },
+        "buildTimeMin": 180,
+        "checkpoint": {
+          "detect": 0.86,
+          "detonate": 0.12
+        },
+        "upkeepPerDay": {
+          "funds": 8
+        }
+      }
+    ],
     "upkeepPerDay": {
       "funds": 2
     },

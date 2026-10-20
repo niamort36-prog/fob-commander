@@ -4,7 +4,7 @@
  */
 import type { ContentRegistry } from '../core/ContentRegistry';
 import type { GameContext } from '../core/GameContext';
-import { SAVE_VERSION, emptyCombat, emptyDiplomacy, emptyRegion, type GameState } from '../core/GameState';
+import { SAVE_VERSION, emptyCheckpoint, emptyCombat, emptyDiplomacy, emptyRegion, type GameState } from '../core/GameState';
 import { carveTrack, entryCell, generateTerrain } from '../utils/terrainGen';
 import type { System } from './System';
 
@@ -212,6 +212,12 @@ const MIGRATIONS: Record<number, (file: SaveFile, content: ContentRegistry) => S
     st.region.incidents ??= [];
     st.region.sitesVisited ??= {};
     return { ...file, version: 13, state: st };
+  },
+  /** v13 → v14 : civils fouillés au poste de garde. */
+  13: (file) => {
+    const st = file.state;
+    st.checkpoint ??= emptyCheckpoint();
+    return { ...file, version: 14, state: st };
   },
 };
 

@@ -1,5 +1,5 @@
 {
-  "_doc": "Visites physiques (événements de la base) : apparence des visiteurs et réglages. Chaque événement de visite (events.json → visit) décrit le mode d'arrivée (à pied, charrette, véhicule, hélicoptère), le chef de la délégation, son escorte et la durée du séjour.",
+  "_doc": "Visites physiques (événements de la base) : apparence des visiteurs et réglages. Chaque événement de visite (events.json → visit) décrit le mode d'arrivée (à pied, charrette, véhicule, hélicoptère), le chef de la délégation, son escorte et la durée du séjour. « traffic » règle le va-et-vient des civils fouillés au poste de garde (ouvriers, marchands…) et les tentatives d'infiltration cachées parmi eux.",
   "config": {
     "walkSpeed": 0.5,
     "meetBuilding": "toc",
@@ -7,6 +7,37 @@
     "wanderRadius": 2,
     "heliVehicle": "helicopter",
     "maxWaitHours": 6
+  },
+  "traffic": {
+    "_doc": "Civils venant à la base de jour : fouille au poste de garde le plus proche de l'entrée (chance de détection : buildings.json → guard_post → checkpoint, selon le niveau). detectNoPost : chance qu'un soldat remarque seul la menace sans poste ; unmannedMult : poste sans sentinelle ; caughtBlastMult : puissance d'un engin qui explose au poste quand il est démasqué ; approachCells : distance de la base où ils apparaissent sur la piste.",
+    "approachCells": { "foot": 28, "vehicle": 40 },
+    "detainMin": 90,
+    "hours": [6, 18],
+    "intervalMin": [45, 130],
+    "maxEntrants": 3,
+    "graceDays": 4,
+    "threatChance": 0.015,
+    "searchMin": { "foot": 3, "vehicle": 6 },
+    "stayMin": [20, 50],
+    "detectNoPost": 0.1,
+    "unmannedMult": 0.35,
+    "vehicleChance": 0.35,
+    "vehicles": ["civ_pickup", "civ_truck"],
+    "walkers": ["laborer", "merchant", "villager", "informant", "farmer"],
+    "threats": {
+      "gunman": { "weight": 5, "foot": true },
+      "vest": { "weight": 3, "foot": true },
+      "vbied": { "weight": 2, "foot": false }
+    },
+    "vest": { "radius": 2.6, "agentDamage": [45, 95], "buildingDamage": [0.15, 0.4], "triggerAgents": 2, "waitMin": 15 },
+    "vbied": { "radius": 4.5, "agentDamage": [55, 110], "buildingDamage": [0.3, 0.7] },
+    "caughtBlastMult": 0.6,
+    "reward": {
+      "gunman": { "funds": 150, "morale": 3 },
+      "vest": { "funds": 250, "morale": 5 },
+      "vbied": { "funds": 400, "morale": 6 }
+    },
+    "missedMorale": -6
   },
   "visuals": {
     "elder": {
@@ -56,6 +87,24 @@
       "color": "#4a5a6a",
       "accent": "#4a5a6a",
       "headwear": "cap"
+    },
+    "laborer": {
+      "color": "#7a6a52",
+      "accent": "#c9b48a",
+      "headwear": "pakol",
+      "beard": "#2a241c"
+    },
+    "merchant": {
+      "color": "#d8d0bc",
+      "accent": "#6b5a44",
+      "headwear": "turban",
+      "beard": "#3a3228"
+    },
+    "farmer": {
+      "color": "#6a5e48",
+      "accent": "#8a7a5a",
+      "headwear": "turban",
+      "beard": "#4a4034"
     }
   }
 }

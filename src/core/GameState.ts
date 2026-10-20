@@ -10,7 +10,7 @@ import type { ContentRegistry } from './ContentRegistry';
 import { carveTrack, entryCell, generateTerrain } from '../utils/terrainGen';
 
 /** Version du format de sauvegarde (incrémenter + ajouter une migration dans SaveSystem en cas de changement). */
-export const SAVE_VERSION = 13;
+export const SAVE_VERSION = 14;
 
 export type Id = string;
 
@@ -223,8 +223,10 @@ export interface Vehicle {
   homeId: Id | null; // chariot élévateur : zone de rattachement
   carry: Load | null; // chariot élévateur
   warned: boolean;
-  /** Véhicule d'une délégation en visite (piloté par VisitSystem). */
+  /** Véhicule d'une délégation en visite (piloté par VisitSystem), ou d'un civil fouillé au poste de garde. */
   visit?: boolean;
+  /** Véhicule civil (CheckpointSystem) : fouillé au poste de garde, pas au passage des portes. */
+  civilian?: boolean;
   /** Avions : points de passage (position, altitude en px, vitesse en cases/minute). */
   route?: { x: number; y: number; alt: number; speed: number }[];
 }
@@ -442,6 +444,41 @@ export interface VisitState {
   landing: GridPos | null;
   untilTick: number;
   startedTick: number;
+}
+
+// ---------------------------------------------------------------- Point de contrôle
+
+/** Civil venu à la base (à pied ou en véhicule), fouillé au poste de garde. */
+export interface Entrant {
+  id: Id;
+  visual: string; // → visitors.json visuals
+  /** Menace cachée (null = civil inoffensif). */
+  threat: 'gunman' | 'vest' | 'vbied' | null;
+  vehicleId: Id | null;
+  pos: { x: number; y: number };
+  prevPos: { x: number; y: number };
+  path: GridPos[];
+  phase: 'approach' | 'search' | 'inside' | 'business' | 'leaving' | 'detained';
+  /** Poste de garde où il est fouillé (null : base sans poste). */
+  postId: Id | null;
+  /** Case où il attend la fouille, puis sa destination dans la base. */
+  checkCell: GridPos | null;
+  dest: GridPos;
+  /** Point d'arrivée sur la piste, par où il repart. */
+  exit: GridPos;
+  /** Fin de la fouille, du séjour ou de la garde à vue. */
+  until: number;
+  searched: boolean;
+}
+
+export interface CheckpointState {
+  nextTick: number;
+  entrants: Entrant[];
+  stats: { searched: number; caught: number; missed: number };
+}
+
+export function emptyCheckpoint(): CheckpointState {
+  return { nextTick: 0, entrants: [], stats: { searched: 0, caught: 0, missed: 0 } };
 }
 
 // ---------------------------------------------------------------- Géopolitique (Phase 7)
@@ -692,6 +729,8 @@ export interface GameState {
   diplomacy: DiplomacyState;
   /** Délégation en visite à la base (une à la fois). */
   visit: VisitState | null;
+  /** Civils en cours de fouille ou dans la base. */
+  checkpoint: CheckpointState;
   /** Équipement individuel en stock (non distribué). */
   equipment: Record<string, number>;
   log: LogEntry[];
@@ -775,6 +814,7 @@ export function createInitialState(content: ContentRegistry, siteId: string, see
     missions: {},
     diplomacy: emptyDiplomacy(),
     visit: null,
+    checkpoint: emptyCheckpoint(),
     equipment: {},
     log: [],
   };

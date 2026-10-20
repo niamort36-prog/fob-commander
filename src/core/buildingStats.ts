@@ -2,7 +2,7 @@
  * Caractéristiques effectives d'un bâtiment selon son niveau d'amélioration.
  * Chaque niveau de `levels` remplace les champs qu'il définit (services, stockage, production…).
  */
-import type { BuildingDef, BuildingLevelDef, ServiceDef } from './ContentTypes';
+import type { BuildingDef, BuildingLevelDef, CheckpointDef, ServiceDef } from './ContentTypes';
 import type { ResourceBag } from './GameState';
 
 export interface BuildingStats {
@@ -13,6 +13,7 @@ export interface BuildingStats {
   upkeepPerDay: ResourceBag;
   powerSupply: number;
   powerDemand: number;
+  checkpoint: CheckpointDef | null;
 }
 
 const cache = new WeakMap<BuildingDef, BuildingStats[]>();
@@ -35,6 +36,7 @@ export function buildingStats(def: BuildingDef, level: number): BuildingStats {
     upkeepPerDay: def.upkeepPerDay ?? {},
     powerSupply: def.powerSupply ?? 0,
     powerDemand: def.powerDemand ?? 0,
+    checkpoint: def.checkpoint ?? null,
   };
   for (let i = 0; i < index - 1; i++) {
     const lv = def.levels![i];
@@ -45,6 +47,7 @@ export function buildingStats(def: BuildingDef, level: number): BuildingStats {
     if (lv.upkeepPerDay) stats.upkeepPerDay = lv.upkeepPerDay;
     if (lv.powerSupply !== undefined) stats.powerSupply = lv.powerSupply;
     if (lv.powerDemand !== undefined) stats.powerDemand = lv.powerDemand;
+    if (lv.checkpoint) stats.checkpoint = lv.checkpoint;
   }
   perLevel[index] = stats;
   return stats;

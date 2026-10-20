@@ -720,5 +720,22 @@
   "info.guardedYes": "poste de garde occupé",
   "info.guardedNo": "aucun poste de garde occupé",
   "info.breach": "Résistance à une attaque",
-  "info.breachMin": "≈ {min} min pour un assaillant"
+  "info.breachMin": "≈ {min} min pour un assaillant",
+  "log.cp.caught.gunman": "Poste de garde : un homme armé démasqué à la fouille et arrêté (prime {funds} $).",
+  "log.cp.caught.vest": "Poste de garde : ceinture explosive découverte, le porteur est maîtrisé (prime {funds} $).",
+  "log.cp.caught.vbied": "Poste de garde : voiture piégée découverte et neutralisée (prime {funds} $).",
+  "log.cp.blastPost.vest": "Le kamikaze démasqué se fait sauter au poste de garde : {kia} tué(s), {wounded} blessé(s).",
+  "log.cp.blastPost.vbied": "La voiture piégée démasquée explose au poste de garde : {kia} tué(s), {wounded} blessé(s).",
+  "log.cp.missed.gunman": "Un civil passé au contrôle sort une arme et ouvre le feu dans la base !",
+  "log.cp.missed.vest": "Attentat-suicide dans la base : {kia} tué(s), {wounded} blessé(s).",
+  "log.cp.missed.vbied": "Voiture piégée dans la base : {kia} tué(s), {wounded} blessé(s).",
+  "info.checkpoint": "Fouille des civils",
+  "info.checkpointDetect": "{pct} % de chances de démasquer une menace",
+  "info.checkpointUnmanned": " (sans sentinelle)",
+  "info.checkpointMain": "Point de contrôle de l'entrée",
+  "info.checkpointSpare": "autre poste plus proche de l'entrée",
+  "info.checkpointStats": "Bilan",
+  "info.checkpointStatsValue": "{searched} fouilles · {caught} menaces arrêtées · {missed} passées",
+  "cp.searching": "Fouille…",
+  "cp.detained": "Arrêté"
 }

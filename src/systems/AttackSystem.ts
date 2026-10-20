@@ -10,6 +10,7 @@
  *
  * Les effets visuels (tirs, impacts, morts) sont transmis au rendu par des événements du bus.
  */
+import type { BlastDef } from '../core/ContentTypes';
 import type { GameContext } from '../core/GameContext';
 import type { Agent, BuildingInstance, CombatMode, Enemy, GridPos, Id } from '../core/GameState';
 import { emptyCombat } from '../core/GameState';
@@ -80,13 +81,79 @@ export class AttackSystem implements System {
 
   // ------------------------------------------------------------ Déclenchement
 
-  start(attackId: string, mode: CombatMode): void {
+  /**
+   * Un tireur infiltré passé au poste de garde ouvre le feu à l'intérieur de la base : il rejoint
+   * l'attaque en cours, sinon déclenche l'attaque « insider » depuis sa position.
+   */
+  startInsider(at: GridPos): void {
+    const c = this.ctx.state.combat;
+    if (c.active && this.ctx.content.combat.attacks[c.attackId ?? '']?.type === 'ground') {
+      const e = this.spawnEnemy({ x: at.x + 0.5, y: at.y + 0.5 });
+      e.cooldown = this.now;
+      c.enemies[e.id] = e;
+      c.initialEnemies++;
+      return;
+    }
+    if (c.active) return;
+    this.start('insider', 'engage', at);
+  }
+
+  private spawnEnemy(pos: { x: number; y: number }): Enemy {
+    const enemyDef = this.ctx.content.combat.enemies[0];
+    return {
+      id: newId(this.ctx.state, 'enm'),
+      defId: enemyDef.id,
+      pos: { ...pos },
+      prevPos: { ...pos },
+      path: [],
+      health: enemyDef.health,
+      skill: Math.round(this.rand(enemyDef.skill[0], enemyDef.skill[1])),
+      state: 'approach',
+      cooldown: this.now + this.minutesToTicks(this.rand(2, 8)),
+    };
+  }
+
+  /**
+   * Explosion (ceinture explosive, voiture piégée) : dégâts aux bâtiments et au personnel exposé
+   * selon la distance et l'abri. Renvoie le nombre de tués et de blessés.
+   */
+  blast(x: number, y: number, def: BlastDef, mult = 1): { kia: number; wounded: number } {
+    const s = this.ctx.state;
+    const radius = def.radius * Math.sqrt(mult);
+    this.ctx.bus.emit('combat:impact', { x, y, radius });
+    for (const b of Object.values(s.fob.buildings)) {
+      if (b.state === 'construction') continue;
+      const bdef = this.ctx.content.building(b.defId);
+      const [w, h] = BuildSystem.footprint(bdef, b.rot);
+      const d = Math.hypot(Math.max(b.pos.x - x, 0, x - (b.pos.x + w)), Math.max(b.pos.y - y, 0, y - (b.pos.y + h)));
+      if (d > radius) continue;
+      const shield = installedModules(bdef, b).reduce((p, m) => Math.max(p, m.blastProtection ?? 0), 0);
+      this.ctx.sim.build.applyDamage(b, this.rand(def.buildingDamage[0], def.buildingDamage[1]) * mult * (1 - (d / radius) * 0.6) * (1 - shield));
+    }
+    let kia = 0;
+    let wounded = 0;
+    for (const a of Object.values(s.agents)) {
+      if (a.status !== 'on_base') continue;
+      const d = Math.hypot(a.pos.x - x, a.pos.y - y);
+      if (d > radius) continue;
+      const protection = this.protection(a);
+      if (protection <= 0) continue;
+      const dmg = this.rand(def.agentDamage[0], def.agentDamage[1]) * mult * protection * (1 - (d / radius) * 0.5);
+      if (dmg <= 0) continue;
+      this.hurt(a, dmg, s.combat.active);
+      if (s.agents[a.id]) wounded++;
+      else kia++;
+    }
+    return { kia, wounded };
+  }
+
+  start(attackId: string, mode: CombatMode, spawnAt?: GridPos): void {
     const s = this.ctx.state;
     const def = this.ctx.content.combat.attacks[attackId];
     if (!def || s.combat.active) return;
     // Un renseignement préalable affaiblit l'attaque
     let mult = 1;
-    if (s.progression.flags.intel_warning) {
+    if (s.progression.flags.intel_warning && !spawnAt) {
       mult = 0.5;
       delete s.progression.flags.intel_warning;
       pushLog(this.ctx, 'good', 'log.intelHelped');
@@ -96,7 +163,8 @@ export class AttackSystem implements System {
     c.attackId = attackId;
     c.mode = mode;
     c.startedTick = this.now;
-    c.origin = this.pickOrigin();
+    // Tireur infiltré : il surgit dans la base et se replie ensuite vers l'entrée
+    c.origin = spawnAt ? { ...s.fob.entry } : this.pickOrigin();
     if (def.type === 'indirect') {
       const [a, b] = def.shells ?? [4, 8];
       c.shellsLeft = Math.max(1, Math.round(this.rand(a, b + 1) * mult));
@@ -104,23 +172,12 @@ export class AttackSystem implements System {
       c.endsTick = this.now + this.minutesToTicks(240);
     } else {
       const [a, b] = def.enemies ?? [3, 5];
-      const n = Math.max(1, Math.round(this.rand(a, b + 1) * mult));
-      const enemyDef = this.ctx.content.combat.enemies[0];
+      const n = spawnAt ? Math.max(1, a) : Math.max(1, Math.round(this.rand(a, b + 1) * mult));
       const nav = this.ctx.sim.agents.nav;
       for (let i = 0; i < n; i++) {
-        const spot = nav.randomWalkableNear(c.origin, 3, () => this.ctx.random()) ?? c.origin;
-        const pos = { x: spot.x + 0.5, y: spot.y + 0.5 };
-        const e: Enemy = {
-          id: newId(s, 'enm'),
-          defId: enemyDef.id,
-          pos,
-          prevPos: { ...pos },
-          path: [],
-          health: enemyDef.health,
-          skill: Math.round(this.rand(enemyDef.skill[0], enemyDef.skill[1])),
-          state: 'approach',
-          cooldown: this.now + this.minutesToTicks(this.rand(2, 8)),
-        };
+        const spot = spawnAt ?? nav.randomWalkableNear(c.origin, 3, () => this.ctx.random()) ?? c.origin;
+        const e = this.spawnEnemy({ x: spot.x + 0.5, y: spot.y + 0.5 });
+        if (spawnAt) e.cooldown = this.now;
         c.enemies[e.id] = e;
       }
       c.initialEnemies = n;

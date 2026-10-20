@@ -520,6 +520,27 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
   La brèche détruit l'élément et ouvre le passage. Le harcèlement reste, lui, à l'extérieur.
   Le panneau d'info d'une porte ou d'un mur indique le temps de brèche restant.
 
+## Point de contrôle : fouille des civils et infiltrations
+
+- **Va-et-vient** (`visitors.json` → `traffic`) : de 6 h à 18 h, des civils (ouvriers, marchands,
+  paysans…) viennent à la base à pied, en pick-up ou en camion décoré. Ils s'arrêtent au **poste de
+  garde le plus proche de l'entrée** (« Fouille… » au-dessus d'eux), entrent jusqu'au TOC, y restent
+  un moment puis repartent. En cas d'attaque, ils s'en vont.
+- **Menaces cachées** (à partir du jour 5, plus fréquentes là où la menace régionale est forte) :
+  - **tireur** : s'il passe, il sort son arme dans l'enceinte et devient un assaillant (attaque
+    « Tireur infiltré » qui progresse vers le TOC) ;
+  - **ceinture explosive** : il se fait sauter près d'un groupe de soldats ;
+  - **voiture piégée** : elle explose au cœur de la base (gros rayon, dégâts aux bâtiments).
+- **Fouille** : chance de démasquer la menace selon le niveau du poste (50 / 70 / 86 %), divisée
+  par trois sans sentinelle ; sans aucun poste, un soldat ne remarque l'anomalie que 1 fois sur 10.
+  Une menace démasquée est arrêtée (« Arrêté », à genoux) : **prime** (150 / 250 / 400 $) et
+  **moral** pour toute la base. Un engin démasqué peut tout de même exploser au poste, avec une
+  puissance réduite (40 % de risque au niveau 1, 12 % au niveau 3).
+- **Améliorations du poste de garde** : *Point de contrôle renforcé* (500 $ : chicane de blocs de
+  béton) puis *Point de contrôle équipé* (900 $ : barrière levante animée, miroir d'inspection,
+  projecteur). La fiche du poste affiche la chance de détection et le bilan des contrôles.
+- La guérite a été redessinée : les sacs de sable de devant passent bien devant la cabane.
+
 ## Ajouter du contenu (sans toucher au code)
 
 - **Bâtiment** : ajouter une entrée dans `src/data/buildings.json` (catégorie, emprise, coût, entretien,

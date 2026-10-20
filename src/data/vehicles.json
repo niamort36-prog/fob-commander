@@ -203,6 +203,32 @@
     }
   },
   {
+    "id": "civ_pickup",
+    "name": "Pick-up civil",
+    "kind": "road",
+    "speed": 0.8,
+    "visual": {
+      "style": "suv",
+      "color": "#d8d4c6",
+      "accent": "#8a8478",
+      "length": 2,
+      "height": 28
+    }
+  },
+  {
+    "id": "civ_truck",
+    "name": "Camion décoré",
+    "kind": "road",
+    "speed": 0.6,
+    "visual": {
+      "style": "truck",
+      "color": "#b8562e",
+      "accent": "#2f7a8a",
+      "length": 2,
+      "height": 24
+    }
+  },
+  {
     "id": "attack_helo",
     "name": "AH-64 Apache",
     "desc": "Hélicoptère d'attaque biplace (canon de 30 mm, roquettes). Appuie les missions et défend la base pendant les attaques au sol. Stationne sur une hélisurface (un appareil par hélisurface).",

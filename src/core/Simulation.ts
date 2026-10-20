@@ -23,6 +23,7 @@ import { EventSystem } from '../systems/EventSystem';
 import { DiplomacySystem } from '../systems/DiplomacySystem';
 import { IntelSystem } from '../systems/IntelSystem';
 import { VisitSystem } from '../systems/VisitSystem';
+import { CheckpointSystem } from '../systems/CheckpointSystem';
 import { GroupSystem } from '../systems/GroupSystem';
 import { LogisticsSystem } from '../systems/LogisticsSystem';
 import { WorldSystem } from '../systems/WorldSystem';
@@ -41,6 +42,7 @@ export class Simulation {
   readonly radio: RadioSystem;
   readonly diplomacy: DiplomacySystem;
   readonly visits: VisitSystem;
+  readonly checkpoint: CheckpointSystem;
   readonly groups: GroupSystem;
   readonly logistics: LogisticsSystem;
   readonly world: WorldSystem;
@@ -67,6 +69,7 @@ export class Simulation {
     this.radio = new RadioSystem(ctx);
     this.diplomacy = new DiplomacySystem(ctx);
     this.visits = new VisitSystem(ctx);
+    this.checkpoint = new CheckpointSystem(ctx);
     this.groups = new GroupSystem(ctx);
     this.logistics = new LogisticsSystem(ctx);
     this.world = new WorldSystem(ctx);
@@ -80,6 +83,7 @@ export class Simulation {
       this.logistics, // après AgentAI : cuisine et nettoyage des agents à l'ouvrage
       this.supply,
       this.visits, // après SupplySystem : pilote les véhicules des délégations
+      this.checkpoint, // civils fouillés au poste de garde (véhicules pilotés ici aussi)
       this.groups,
       this.attacks,
       this.missions,

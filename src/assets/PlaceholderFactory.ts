@@ -575,21 +575,54 @@ function drawGate(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: n
 function drawBooth(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number): void {
   const { w, h } = geo;
   const bag = 0xa8946a;
-  // Sacs de sable sur trois côtés (l'arrière reste ouvert)
-  prism(g, P, 0.06, 0.06, w - 0.06, 0.2, 0, 8, bag);
-  prism(g, P, 0.06, 0.2, 0.2, h - 0.06, 0, 8, bag);
-  prism(g, P, 0.2, h - 0.2, w - 0.35, h - 0.06, 0, 8, bag);
-  g.lineStyle(1, shade(bag, 0.6), 0.5);
-  for (const z of [3, 6]) {
-    const a = P(0.2, h - 0.06, z);
-    const b = P(w - 0.35, h - 0.06, z);
+  const bagH = 8;
+  /** Muret de sacs de sable : rangées décalées sur les faces visibles (+x, +y). */
+  const bags = (x0: number, y0: number, x1: number, y1: number): void => {
+    prism(g, P, x0, y0, x1, y1, 0, bagH, bag);
+    g.lineStyle(1, shade(bag, 0.62), 0.6);
+    for (const z of [bagH / 3, (2 * bagH) / 3]) {
+      const a = P(x0, y1, z);
+      const b = P(x1, y1, z);
+      g.lineBetween(a.x, a.y, b.x, b.y);
+      const c = P(x1, y0, z);
+      const d = P(x1, y1, z);
+      g.lineBetween(c.x, c.y, d.x, d.y);
+    }
+    // Joints verticaux entre les sacs, décalés d'une rangée à l'autre
+    g.lineStyle(1, shade(bag, 0.7), 0.45);
+    for (let row = 0; row < 3; row++) {
+      const za = (row * bagH) / 3;
+      const zb = ((row + 1) * bagH) / 3;
+      for (let u = x0 + (row % 2 ? 0.1 : 0.2); u < x1 - 0.05; u += 0.2) {
+        const a = P(u, y1, za);
+        const b = P(u, y1, zb);
+        g.lineBetween(a.x, a.y, b.x, b.y);
+      }
+      for (let v = y0 + (row % 2 ? 0.1 : 0.2); v < y1 - 0.05; v += 0.2) {
+        const a = P(x1, v, za);
+        const b = P(x1, v, zb);
+        g.lineBetween(a.x, a.y, b.x, b.y);
+      }
+    }
+  };
+  // Sacs du fond (derrière la guérite) : dessinés en premier
+  bags(0.04, 0.04, w - 0.04, 0.18);
+  bags(0.04, 0.18, 0.18, h - 0.2);
+  // Guérite et toit
+  prism(g, P, 0.26, 0.24, w - 0.26, h - 0.3, 0, height - 6, color);
+  const win = [P(0.34, h - 0.3, height - 10), P(w - 0.34, h - 0.3, height - 10), P(w - 0.34, h - 0.3, height - 15), P(0.34, h - 0.3, height - 15)];
+  poly(g, win, 0x2b3a46);
+  // Planches verticales sur la face droite
+  g.lineStyle(1, shade(color, 0.7), 0.6);
+  for (const v of [0.45, 0.6]) {
+    const a = P(w - 0.26, v, 0);
+    const b = P(w - 0.26, v, height - 6);
     g.lineBetween(a.x, a.y, b.x, b.y);
   }
-  // Guérite et toit
-  prism(g, P, 0.3, 0.25, w - 0.25, h - 0.3, 0, height - 6, color);
-  const win = [P(0.38, h - 0.3, height - 10), P(w - 0.33, h - 0.3, height - 10), P(w - 0.33, h - 0.3, height - 15), P(0.38, h - 0.3, height - 15)];
-  poly(g, win, 0x2b3a46);
-  prism(g, P, 0.2, 0.15, w - 0.15, h - 0.2, height - 6, height - 4, accent);
+  prism(g, P, 0.18, 0.14, w - 0.16, h - 0.22, height - 6, height - 4, accent);
+  // Sacs de devant (face gauche visible, passage laissé ouvert côté droit) : par-dessus la guérite
+  bags(0.04, h - 0.2, w - 0.34, h - 0.04);
+  bags(w - 0.18, 0.04, w - 0.04, 0.34);
   // Lampe et panneau « STOP »
   const lamp = P(w - 0.2, h - 0.25, height - 7);
   g.fillStyle(0xffe08a, 1);

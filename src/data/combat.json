@@ -116,6 +116,16 @@
       ],
       "durationMin": 150,
       "penetrate": true
+    },
+    "insider": {
+      "type": "ground",
+      "name": "Tireur infiltré",
+      "enemies": [
+        1,
+        1
+      ],
+      "durationMin": 60,
+      "penetrate": true
     }
   }
 }

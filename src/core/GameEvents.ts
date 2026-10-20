@@ -70,6 +70,8 @@ export interface GameEvents {
   'event:closed': { eventId: string };
   'visit:started': { eventId: string };
   'visit:ended': { eventId: string };
+  /** Menace démasquée à la fouille du poste de garde. */
+  'checkpoint:caught': { x: number; y: number };
 
   'combat:started': { attackId: string; mode: CombatMode };
   'combat:ended': { stats: CombatStats };
