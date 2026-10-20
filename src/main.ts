@@ -34,4 +34,17 @@ function bootWhenSized(): void {
   else window.setTimeout(bootWhenSized, 100);
 }
 
+/**
+ * Les sauvegardes restent dans le navigateur de chaque joueur (localStorage, propre à son PC) :
+ * on demande un stockage persistant pour que le navigateur ne les efface pas en cas de manque de place.
+ */
+function keepSavesPersistent(): void {
+  try {
+    void navigator.storage?.persist?.().catch(() => undefined);
+  } catch {
+    // API indisponible (ancien navigateur, iframe) : stockage habituel
+  }
+}
+
+keepSavesPersistent();
 bootWhenSized();
