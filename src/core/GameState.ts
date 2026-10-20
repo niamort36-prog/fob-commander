@@ -469,6 +469,8 @@ export interface Entrant {
   /** Fin de la fouille, du séjour ou de la garde à vue. */
   until: number;
   searched: boolean;
+  /** Pression ennemie à son arrivée (0..1) : force et discrétion de la menace. */
+  power?: number;
 }
 
 export interface CheckpointState {

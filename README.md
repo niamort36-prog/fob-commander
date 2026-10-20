@@ -536,6 +536,14 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
   Une menace démasquée est arrêtée (« Arrêté », à genoux) : **prime** (150 / 250 / 400 $) et
   **moral** pour toute la base. Un engin démasqué peut tout de même exploser au poste, avec une
   puissance réduite (40 % de risque au niveau 1, 12 % au niveau 3).
+- **Pression ennemie** (`visitors.json` → `traffic.pressure`, fiche du poste de garde) : calculée
+  autour de la FOB à partir de l'emprise insurgée des villages à moins de 18 km et des groupes
+  ennemis (cellules, poseurs d'engins, mortiers) à moins de 22 km, selon leurs effectifs et leur
+  proximité. Faible, moyenne ou forte, elle rend les infiltrations jusqu'à 6 fois plus fréquentes
+  (×0,35 → ×2,2), plus discrètes à la fouille (détection ×1,05 → ×0,8) et plus fortes :
+  explosions ×0,7 → ×1,45, et jusqu'à 3 tireurs qui surgissent ensemble. Une capture sous forte
+  pression rapporte jusqu'à 50 % de prime en plus. Faire reculer l'emprise des villages et
+  neutraliser les groupes voisins réduit donc directement le danger aux portes.
 - **Améliorations du poste de garde** : *Point de contrôle renforcé* (500 $) puis *Point de
   contrôle équipé* (900 $), qui améliorent la fouille sans changer l'apparence de la guérite.
   La fiche du poste affiche la chance de détection et le bilan des contrôles.

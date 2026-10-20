@@ -127,9 +127,15 @@ export class InfoPanel {
       const main = cps.post()?.id === b.id;
       rows.push([t('info.checkpoint'), main ? t('info.checkpointMain') : t('info.checkpointSpare')]);
       if (main) {
-        const pct = Math.round(cps.detectChance(b) * 100);
+        // Chance effective face aux menaces actuelles (plus discrètes sous forte pression ennemie)
+        const pr = cps.pressure();
+        const pct = Math.round(Math.min(1, cps.detectChance(b) * cps.stealthAt(pr.value)) * 100);
         rows.push(['', t('info.checkpointDetect', { pct }) + (cps.manned(b) ? '' : t('info.checkpointUnmanned'))]);
         rows.push([t('info.checkpointStats'), t('info.checkpointStatsValue', cps.state.stats)]);
+        rows.push([
+          t('info.pressure'),
+          t('info.pressureValue', { level: t(`pressure.${cps.pressureLevel(pr.value)}`), pct: Math.round(pr.value * 100), inf: Math.round(pr.influence * 100), groups: pr.groups }),
+        ]);
       }
     }
     if (def.breachMin !== undefined && (def.gate || def.placement.line)) rows.push([t('info.breach'), t('info.breachMin', { min: Math.round(def.breachMin * (1 - b.wear)) })]);

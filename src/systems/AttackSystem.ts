@@ -85,17 +85,20 @@ export class AttackSystem implements System {
    * Un tireur infiltré passé au poste de garde ouvre le feu à l'intérieur de la base : il rejoint
    * l'attaque en cours, sinon déclenche l'attaque « insider » depuis sa position.
    */
-  startInsider(at: GridPos): void {
+  startInsider(at: GridPos, count = 1): void {
     const c = this.ctx.state.combat;
     if (c.active && this.ctx.content.combat.attacks[c.attackId ?? '']?.type === 'ground') {
-      const e = this.spawnEnemy({ x: at.x + 0.5, y: at.y + 0.5 });
-      e.cooldown = this.now;
-      c.enemies[e.id] = e;
-      c.initialEnemies++;
+      for (let i = 0; i < count; i++) {
+        const spot = i === 0 ? at : (this.ctx.sim.agents.nav.randomWalkableNear(at, 1, () => this.ctx.random()) ?? at);
+        const e = this.spawnEnemy({ x: spot.x + 0.5, y: spot.y + 0.5 });
+        e.cooldown = this.now;
+        c.enemies[e.id] = e;
+        c.initialEnemies++;
+      }
       return;
     }
     if (c.active) return;
-    this.start('insider', 'engage', at);
+    this.start('insider', 'engage', at, count);
   }
 
   private spawnEnemy(pos: { x: number; y: number }): Enemy {
@@ -147,7 +150,7 @@ export class AttackSystem implements System {
     return { kia, wounded };
   }
 
-  start(attackId: string, mode: CombatMode, spawnAt?: GridPos): void {
+  start(attackId: string, mode: CombatMode, spawnAt?: GridPos, spawnCount?: number): void {
     const s = this.ctx.state;
     const def = this.ctx.content.combat.attacks[attackId];
     if (!def || s.combat.active) return;
@@ -172,10 +175,14 @@ export class AttackSystem implements System {
       c.endsTick = this.now + this.minutesToTicks(240);
     } else {
       const [a, b] = def.enemies ?? [3, 5];
-      const n = spawnAt ? Math.max(1, a) : Math.max(1, Math.round(this.rand(a, b + 1) * mult));
+      const n = spawnAt ? Math.max(1, spawnCount ?? a) : Math.max(1, Math.round(this.rand(a, b + 1) * mult));
       const nav = this.ctx.sim.agents.nav;
       for (let i = 0; i < n; i++) {
-        const spot = spawnAt ?? nav.randomWalkableNear(c.origin, 3, () => this.ctx.random()) ?? c.origin;
+        const spot = spawnAt
+          ? i === 0
+            ? spawnAt
+            : (nav.randomWalkableNear(spawnAt, 1, () => this.ctx.random()) ?? spawnAt)
+          : (nav.randomWalkableNear(c.origin, 3, () => this.ctx.random()) ?? c.origin);
         const e = this.spawnEnemy({ x: spot.x + 0.5, y: spot.y + 0.5 });
         if (spawnAt) e.cooldown = this.now;
         c.enemies[e.id] = e;

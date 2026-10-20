@@ -736,6 +736,12 @@
   "info.checkpointSpare": "autre poste plus proche de l'entrée",
   "info.checkpointStats": "Bilan",
   "info.checkpointStatsValue": "{searched} fouilles · {caught} menaces arrêtées · {missed} passées",
+  "log.cp.missed.gunmen": "{n} hommes passés au contrôle sortent leurs armes et ouvrent le feu dans la base !",
+  "info.pressure": "Pression ennemie",
+  "info.pressureValue": "{level} ({pct} %) — emprise insurgée {inf} %, {groups} groupe(s) dans les environs",
+  "pressure.0": "faible",
+  "pressure.1": "moyenne",
+  "pressure.2": "forte",
   "cp.searching": "Fouille…",
   "cp.detained": "Arrêté"
 }

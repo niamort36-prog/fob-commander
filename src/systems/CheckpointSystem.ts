@@ -54,6 +54,55 @@ export class CheckpointSystem implements System {
     return this.ctx.state.checkpoint;
   }
 
+  // ------------------------------------------------------------ Pression ennemie
+
+  /**
+   * Pression ennemie autour de la FOB (0..1) : emprise insurgée des villages proches et groupes
+   * ennemis dans les environs (cellules, poseurs d'engins, mortiers), pondérés par leurs effectifs
+   * et leur proximité.
+   */
+  pressure(): { value: number; influence: number; groups: number } {
+    const p = this.cfg.pressure;
+    const s = this.ctx.state;
+    const fob = this.ctx.site.regionPos;
+    const d = (a: { x: number; y: number }): number => Math.hypot(a.x - fob.x, a.y - fob.y);
+    // Emprise insurgée moyenne des villages proches (pondérée par la proximité)
+    let wSum = 0;
+    let infSum = 0;
+    for (const v of this.ctx.content.region.villages) {
+      const dist = d(v.pos);
+      if (dist > p.nearKm) continue;
+      const w = 1 - (dist / p.nearKm) * 0.6;
+      wSum += w;
+      infSum += w * (s.region.villages[v.id]?.influence ?? 0);
+    }
+    const influence = wSum > 0 ? infSum / wSum / 100 : 0;
+    // Groupes ennemis dans les environs
+    let groups = 0;
+    let weight = 0;
+    for (const c of Object.values(s.region.contacts)) {
+      const k = p.contactWeights[this.ctx.sim.world.kindOf(c)];
+      if (!k) continue;
+      const dist = d(c.truePos);
+      if (dist > p.contactKm) continue;
+      groups++;
+      weight += k * (c.strength ?? 1) * (1 - (dist / p.contactKm) * 0.7);
+    }
+    const contacts = Math.min(1, weight / p.contactsFull);
+    const value = Math.max(0, Math.min(1, p.influenceShare * influence + (1 - p.influenceShare) * contacts));
+    return { value, influence, groups };
+  }
+
+  /** Niveau de la pression ennemie : 0 faible, 1 moyenne, 2 forte. */
+  pressureLevel(value = this.pressure().value): 0 | 1 | 2 {
+    const [a, b] = this.cfg.pressure.levels;
+    return value >= b ? 2 : value >= a ? 1 : 0;
+  }
+
+  private lerp(range: [number, number], k: number): number {
+    return range[0] + (range[1] - range[0]) * Math.max(0, Math.min(1, k));
+  }
+
   // ------------------------------------------------------------ Poste de contrôle
 
   private operational(b: BuildingInstance): boolean {
@@ -152,7 +201,7 @@ export class CheckpointSystem implements System {
   private rollThreat(): ThreatKind | null {
     const s = this.ctx.state;
     if (s.time.day <= this.cfg.graceDays) return null;
-    const threat = this.ctx.site.threat * this.ctx.sim.diplomacy.threatMult();
+    const threat = this.ctx.site.threat * this.ctx.sim.diplomacy.threatMult() * this.lerp(this.cfg.pressure.freqMult, this.pressure().value);
     if (this.ctx.random() >= this.cfg.threatChance * threat) return null;
     const kinds = Object.entries(this.cfg.threats) as [ThreatKind, { weight: number }][];
     let r = this.ctx.random() * kinds.reduce((t, [, k]) => t + k.weight, 0);
@@ -203,6 +252,7 @@ export class CheckpointSystem implements System {
       exit: { ...start },
       until: 0,
       searched: false,
+      power: threat ? this.pressure().value : undefined,
     };
     if (vehicle) {
       const ids = this.cfg.vehicles;
@@ -214,7 +264,7 @@ export class CheckpointSystem implements System {
       e.path = [];
     }
     // Base sans poste de garde : un soldat remarque parfois quelque chose d'anormal
-    if (!check && threat && this.ctx.random() < this.cfg.detectNoPost) {
+    if (!check && threat && this.ctx.random() < this.cfg.detectNoPost * this.stealth(e)) {
       e.searched = true;
       e.until = -1; // démasqué à l'arrivée dans le périmètre
     }
@@ -323,7 +373,7 @@ export class CheckpointSystem implements System {
     cp.stats.searched++;
     e.searched = true;
     const post = e.postId ? this.ctx.state.fob.buildings[e.postId] : null;
-    if (e.threat && this.ctx.random() < this.detectChance(post ?? null)) return this.caught(e);
+    if (e.threat && this.ctx.random() < this.detectChance(post ?? null) * this.stealth(e)) return this.caught(e);
     e.phase = 'inside';
     // Destination dans la base ; si le véhicule ne peut pas entrer, l'affaire se règle au poste
     const dests = this.destination(!!e.vehicleId);
@@ -336,6 +386,15 @@ export class CheckpointSystem implements System {
     const v = this.vehicleOf(e);
     const path = v ? v.path : e.path;
     e.dest = path[path.length - 1] ?? e.dest;
+  }
+
+  /** Discrétion de la menace : un réseau bien implanté prépare mieux ses hommes (multiplicateur de détection). */
+  private stealth(e: Entrant): number {
+    return this.stealthAt(e.power ?? 0);
+  }
+
+  stealthAt(power: number): number {
+    return this.lerp(this.cfg.pressure.stealth, power);
   }
 
   // ------------------------------------------------------------ Issues
@@ -354,11 +413,13 @@ export class CheckpointSystem implements System {
       const risk = cpDef?.detonate ?? 0.5;
       if (this.ctx.random() < risk) return this.detonate(e, true);
     }
+    // Réseau plus actif : capture plus précieuse (renseignement, prime)
     const reward = this.cfg.reward[threat];
-    gain(s, { funds: reward.funds });
+    const funds = Math.round(reward.funds * (1 + 0.5 * (e.power ?? 0)));
+    gain(s, { funds });
     this.rewardMorale(reward.morale);
     this.state.stats.caught++;
-    pushLog(this.ctx, 'good', `log.cp.caught.${threat}`, { funds: reward.funds });
+    pushLog(this.ctx, 'good', `log.cp.caught.${threat}`, { funds });
     this.ctx.bus.emit('checkpoint:caught', { x: e.pos.x, y: e.pos.y });
     e.phase = 'detained';
     e.path = [];
@@ -371,17 +432,20 @@ export class CheckpointSystem implements System {
   private openFire(e: Entrant): void {
     this.state.stats.missed++;
     this.rewardMorale(this.cfg.missedMorale / 2);
-    pushLog(this.ctx, 'bad', 'log.cp.missed.gunman');
+    // Pression forte : il n'est pas seul, d'autres hommes armés surgissent avec lui
+    const [g0, g1] = this.cfg.pressure.gunmen;
+    const n = Math.min(g1, g0 + Math.floor(this.ctx.random() * (1 + (e.power ?? 0) * (g1 - g0))));
+    pushLog(this.ctx, 'bad', n > 1 ? 'log.cp.missed.gunmen' : 'log.cp.missed.gunman', { n });
     const at = { x: Math.floor(e.pos.x), y: Math.floor(e.pos.y) };
     this.remove(e);
-    this.ctx.sim.attacks.startInsider(at);
+    this.ctx.sim.attacks.startInsider(at, n);
   }
 
   /** Explosion d'une ceinture ou d'une voiture piégée (au poste si l'engin a été démasqué). */
   private detonate(e: Entrant, atCheckpoint: boolean): void {
     const threat = e.threat === 'vbied' ? 'vbied' : 'vest';
     const def = threat === 'vbied' ? this.cfg.vbied : this.cfg.vest;
-    const mult = atCheckpoint ? this.cfg.caughtBlastMult : 1;
+    const mult = (atCheckpoint ? this.cfg.caughtBlastMult : 1) * this.lerp(this.cfg.pressure.powerMult, e.power ?? 0);
     const v = this.vehicleOf(e);
     const p = v ? { ...v.pos } : { ...e.pos };
     this.remove(e);

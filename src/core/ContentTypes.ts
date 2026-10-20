@@ -1389,6 +1389,22 @@ export interface TrafficDef {
   caughtBlastMult: number;
   reward: Record<ThreatKind, { funds: number; morale: number }>;
   missedMorale: number;
+  pressure: PressureDef;
+}
+
+/** Pression ennemie autour de la FOB et ses effets sur les infiltrations. */
+export interface PressureDef {
+  nearKm: number;
+  contactKm: number;
+  contactWeights: Record<string, number>;
+  contactsFull: number;
+  influenceShare: number;
+  freqMult: [number, number];
+  powerMult: [number, number];
+  stealth: [number, number];
+  gunmen: [number, number];
+  /** Seuils des niveaux faible / moyenne / forte. */
+  levels: [number, number];
 }
 
 export interface VisitorsDef {

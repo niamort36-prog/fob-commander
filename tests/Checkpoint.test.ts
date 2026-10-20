@@ -119,6 +119,39 @@ describe('Point de contrôle : fouille des civils', () => {
     expect(toc.wear).toBeGreaterThan(wear);
   });
 
+  it('la pression ennemie suit l’emprise insurgée des villages proches et les groupes ennemis', () => {
+    const ctx = makeGame();
+    const cp = ctx.sim.checkpoint;
+    const s = ctx.state;
+    for (const v of Object.values(s.region.villages)) v.influence = 0;
+    const contacts = s.region.contacts;
+    s.region.contacts = {};
+    const calm = cp.pressure();
+    expect(calm.value).toBe(0);
+    expect(cp.pressureLevel(calm.value)).toBe(0);
+    for (const v of Object.values(s.region.villages)) v.influence = 100;
+    s.region.contacts = contacts;
+    const tense = cp.pressure();
+    expect(tense.influence).toBeGreaterThan(0.9);
+    expect(tense.value).toBeGreaterThan(0.5);
+    expect(cp.pressureLevel(tense.value)).toBeGreaterThanOrEqual(1);
+  });
+
+  it('sous forte pression, plusieurs tireurs surgissent avec l’infiltré', () => {
+    const ctx = makeGame(undefined, { agents: true });
+    setup(ctx);
+    quiet(ctx);
+    const cp = ctx.sim.checkpoint;
+    cp.detectChance = () => 0;
+    const e = cp.spawn('gunman', false)!;
+    stepUntil(ctx, () => e.phase === 'inside', 300);
+    e.power = 1;
+    (ctx as unknown as { random: () => number }).random = () => 0.99;
+    stepUntil(ctx, () => ctx.state.combat.active, 600);
+    expect(Object.keys(ctx.state.combat.enemies).length).toBe(3);
+    expect(ctx.state.log.some((l) => l.key === 'log.cp.missed.gunmen')).toBe(true);
+  });
+
   it('une ceinture explosive démasquée au poste équipé est le plus souvent désamorcée', () => {
     let detained = 0;
     for (let i = 0; i < 6; i++) {
