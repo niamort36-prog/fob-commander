@@ -45,14 +45,37 @@ export function vehicleKey(defId: string, axis: 0 | 1, flip: boolean): string {
   return `veh.${defId}.a${axis}${flip ? 'f' : ''}`;
 }
 
-export function vehicleGeometry(axis: 0 | 1, length: number, heightPx: number, tileW: number, tileH: number, span = 1): BuildingGeometry {
-  const w = axis === 0 ? length : span;
-  const h = axis === 0 ? span : length;
+/** Nombre d'orientations dessinées pour les véhicules (tous les 22,5°) : virages fluides. */
+export const VEHICLE_HEADINGS = 16;
+
+/** Sprite d'un véhicule tourné vers l'orientation k (0 = x croissants, sens des aiguilles en grille). */
+export function vehicleHeadingKey(defId: string, k: number): string {
+  return `veh.${defId}.h${k}`;
+}
+
+/** Pas entre deux orientations dessinées : les avions (grands, en ligne droite) n'en ont que 4. */
+export function vehicleHeadingStep(def: { kind: string }): number {
+  return def.kind === 'plane' ? VEHICLE_HEADINGS / 4 : 1;
+}
+
+/** Orientation dessinée la plus proche d'un cap (radians) ; `step` > 1 pour n'utiliser qu'une orientation sur `step`. */
+export function headingIndex(angle: number, step = 1): number {
+  const n = VEHICLE_HEADINGS / step;
+  const k = Math.round((angle / (Math.PI * 2)) * n);
+  return ((((k % n) + n) % n) * step) % VEHICLE_HEADINGS;
+}
+
+/**
+ * Canevas d'un véhicule orientable : emprise carrée S × S (S = plus grande dimension + marge)
+ * centrée sur le véhicule, quelle que soit son orientation.
+ */
+export function vehicleGeometry(length: number, heightPx: number, tileW: number, tileH: number, span = 1): BuildingGeometry {
+  const s = Math.max(length, span) + 0.3;
   const top = heightPx + SPRITE_PAD;
-  const width = ((w + h) * tileW) / 2;
-  const height = ((w + h) * tileH) / 2 + top;
-  const anchorX = (h * tileW) / 2;
-  return { w, h, top, width, height, anchorX, anchorY: top, originX: anchorX / width, originY: top / height };
+  const width = s * tileW;
+  const height = s * tileH + top;
+  const anchorX = (s * tileW) / 2;
+  return { w: s, h: s, top, width, height, anchorX, anchorY: top, originX: anchorX / width, originY: top / height };
 }
 
 /** Éléments visibles des améliorations : taille du canevas et point de pose (base) dans le canevas. */

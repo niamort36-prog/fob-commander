@@ -214,6 +214,8 @@ export interface Vehicle {
   /** Orientation du sprite : 0 = axe x, 1 = axe y ; flip = sens inverse. */
   axis: 0 | 1;
   flip: boolean;
+  /** Cap exact vers lequel le véhicule se dirige (radians, 0 = x croissants, π/2 = y croissants). */
+  heading?: number;
   altitude: number; // hélicoptère (px)
   state: VehicleState;
   orderId: Id | null;

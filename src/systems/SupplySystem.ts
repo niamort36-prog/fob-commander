@@ -587,6 +587,8 @@ export class SupplySystem implements System {
     if (Math.abs(dx) < 1e-6 && Math.abs(dy) < 1e-6) return;
     v.axis = Math.abs(dx) >= Math.abs(dy) ? 0 : 1;
     v.flip = v.axis === 0 ? dx < 0 : dy < 0;
+    // Cap exact (radians, 0 = vers les x croissants) : le rendu y tourne progressivement
+    v.heading = Math.atan2(dy, dx);
   }
 
   private onArrive(v: Vehicle, vdef: VehicleDef): void {
@@ -885,6 +887,7 @@ export class SupplySystem implements System {
     const [w, h] = BuildSystem.footprint(this.ctx.content.building(home.defId), home.rot);
     v.axis = w >= h ? 1 : 0;
     v.flip = false;
+    v.heading = v.axis === 0 ? 0 : Math.PI / 2;
   }
 
   // ------------------------------------------------------------ Avions (piste d'aviation)

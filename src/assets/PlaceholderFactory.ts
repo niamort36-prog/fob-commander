@@ -28,8 +28,10 @@ import {
   sandbagGeometry,
   sandbagKey,
   terrainKey,
+  VEHICLE_HEADINGS,
   vehicleGeometry,
-  vehicleKey,
+  vehicleHeadingKey,
+  vehicleHeadingStep,
   type BuildingGeometry,
 } from './spriteKeys';
 
@@ -1164,21 +1166,21 @@ export const PlaceholderFactory = {
       });
     }
 
+    // Véhicules : 16 orientations (les avions, qui ne virent pas au sol, n'en utilisent que 4)
     for (const def of content.vehicleList) {
-      for (const axis of [0, 1] as const) {
-        for (const flip of [false, true]) {
-          const key = vehicleKey(def.id, axis, flip);
-          if (AssetLoader.has(scene, key)) continue;
-          const geo = vehicleGeometry(axis, def.visual.length ?? 2, def.visual.height ?? 24, tw, th, def.visual.width ?? 1);
-          const P = (gx: number, gy: number, z: number): Pt => ({
-            x: geo.anchorX + ((gx - gy) * tw) / 2,
-            y: geo.anchorY + ((gx + gy) * th) / 2 - z,
-          });
-          g.clear();
-          drawVehicleArt(g, def, axis, flip, P);
-          g.generateTexture(key, Math.ceil(geo.width), Math.ceil(geo.height));
-          created++;
-        }
+      const geo = vehicleGeometry(def.visual.length ?? 2, def.visual.height ?? 24, tw, th, def.visual.width ?? 1);
+      const P = (gx: number, gy: number, z: number): Pt => ({
+        x: geo.anchorX + ((gx - gy) * tw) / 2,
+        y: geo.anchorY + ((gx + gy) * th) / 2 - z,
+      });
+      const step = vehicleHeadingStep(def);
+      for (let k = 0; k < VEHICLE_HEADINGS; k += step) {
+        const key = vehicleHeadingKey(def.id, k);
+        if (AssetLoader.has(scene, key)) continue;
+        g.clear();
+        drawVehicleArt(g, def, (k / VEHICLE_HEADINGS) * Math.PI * 2, geo.w, P);
+        g.generateTexture(key, Math.ceil(geo.width), Math.ceil(geo.height));
+        created++;
       }
     }
 

@@ -4,8 +4,8 @@
  * et les modèles détaillés (camion de palettes, camions-citernes, chariot élévateur, hélicoptère).
  *
  * Coordonnées locales d'un véhicule : u le long du véhicule (0 → L, l'avant en u = L),
- * v en travers (0 → 1), z en pixels au-dessus du sol. Le maillage convertit selon l'axe
- * (a0 : u suit x ; a1 : u suit y) et le sens (flip : avant vers les x/y décroissants).
+ * v en travers (0 → largeur), z en pixels au-dessus du sol. Le maillage fait tourner le modèle
+ * autour de son centre selon un cap quelconque (16 orientations dessinées : virages fluides).
  */
 import type Phaser from 'phaser';
 import type { VehicleDef } from '../core/ContentTypes';
@@ -65,23 +65,35 @@ function lightOf(n: P3): number {
 
 export class Mesh {
   private readonly parts: Part[] = [];
+  private readonly cos: number;
+  private readonly sin: number;
 
+  /**
+   * @param length longueur du véhicule (u de 0 à length, l'avant en u = length)
+   * @param span largeur (v de 0 à span)
+   * @param angle cap en grille (radians, 0 = avant vers les x croissants, π/2 = vers les y croissants)
+   * @param size côté du canevas carré (grille) au centre duquel le véhicule tourne
+   */
   constructor(
     private readonly length: number,
-    private readonly axis: 0 | 1,
-    private readonly flip: boolean,
-  ) {}
+    private readonly span: number,
+    angle: number,
+    private readonly size: number,
+  ) {
+    this.cos = Math.cos(angle);
+    this.sin = Math.sin(angle);
+  }
 
-  /** Point local → grille. */
+  /** Point local → grille (rotation autour du centre du véhicule). */
   private g(u: number, v: number, z: number): P3 {
-    const uu = this.flip ? this.length - u : u;
-    return this.axis === 0 ? { x: uu, y: v, z } : { x: v, y: uu, z };
+    const a = u - this.length / 2;
+    const b = v - this.span / 2;
+    return { x: this.size / 2 + this.cos * a - this.sin * b, y: this.size / 2 + this.sin * a + this.cos * b, z };
   }
 
   /** Vecteur local (u, v, z) → grille. */
   private dir(nu: number, nv: number, nz: number): P3 {
-    const uu = this.flip ? -nu : nu;
-    return this.axis === 0 ? { x: uu, y: nv, z: nz } : { x: nv, y: uu, z: nz };
+    return { x: this.cos * nu - this.sin * nv, y: this.sin * nu + this.cos * nv, z: nz };
   }
 
   private push(faces: Face[], outline: boolean, bias: number): void {
@@ -101,20 +113,21 @@ export class Mesh {
 
   /** Pavé en coordonnées locales. */
   box(u0: number, u1: number, v0: number, v1: number, z0: number, z1: number, color: number, outline = true, bias = 0): this {
-    const a = this.g(u0, v0, z0);
-    const b = this.g(u1, v1, z1);
-    const x0 = Math.min(a.x, b.x);
-    const x1 = Math.max(a.x, b.x);
-    const y0 = Math.min(a.y, b.y);
-    const y1 = Math.max(a.y, b.y);
-    const p = (x: number, y: number, z: number): P3 => ({ x, y, z });
+    // Coins dans le repère local, puis rotation : le pavé suit le cap du véhicule
+    const ua = Math.min(u0, u1);
+    const ub = Math.max(u0, u1);
+    const va = Math.min(v0, v1);
+    const vb = Math.max(v0, v1);
+    const za = Math.min(z0, z1);
+    const zb = Math.max(z0, z1);
+    const c = (u: number, v: number, z: number): P3 => this.g(u, v, z);
     this.push(
       [
-        { pts: [p(x0, y0, z1), p(x1, y0, z1), p(x1, y1, z1), p(x0, y1, z1)], n: { x: 0, y: 0, z: 1 }, color },
-        { pts: [p(x1, y0, z1), p(x1, y1, z1), p(x1, y1, z0), p(x1, y0, z0)], n: { x: 1, y: 0, z: 0 }, color },
-        { pts: [p(x0, y1, z1), p(x1, y1, z1), p(x1, y1, z0), p(x0, y1, z0)], n: { x: 0, y: 1, z: 0 }, color },
-        { pts: [p(x0, y0, z1), p(x0, y1, z1), p(x0, y1, z0), p(x0, y0, z0)], n: { x: -1, y: 0, z: 0 }, color },
-        { pts: [p(x0, y0, z1), p(x1, y0, z1), p(x1, y0, z0), p(x0, y0, z0)], n: { x: 0, y: -1, z: 0 }, color },
+        { pts: [c(ua, va, zb), c(ub, va, zb), c(ub, vb, zb), c(ua, vb, zb)], n: { x: 0, y: 0, z: 1 }, color },
+        { pts: [c(ub, va, zb), c(ub, vb, zb), c(ub, vb, za), c(ub, va, za)], n: this.dir(1, 0, 0), color },
+        { pts: [c(ua, vb, zb), c(ub, vb, zb), c(ub, vb, za), c(ua, vb, za)], n: this.dir(0, 1, 0), color },
+        { pts: [c(ua, va, zb), c(ua, vb, zb), c(ua, vb, za), c(ua, va, za)], n: this.dir(-1, 0, 0), color },
+        { pts: [c(ua, va, zb), c(ub, va, zb), c(ub, va, za), c(ua, va, za)], n: this.dir(0, -1, 0), color },
       ],
       outline,
       bias,
@@ -865,12 +878,12 @@ function a10(m: Mesh, color: number, accent: number, L: number, W: number): void
 export function drawVehicleArt(
   g: G,
   def: VehicleDef,
-  axis: 0 | 1,
-  flip: boolean,
+  angle: number,
+  size: number,
   P: (x: number, y: number, z: number) => { x: number; y: number },
 ): void {
   const length = def.visual.length ?? 2;
-  const m = new Mesh(length, axis, flip);
+  const m = new Mesh(length, def.visual.width ?? 1, angle, size);
   const color = hex(def.visual.color);
   const accent = def.visual.accent ? hex(def.visual.accent) : shadeColor(color, 1.2);
   switch (def.visual.style) {

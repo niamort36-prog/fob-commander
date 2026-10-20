@@ -214,12 +214,17 @@ export class LightingRenderer {
           const top = this.iso.toScreen(b.pos.x + 0.5, b.pos.y + 0.5);
           const lampY = top.y - (svc.standZ ?? 30) - 10;
           out.push({ wx: top.x, wy: lampY, radius: 0.45, color: hexToInt(amb.searchlight.color), strength: k * night, bulb: true });
-          // Faisceau au sol, depuis le pied de la tour
-          const sx = (Math.cos(ang) - Math.sin(ang)) * this.iso.halfW;
-          const sy = (Math.cos(ang) + Math.sin(ang)) * this.iso.halfH;
-          const per = Math.hypot(sx, sy);
-          const len = amb.searchlight.length * per;
-          out.push({ wx: top.x, wy: top.y, radius: amb.searchlight.length, color: hexToInt(amb.searchlight.color), strength: k * night, cone: { angle: Math.atan2(sy, sx), len, width: len * 0.36 } });
+          // Faisceau : part de la lampe en haut de la tour et descend vers le sol balayé
+          const reach = amb.searchlight.length;
+          const ground = this.iso.toScreen(b.pos.x + 0.5 + Math.cos(ang) * reach, b.pos.y + 0.5 + Math.sin(ang) * reach);
+          const bx = ground.x - top.x;
+          const by = ground.y - lampY;
+          const len = Math.hypot(bx, by);
+          const groundLen = Math.hypot(ground.x - top.x, ground.y - top.y);
+          out.push({ wx: top.x, wy: lampY, radius: reach, color: hexToInt(amb.searchlight.color), strength: k * night, cone: { angle: Math.atan2(by, bx), len, width: groundLen * 0.36 } });
+          // Tache éclairée au sol, au bout du faisceau
+          const spot = this.iso.toScreen(b.pos.x + 0.5 + Math.cos(ang) * reach * 0.82, b.pos.y + 0.5 + Math.sin(ang) * reach * 0.82);
+          out.push({ wx: spot.x, wy: spot.y, radius: reach * 0.22, color: hexToInt(amb.searchlight.color), strength: k * night * 0.9 });
         }
       }
       // Phares des véhicules en mouvement : faisceau devant le véhicule et petite flaque au capot

@@ -1,7 +1,8 @@
 /**
- * Rendu des véhicules : sprites orientés selon le déplacement (4 orientations, interpolés entre
- * deux ticks), léger tressautement en roulant, poussière hors route ; hélicoptère en altitude
- * avec ombre portée, rotor principal et rotor de queue animés ; sélection et survol.
+ * Rendu des véhicules : sprites orientés selon le déplacement (16 orientations, interpolés entre
+ * deux ticks) ; le cap affiché pivote progressivement vers la direction suivie, au fil de la
+ * distance parcourue (virages fluides). Léger tressautement en roulant, poussière hors route ;
+ * hélicoptère en altitude avec ombre portée, rotor principal et rotor de queue animés ; sélection et survol.
  */
 import Phaser from 'phaser';
 import type { GameContext } from '../core/GameContext';
@@ -9,7 +10,7 @@ import type { VehicleDef } from '../core/ContentTypes';
 import { hourAt, isNightHour } from '../systems/modules';
 import type { Id, Vehicle } from '../core/GameState';
 import { AssetLoader } from '../assets/AssetLoader';
-import { vehicleGeometry, vehicleKey } from '../assets/spriteKeys';
+import { headingIndex, vehicleGeometry, vehicleHeadingKey, vehicleHeadingStep } from '../assets/spriteKeys';
 import type { IsoMath, Point } from './IsoMath';
 import { DEPTH } from './TerrainRenderer';
 
@@ -31,6 +32,19 @@ const HUB_Z = 28; // px au-dessus du fuselage posé
 const HUB_U = 1.75; // position du moyeu le long du fuselage
 const TAIL_U = 0.12;
 const TAIL_Z = 24;
+/** Braquage : rotation du cap affiché par case parcourue (rad), et à l'arrêt par seconde (manœuvre). */
+const TURN_PER_CELL = 1.9;
+const TURN_PER_SEC = 1.6;
+
+/** Cap exact d'un véhicule (ancienne sauvegarde : déduit de l'axe et du sens). */
+function targetHeading(v: Vehicle): number {
+  if (v.heading !== undefined) return v.heading;
+  return v.axis === 0 ? (v.flip ? Math.PI : 0) : v.flip ? -Math.PI / 2 : Math.PI / 2;
+}
+
+function wrapAngle(a: number): number {
+  return Math.atan2(Math.sin(a), Math.cos(a));
+}
 
 export class VehicleRenderer {
   private readonly sprites = new Map<Id, Phaser.GameObjects.Image>();
@@ -41,6 +55,12 @@ export class VehicleRenderer {
   private readonly lastPuff = new Map<Id, number>();
   private selectedId: Id | null = null;
   private hoverId: Id | null = null;
+  /** Cap affiché (qui tourne progressivement) et dernière position dessinée de chaque véhicule. */
+  private readonly shown = new Map<Id, { angle: number; x: number; y: number }>();
+  private lastTime = 0;
+  /** Cap affiché du véhicule en cours de dessin (repère des feux, rotors, ombres…). */
+  private cos = 1;
+  private sin = 0;
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -60,10 +80,29 @@ export class VehicleRenderer {
     this.hoverId = id;
   }
 
-  /** Point local du véhicule (u le long, depuis l'arrière) → coordonnées de grille. */
-  private localToGrid(v: Vehicle, x: number, y: number, u: number, length: number): { gx: number; gy: number } {
-    const along = (v.flip ? length - u : u) - length / 2;
-    return v.axis === 0 ? { gx: x + along, gy: y } : { gx: x, gy: y + along };
+  /** Point local du véhicule (u le long depuis l'arrière, side en travers depuis l'axe) → grille, selon le cap affiché. */
+  private localToGrid(_v: Vehicle, x: number, y: number, u: number, length: number, side = 0): { gx: number; gy: number } {
+    const a = u - length / 2;
+    return { gx: x + this.cos * a - this.sin * side, gy: y + this.sin * a + this.cos * side };
+  }
+
+  /** Fait pivoter le cap affiché vers le cap réel, selon la distance parcourue et le temps écoulé. */
+  private steer(v: Vehicle, x: number, y: number, dtSec: number, paused: boolean): number {
+    const target = targetHeading(v);
+    const s = this.shown.get(v.id);
+    if (!s) {
+      this.shown.set(v.id, { angle: target, x, y });
+      return target;
+    }
+    const moved = Math.hypot(x - s.x, y - s.y);
+    s.x = x;
+    s.y = y;
+    if (!paused) {
+      const max = moved * TURN_PER_CELL + dtSec * TURN_PER_SEC;
+      const delta = wrapAngle(target - s.angle);
+      s.angle = wrapAngle(s.angle + Math.max(-max, Math.min(max, delta)));
+    }
+    return s.angle;
   }
 
   sync(alpha: number, timeMs: number): void {
@@ -73,17 +112,29 @@ export class VehicleRenderer {
         s.destroy();
         this.sprites.delete(id);
         this.lastPuff.delete(id);
+        this.shown.delete(id);
       }
     }
     this.shadows.clear();
     this.overlay.clear();
     const paused = this.ctx.state.time.speed === 0;
+    const dtSec = this.lastTime ? Math.min(0.1, (timeMs - this.lastTime) / 1000) : 0;
+    this.lastTime = timeMs;
 
     for (const v of Object.values(vehicles)) {
       const def = this.ctx.content.vehicle(v.defId);
       const air = def.kind === 'air' || def.kind === 'plane';
       const length = def.visual.length ?? 2;
-      const ref = AssetLoader.resolve(vehicleKey(v.defId, v.axis, v.flip));
+      const x = v.prevPos.x + (v.pos.x - v.prevPos.x) * alpha;
+      const y = v.prevPos.y + (v.pos.y - v.prevPos.y) * alpha;
+      // Cap affiché : il pivote progressivement ; sprite de l'orientation dessinée la plus proche
+      const angle = def.kind === 'plane' ? targetHeading(v) : this.steer(v, x, y, dtSec, paused);
+      const step = vehicleHeadingStep(def);
+      const k = headingIndex(angle, step);
+      const drawn = (k / 16) * Math.PI * 2;
+      this.cos = Math.cos(drawn);
+      this.sin = Math.sin(drawn);
+      const ref = AssetLoader.resolve(vehicleHeadingKey(v.defId, k));
       let sprite = this.sprites.get(v.id);
       if (!sprite) {
         sprite = this.scene.add.image(0, 0, ref.texture, ref.frame);
@@ -94,10 +145,8 @@ export class VehicleRenderer {
 
       sprite.setVisible(v.state !== 'away');
       if (v.state === 'away') continue;
-      const x = v.prevPos.x + (v.pos.x - v.prevPos.x) * alpha;
-      const y = v.prevPos.y + (v.pos.y - v.prevPos.y) * alpha;
       const moving = !paused && (v.pos.x !== v.prevPos.x || v.pos.y !== v.prevPos.y);
-      const geo = vehicleGeometry(v.axis, length, def.visual.height ?? 24, this.iso.tileW, this.iso.tileH, def.visual.width ?? 1);
+      const geo = vehicleGeometry(length, def.visual.height ?? 24, this.iso.tileW, this.iso.tileH, def.visual.width ?? 1);
       const corner = this.iso.toScreen(x - geo.w / 2, y - geo.h / 2);
       const depth = DEPTH.objects + (x + y - 1) * 10 + 7;
       // Tressautement d'un pixel en roulant (pas pour l'hélicoptère en vol)
@@ -128,10 +177,12 @@ export class VehicleRenderer {
     const k = 1 - Math.min(0.45, v.altitude / 180);
     const half = (length / 2) * k;
     const w = 0.32 * k;
-    const corners: Point[] = (v.axis === 0
-      ? [[x - half, y - w], [x + half, y - w], [x + half, y + w], [x - half, y + w]]
-      : [[x - w, y - half], [x + w, y - half], [x + w, y + half], [x - w, y + half]]
-    ).map(([gx, gy]) => iso.toScreen(gx, gy));
+    const corners: Point[] = [
+      [-half, -w],
+      [half, -w],
+      [half, w],
+      [-half, w],
+    ].map(([a, b]) => iso.toScreen(x + this.cos * a - this.sin * b, y + this.sin * a + this.cos * b));
     this.shadows.fillStyle(0x000000, 0.28 * k);
     this.shadows.fillPoints(corners, true);
     const rc = iso.toScreen(x, y);
@@ -175,7 +226,7 @@ export class VehicleRenderer {
     const ta = ((timeMs / 25) * spin) % (Math.PI * 2);
     const r = 0.22;
     const dx = Math.cos(ta) * r;
-    const along = v.axis === 0 ? { gx: dx, gy: 0 } : { gx: 0, gy: dx };
+    const along = { gx: this.cos * dx, gy: this.sin * dx };
     const p1 = iso.toScreen(tail.gx + along.gx, tail.gy + along.gy);
     const p2 = iso.toScreen(tail.gx - along.gx, tail.gy - along.gy);
     const dz = Math.sin(ta) * 7;
@@ -207,9 +258,8 @@ export class VehicleRenderer {
         [u0 - half, w1],
       ];
       return pts.map(([a, b]) => {
-        const along = v.flip ? -a : a;
-        const gx = v.axis === 0 ? x + along * k + off : x + b * k + off;
-        const gy = v.axis === 0 ? y + b * k + off : y + along * k + off;
+        const gx = x + (this.cos * a - this.sin * b) * k + off;
+        const gy = y + (this.sin * a + this.cos * b) * k + off;
         return iso.toScreen(gx, gy);
       });
     };
@@ -223,10 +273,8 @@ export class VehicleRenderer {
       const spin = v.state === 'unloading' ? 0.3 : 1;
       this.overlay.lineStyle(1, 0x2b2a24, 0.35 * spin);
       for (const dv of [-2.4, -1.25, 1.25, 2.4]) {
-        const p = this.localToGrid(v, x, y, length * 0.76, length);
-        const gx = v.axis === 0 ? p.gx : p.gx + dv;
-        const gy = v.axis === 0 ? p.gy + dv : p.gy;
-        const c = iso.toScreen(gx, gy);
+        const p = this.localToGrid(v, x, y, length * 0.76, length, dv);
+        const c = iso.toScreen(p.gx, p.gy);
         const a = (timeMs / 30) * spin;
         const r = 12;
         this.overlay.lineBetween(c.x - Math.cos(a) * 3, c.y - v.altitude - 23 - Math.sin(a) * r, c.x + Math.cos(a) * 3, c.y - v.altitude - 23 + Math.sin(a) * r);
@@ -278,9 +326,8 @@ export class VehicleRenderer {
   private drawLights(v: Vehicle, def: VehicleDef, x: number, y: number, length: number, timeMs: number, moving: boolean): void {
     const g = this.overlay;
     const at = (u: number, z: number, side = 0): { x: number; y: number } => {
-      const c = this.localToGrid(v, x, y, u, length);
-      const off = side * 0.42;
-      const p = this.iso.toScreen(c.gx + (v.axis === 1 ? off : 0), c.gy + (v.axis === 0 ? off : 0));
+      const c = this.localToGrid(v, x, y, u, length, side * 0.42);
+      const p = this.iso.toScreen(c.gx, c.gy);
       return { x: p.x, y: p.y - z - v.altitude };
     };
     const hour = hourAt(this.ctx.content, this.ctx.state.time.tick);
