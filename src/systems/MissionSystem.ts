@@ -18,6 +18,7 @@ import { formatClock, formatNumber, t } from '../utils/i18n';
 import { newId } from '../utils/ids';
 import type { System } from './System';
 import { commsOf, commsPenalty, gearMissionBonus, hourAt, isNightHour } from './modules';
+import { gridRefOf } from './WorldSystem';
 
 export interface MissionPlan {
   typeId: string;
@@ -103,6 +104,17 @@ export class MissionSystem implements System {
     if (sel.kind === 'village') {
       const v = region.villages.find((x) => x.id === sel.id);
       return v ? { kind: 'village', id: v.id, pos: { ...v.pos }, name: v.name } : null;
+    }
+    if (sel.kind === 'site') {
+      const site = region.sites.find((x) => x.id === sel.id);
+      return site ? { kind: 'site', id: site.id, pos: { ...site.pos }, name: site.name } : null;
+    }
+    if (sel.kind === 'sector') {
+      const g = region.gridKm;
+      const cx = Math.floor(sel.x / g) * g + g / 2;
+      const cy = Math.floor(sel.y / g) * g + g / 2;
+      const ref = gridRefOf(region.size.width, region.size.height, g, cx, cy);
+      return { kind: 'sector', id: ref, pos: { x: cx, y: cy }, name: t('map.sector', { ref }) };
     }
     if (sel.kind === 'contact') {
       const c = this.ctx.state.region.contacts[sel.id];
@@ -442,6 +454,7 @@ export class MissionSystem implements System {
         case 'outbound':
           if (this.now >= m.phaseEndTick) {
             this.setPhase(m, 'objective', m.objectiveTicks, t('mission.logObjective', { target: m.target.name }));
+            this.ctx.sim.world.onObjective(m);
             const sup = this.supportDef(m.support);
             if (sup) {
               this.log(m, t('mission.logSupport', { name: sup.name }));
@@ -528,7 +541,15 @@ export class MissionSystem implements System {
     const p = Math.min(1, (this.now - m.phaseStartTick) / span);
     let k = 0;
     if (m.phase === 'outbound') k = p;
-    else if (m.phase === 'objective') k = 1;
+    else if (m.phase === 'objective') {
+      // Ratissage d'un secteur ou d'un lieu : l'unité tourne dans la zone
+      if (m.target.kind === 'sector' || m.target.kind === 'site') {
+        const r = m.target.kind === 'sector' ? this.ctx.content.region.gridKm * 0.35 : 0.8;
+        const a = p * Math.PI * 3;
+        return { x: m.target.pos.x + Math.cos(a) * r * Math.min(1, p * 4), y: m.target.pos.y + Math.sin(a) * r * Math.min(1, p * 4) };
+      }
+      k = 1;
+    }
     else if (m.phase === 'inbound') k = m.aborted ? Math.max(0, 1 - p) * this.abortReach(m) : 1 - p;
     return { x: fob.x + (m.target.pos.x - fob.x) * k, y: fob.y + (m.target.pos.y - fob.y) * k };
   }
@@ -589,6 +610,7 @@ export class MissionSystem implements System {
 
     // Gains et effets
     this.applyEffects(m, def.rewards[result]);
+    if (result !== 'failure' && (m.target.kind === 'site' || m.target.kind === 'sector')) m.gains.push(...this.ctx.sim.world.visit(m, result === 'partial'));
     for (const id of m.memberIds) s.agents[id].xp += result === 'success' ? this.cfg.xpSuccess : result === 'partial' ? this.cfg.xpPartial : 0;
     const prog = this.ctx.content.balance.progression;
     this.ctx.sim.economy.gainPoints(result === 'success' ? (prog.pointsMissionSuccess ?? 0) : result === 'partial' ? (prog.pointsMissionPartial ?? 0) : 0);
@@ -632,7 +654,7 @@ export class MissionSystem implements System {
       const n = this.revealAround(m.target.pos, e.revealRadiusKm);
       if (n) out.push(t('fx.revealed', { n }));
     }
-    if (e.neutralize && m.target.kind === 'contact' && m.target.id && s.region.contacts[m.target.id]) {
+    if (e.neutralize && !m.targetMoved && m.target.kind === 'contact' && m.target.id && s.region.contacts[m.target.id]) {
       this.ctx.sim.diplomacy.onContactNeutralized(m.target.id, intel.contactDef(m.target.id).kind);
       delete s.region.contacts[m.target.id];
       out.push(t('fx.neutralized', { label: m.target.name }));

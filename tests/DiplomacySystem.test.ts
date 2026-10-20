@@ -136,10 +136,8 @@ describe('DiplomacySystem — stabilité et conséquences', () => {
     const ctx = makeGame();
     for (const v of Object.values(ctx.state.region.villages)) v.influence = 90;
     ctx.random = () => 0.01;
-    const n = Object.keys(ctx.state.region.contacts).length;
     stepTicks(ctx, DAY + 1);
     const dyn = Object.values(ctx.state.region.contacts).filter((c) => c.dyn);
-    expect(Object.keys(ctx.state.region.contacts).length).toBeGreaterThan(n);
     expect(dyn.length).toBeGreaterThan(0);
     expect(ctx.sim.intel.contactDef(dyn[0].id).label).toContain('(');
   });

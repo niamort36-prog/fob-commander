@@ -80,6 +80,10 @@ describe('AgentAI et NeedsSystem', () => {
 
   it('reste stable sur plusieurs jours (pas de blocage, besoins maintenus)', () => {
     const ctx = makeGame(undefined, { agents: true });
+    ctx.state.region.contacts = {}; // besoins seuls : pas d'attaque ennemie pendant l'essai
+    ctx.state.resources.stock.funds += 10000; // de quoi construire tout le nécessaire
+    ctx.state.progression.reputation = 20;
+    ctx.state.progression.unlocked.push('water_well'); // le puits demande de la réputation
     const z = ctx.state.fob.zone;
     const cx = z.x + 20;
     const cy = z.y + 20;
@@ -87,6 +91,7 @@ describe('AgentAI et NeedsSystem', () => {
     ctx.sim.build.place('dfac', { x: cx + 2, y: cy - 6 }, 0);
     ctx.sim.build.place('showers', { x: cx + 2, y: cy - 1 }, 0);
     ctx.sim.build.place('water_well', { x: cx + 6, y: cy - 1 }, 0);
+    ctx.sim.build.place('water_well', { x: cx + 9, y: cy - 1 }, 0); // 21 personnes : un seul puits ne suffit pas
     stepTicks(ctx, 4 * 24 * 60);
     const agents = Object.values(ctx.state.agents);
     const avg = (k: 'food' | 'sleep' | 'hygiene' | 'morale') => agents.reduce((s, a) => s + a.needs[k], 0) / agents.length;

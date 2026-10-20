@@ -1,10 +1,10 @@
 {
-  "_doc": "Carte tactique régionale (Phase 5). Coordonnées en kilomètres : x vers l'est, y vers le sud. Tous les lieux, tribus, personnes et groupes sont fictifs.",
+  "_doc": "Carte tactique régionale (Phase 5). Coordonnées en kilomètres : x vers l'est, y vers le sud. Tous les lieux, tribus, personnes et groupes sont fictifs. Carte agrandie à 120 × 90 km : au centre la vallée de départ, autour des vallées plus lointaines où ne vont d'abord que les véhicules et les hélicoptères.",
   "name": "District de Sarband",
   "province": "Province de Kandara",
   "size": {
-    "width": 60,
-    "height": 45
+    "width": 120,
+    "height": 90
   },
   "gridKm": 5,
   "seed": 1207,
@@ -22,51 +22,91 @@
   "mountains": [
     {
       "name": "Koh-e Siah",
-      "x": 30,
-      "y": 3,
+      "x": 60,
+      "y": 25,
       "rx": 30,
       "ry": 7,
       "h": 1500
     },
     {
       "name": "Kotal-e Kharaw (nord)",
-      "x": 54.5,
-      "y": 13,
+      "x": 84.5,
+      "y": 35,
       "rx": 7,
       "ry": 7,
       "h": 1400
     },
     {
       "name": "Kotal-e Kharaw (sud)",
-      "x": 55,
-      "y": 32,
+      "x": 85,
+      "y": 54,
       "rx": 7,
       "ry": 8,
       "h": 1250
     },
     {
       "name": "Collines de Zarghun",
-      "x": 8,
-      "y": 14,
+      "x": 38,
+      "y": 36,
       "rx": 7,
       "ry": 6,
       "h": 700
     },
     {
       "name": "Tepe Surkh",
-      "x": 46,
-      "y": 42,
+      "x": 76,
+      "y": 64,
       "rx": 6,
       "ry": 4,
       "h": 450
     },
     {
       "name": "Ghundai Sangar",
-      "x": 26,
-      "y": 15.5,
+      "x": 56,
+      "y": 37.5,
       "rx": 4,
       "ry": 3,
       "h": 520
+    },
+    {
+      "name": "Spin Ghar",
+      "x": 98,
+      "y": 8,
+      "rx": 22,
+      "ry": 9,
+      "h": 1700
+    },
+    {
+      "name": "Koh-e Baba Wali",
+      "x": 12,
+      "y": 10,
+      "rx": 14,
+      "ry": 9,
+      "h": 1350
+    },
+    {
+      "name": "Kotal-e Sabz",
+      "x": 110,
+      "y": 62,
+      "rx": 9,
+      "ry": 12,
+      "h": 1150
+    },
+    {
+      "name": "Regestan",
+      "x": 70,
+      "y": 84,
+      "rx": 30,
+      "ry": 6,
+      "h": 380
+    },
+    {
+      "name": "Tor Ghar",
+      "x": 8,
+      "y": 50,
+      "rx": 7,
+      "ry": 9,
+      "h": 900
     }
   ],
   "rivers": [
@@ -75,40 +115,60 @@
       "width": 3,
       "points": [
         [
-          50,
-          3
+          86,
+          2
         ],
         [
-          46,
-          9
+          82,
+          14
         ],
         [
-          40,
-          15
+          80,
+          25
         ],
         [
-          33,
-          19
-        ],
-        [
-          26,
-          23
-        ],
-        [
-          20,
-          26.5
-        ],
-        [
-          14,
+          76,
           31
         ],
         [
-          8,
+          70,
           37
         ],
         [
-          1,
-          44
+          63,
+          41
+        ],
+        [
+          56,
+          45
+        ],
+        [
+          50,
+          48.5
+        ],
+        [
+          44,
+          53
+        ],
+        [
+          38,
+          59
+        ],
+        [
+          31,
+          66
+        ],
+        [
+          20,
+          74
+        ],
+        [
+          8,
+          84
+        ],
+        [
+          0,
+          89
         ]
       ]
     },
@@ -117,20 +177,58 @@
       "width": 2,
       "points": [
         [
-          59.5,
-          24
+          89.5,
+          46
         ],
         [
-          53,
-          22.5
+          83,
+          44.5
         ],
         [
-          47,
-          20
+          77,
+          42
         ],
         [
-          40.5,
-          15.5
+          70.5,
+          37.5
+        ]
+      ]
+    },
+    {
+      "name": "Rud-e Arghandab",
+      "width": 3,
+      "points": [
+        [
+          120,
+          52
+        ],
+        [
+          106,
+          56
+        ],
+        [
+          94,
+          60
+        ],
+        [
+          80,
+          63
+        ],
+        [
+          66,
+          68
+        ],
+        [
+          52,
+          72
+        ],
+        [
+          40,
+          80
+        ],
+        [
+          34,
+          90
         ]
       ]
     }
@@ -142,126 +240,181 @@
       "points": [
         [
           0,
-          40
+          70
         ],
         [
-          10,
-          38.5
+          14,
+          66
         ],
         [
-          20,
-          37
-        ],
-        [
-          31,
-          35
-        ],
-        [
-          40,
-          33.5
-        ],
-        [
-          47,
-          31
-        ],
-        [
-          51.5,
-          26.5
-        ],
-        [
-          55,
-          22.5
-        ],
-        [
-          60,
-          21
-        ]
-      ]
-    },
-    {
-      "type": "track",
-      "points": [
-        [
-          31,
-          35
-        ],
-        [
-          27,
-          28.5
-        ],
-        [
-          21,
-          24.5
-        ],
-        [
-          22.5,
-          19
+          24,
+          63
         ],
         [
           30,
-          13
+          62
         ],
         [
-          42.5,
-          11
-        ]
-      ]
-    },
-    {
-      "type": "track",
-      "points": [
-        [
-          20.5,
-          24.5
-        ],
-        [
-          15,
-          30
-        ],
-        [
-          8,
-          36
-        ],
-        [
-          4,
-          41
-        ]
-      ]
-    },
-    {
-      "type": "track",
-      "points": [
-        [
-          31,
-          35
-        ],
-        [
-          36,
-          39
-        ],
-        [
-          37.5,
-          40.5
-        ],
-        [
-          39,
-          45
-        ]
-      ]
-    },
-    {
-      "type": "track",
-      "points": [
-        [
-          51.5,
-          26.5
+          40,
+          60.5
         ],
         [
           50,
-          22.5
+          59
         ],
         [
-          48.5,
+          61,
+          57
+        ],
+        [
+          70,
+          55.5
+        ],
+        [
+          77,
+          53
+        ],
+        [
+          81.5,
+          48.5
+        ],
+        [
+          85,
+          44.5
+        ],
+        [
+          90,
+          43
+        ],
+        [
+          100,
+          40
+        ],
+        [
+          112,
+          33
+        ],
+        [
+          120,
+          30
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          61,
+          57
+        ],
+        [
+          57,
+          50.5
+        ],
+        [
+          51,
+          46.5
+        ],
+        [
+          52.5,
+          41
+        ],
+        [
+          60,
+          35
+        ],
+        [
+          72.5,
+          33
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          50.5,
+          46.5
+        ],
+        [
+          45,
+          52
+        ],
+        [
+          38,
+          58
+        ],
+        [
+          34,
+          63
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          61,
+          57
+        ],
+        [
+          66,
+          61
+        ],
+        [
+          67.5,
+          62.5
+        ],
+        [
+          69,
+          67
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          81.5,
+          48.5
+        ],
+        [
+          80,
+          44.5
+        ],
+        [
+          78.5,
+          42
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          53,
+          44
+        ],
+        [
+          51,
+          46.5
+        ]
+      ]
+    },
+    {
+      "name": "Route du nord",
+      "type": "road",
+      "points": [
+        [
+          104,
+          38
+        ],
+        [
+          100,
+          30
+        ],
+        [
+          96,
           20
         ]
       ]
@@ -270,12 +423,106 @@
       "type": "track",
       "points": [
         [
-          23,
-          22
+          12,
+          30
         ],
         [
-          21,
-          24.5
+          20,
+          40
+        ],
+        [
+          34,
+          46
+        ],
+        [
+          50.5,
+          46.5
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          22,
+          60
+        ],
+        [
+          24,
+          63
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          6,
+          76
+        ],
+        [
+          14,
+          66
+        ]
+      ]
+    },
+    {
+      "name": "Route de l'Arghandab",
+      "type": "road",
+      "points": [
+        [
+          61,
+          57
+        ],
+        [
+          70,
+          62
+        ],
+        [
+          82,
+          66
+        ],
+        [
+          96,
+          64
+        ],
+        [
+          112,
+          70
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          82,
+          66
+        ],
+        [
+          70,
+          74
+        ],
+        [
+          58,
+          80
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          104,
+          38
+        ],
+        [
+          110,
+          50
+        ],
+        [
+          112,
+          70
         ]
       ]
     }
@@ -285,37 +532,62 @@
       "label": "Commandement insurgé",
       "icon": "hq",
       "echelon": "I",
-      "strength": 0.25
+      "strength": 0.25,
+      "sightings": [
+        "une enceinte gardée, des antennes sur le toit, des allées et venues de motos"
+      ]
     },
     "cell": {
       "label": "Groupe de combattants",
       "icon": "infantry",
       "echelon": "•••",
-      "strength": 0.15
+      "strength": 0.15,
+      "sightings": [
+        "une colonne d'hommes armés en file indienne",
+        "un groupe de combattants qui traverse les vergers",
+        "des hommes en armes à moto et à pied",
+        "une dizaine de combattants qui se reposent à l'ombre d'un mur"
+      ]
     },
     "mortar": {
       "label": "Équipe mortier",
       "icon": "mortar",
       "echelon": "••",
-      "strength": 0.1
+      "strength": 0.1,
+      "sightings": [
+        "des hommes qui chargent un tube de mortier sur des ânes",
+        "une équipe qui transporte des caisses d'obus et un trépied",
+        "un pick-up avec un tube de mortier sous une bâche"
+      ]
     },
     "ied": {
       "label": "Cellule IED",
       "icon": "ied",
       "echelon": "••",
-      "strength": 0.1
+      "strength": 0.1,
+      "sightings": [
+        "deux hommes qui creusent au bord de la piste",
+        "des hommes qui déroulent un fil vers un fossé",
+        "un homme qui fait le guet pendant qu'un autre enterre un bidon"
+      ]
     },
     "camp": {
       "label": "Camp d'entraînement",
       "icon": "camp",
       "echelon": "",
-      "strength": 0.2
+      "strength": 0.2,
+      "sightings": [
+        "des tentes camouflées et des jeunes hommes qui s'entraînent au tir"
+      ]
     },
     "cache": {
       "label": "Cache d'armes",
       "icon": "cache",
       "echelon": "",
-      "strength": 0.05
+      "strength": 0.05,
+      "sightings": [
+        "une grotte murée dont l'entrée a été récemment rouverte"
+      ]
     }
   },
   "villages": [
@@ -324,8 +596,8 @@
       "name": "Sangar",
       "type": "village",
       "pos": {
-        "x": 20.5,
-        "y": 24.5
+        "x": 50.5,
+        "y": 46.5
       },
       "population": 1800,
       "tribe": "Khel Zamani",
@@ -343,8 +615,8 @@
       "name": "Deh Mirza",
       "type": "village",
       "pos": {
-        "x": 27,
-        "y": 28.5
+        "x": 57,
+        "y": 50.5
       },
       "population": 1200,
       "tribe": "Khel Zamani",
@@ -362,8 +634,8 @@
       "name": "Karez-e Sabz",
       "type": "village",
       "pos": {
-        "x": 15,
-        "y": 30
+        "x": 45,
+        "y": 52
       },
       "population": 900,
       "tribe": "Daudzai",
@@ -380,8 +652,8 @@
       "name": "Shahr-e Kandara",
       "type": "town",
       "pos": {
-        "x": 31,
-        "y": 35
+        "x": 61,
+        "y": 57
       },
       "population": 14000,
       "tribe": "plusieurs",
@@ -400,8 +672,8 @@
       "name": "Qarya-ye Toor",
       "type": "village",
       "pos": {
-        "x": 42.5,
-        "y": 11
+        "x": 72.5,
+        "y": 33
       },
       "population": 700,
       "tribe": "Ghilzi-Toor",
@@ -416,8 +688,8 @@
       "name": "Kharaw",
       "type": "village",
       "pos": {
-        "x": 50,
-        "y": 22.5
+        "x": 80,
+        "y": 44.5
       },
       "population": 1100,
       "tribe": "Khel Dostan",
@@ -435,8 +707,8 @@
       "name": "Gulistan",
       "type": "village",
       "pos": {
-        "x": 8,
-        "y": 36
+        "x": 38,
+        "y": 58
       },
       "population": 600,
       "tribe": "Daudzai",
@@ -453,8 +725,8 @@
       "name": "Dasht-e Gol",
       "type": "hamlet",
       "pos": {
-        "x": 37.5,
-        "y": 40.5
+        "x": 67.5,
+        "y": 62.5
       },
       "population": 450,
       "tribe": "nomades kuchis",
@@ -465,6 +737,155 @@
         "water"
       ],
       "desc": "Campement semi-permanent de nomades au croisement des pistes."
+    },
+    {
+      "id": "chinar",
+      "name": "Chinar",
+      "type": "village",
+      "pos": {
+        "x": 12,
+        "y": 30
+      },
+      "population": 1300,
+      "tribe": "Khel Ahmadzai",
+      "leader": null,
+      "attitude": 5,
+      "influence": 30,
+      "needs": [
+        "water",
+        "road"
+      ],
+      "desc": "Village de vergers sous le Koh-e Baba Wali, sur la route des caravanes."
+    },
+    {
+      "id": "pashmul",
+      "name": "Pashmul",
+      "type": "village",
+      "pos": {
+        "x": 22,
+        "y": 60
+      },
+      "population": 1600,
+      "tribe": "Khel Barakzai",
+      "leader": null,
+      "attitude": -15,
+      "influence": 55,
+      "needs": [
+        "security",
+        "school"
+      ],
+      "desc": "Grappe de qalats entre les vignes ; les combattants y passent l'hiver."
+    },
+    {
+      "id": "sar_ab",
+      "name": "Sar-e Ab",
+      "type": "hamlet",
+      "pos": {
+        "x": 6,
+        "y": 76
+      },
+      "population": 300,
+      "tribe": "Kuchis sédentarisés",
+      "leader": null,
+      "attitude": 10,
+      "influence": 20,
+      "needs": [
+        "water"
+      ],
+      "desc": "Quelques familles kuchis installées autour d'une source."
+    },
+    {
+      "id": "qalat_naw",
+      "name": "Qalat-e Naw",
+      "type": "town",
+      "pos": {
+        "x": 104,
+        "y": 38
+      },
+      "population": 9000,
+      "tribe": "Khel Alokozai",
+      "leader": null,
+      "attitude": 5,
+      "influence": 30,
+      "needs": [
+        "health",
+        "road"
+      ],
+      "desc": "Bourg commerçant au carrefour de la nationale et de la piste du nord."
+    },
+    {
+      "id": "margha",
+      "name": "Margha",
+      "type": "village",
+      "pos": {
+        "x": 96,
+        "y": 20
+      },
+      "population": 900,
+      "tribe": "Khel Ghilzai",
+      "leader": null,
+      "attitude": -25,
+      "influence": 70,
+      "needs": [
+        "security"
+      ],
+      "desc": "Village de montagne fidèle aux chefs insurgés ; les étrangers n'y sont pas les bienvenus."
+    },
+    {
+      "id": "sher_khan",
+      "name": "Sher Khan",
+      "type": "village",
+      "pos": {
+        "x": 112,
+        "y": 70
+      },
+      "population": 1100,
+      "tribe": "Khel Popalzai",
+      "leader": null,
+      "attitude": 0,
+      "influence": 40,
+      "needs": [
+        "school",
+        "water"
+      ],
+      "desc": "Village de marchands près de la frontière, vit du commerce… et de la contrebande."
+    },
+    {
+      "id": "nahr_e_shahi",
+      "name": "Nahr-e Shahi",
+      "type": "village",
+      "pos": {
+        "x": 82,
+        "y": 66
+      },
+      "population": 2200,
+      "tribe": "Khel Barakzai",
+      "leader": null,
+      "attitude": 15,
+      "influence": 25,
+      "needs": [
+        "road",
+        "health"
+      ],
+      "desc": "Grand village irrigué par un canal royal, sur l'Arghandab."
+    },
+    {
+      "id": "kakaran",
+      "name": "Kakaran",
+      "type": "hamlet",
+      "pos": {
+        "x": 58,
+        "y": 80
+      },
+      "population": 400,
+      "tribe": "Khel Noorzai",
+      "leader": null,
+      "attitude": -5,
+      "influence": 45,
+      "needs": [
+        "water"
+      ],
+      "desc": "Hameau du désert, dernier arrêt avant le Regestan."
     }
   ],
   "personalities": [
@@ -585,8 +1006,8 @@
       "icon": "installation",
       "echelon": "II",
       "pos": {
-        "x": 4,
-        "y": 41
+        "x": 34,
+        "y": 63
       }
     },
     {
@@ -596,8 +1017,8 @@
       "icon": "infantry",
       "echelon": "II",
       "pos": {
-        "x": 39.5,
-        "y": 33.5
+        "x": 69.5,
+        "y": 55.5
       }
     },
     {
@@ -607,8 +1028,8 @@
       "icon": "police",
       "echelon": "I",
       "pos": {
-        "x": 31.8,
-        "y": 36.3
+        "x": 61.8,
+        "y": 58.3
       }
     },
     {
@@ -618,8 +1039,52 @@
       "icon": "police",
       "echelon": "•••",
       "pos": {
-        "x": 53,
-        "y": 24.5
+        "x": 83,
+        "y": 46.5
+      }
+    },
+    {
+      "id": "fob_north",
+      "name": "FOB Tarin (coalition)",
+      "faction": "friendly",
+      "icon": "installation",
+      "echelon": "II",
+      "pos": {
+        "x": 100,
+        "y": 36
+      }
+    },
+    {
+      "id": "cop_west",
+      "name": "COP Zangabad (coalition)",
+      "faction": "friendly",
+      "icon": "installation",
+      "echelon": "I",
+      "pos": {
+        "x": 18,
+        "y": 70
+      }
+    },
+    {
+      "id": "ana_south",
+      "name": "Bataillon de l'armée afghane",
+      "faction": "allied",
+      "icon": "infantry",
+      "echelon": "II",
+      "pos": {
+        "x": 84,
+        "y": 62
+      }
+    },
+    {
+      "id": "anp_qalat",
+      "name": "Police de Qalat-e Naw",
+      "faction": "allied",
+      "icon": "police",
+      "echelon": "I",
+      "pos": {
+        "x": 103,
+        "y": 39.5
       }
     }
   ],
@@ -629,8 +1094,8 @@
       "kind": "hq",
       "label": "QG du mollah Rasoul",
       "pos": {
-        "x": 42.8,
-        "y": 10.4
+        "x": 72.8,
+        "y": 32.4
       },
       "drift": 0,
       "known": true,
@@ -641,8 +1106,8 @@
       "kind": "cell",
       "label": "Groupe de combattants (nord)",
       "pos": {
-        "x": 36,
-        "y": 9
+        "x": 66,
+        "y": 31
       },
       "drift": 1.5
     },
@@ -651,8 +1116,8 @@
       "kind": "mortar",
       "label": "Équipe mortier",
       "pos": {
-        "x": 25.5,
-        "y": 16
+        "x": 55.5,
+        "y": 38
       },
       "drift": 1
     },
@@ -661,8 +1126,8 @@
       "kind": "ied",
       "label": "Cellule IED de la A-1",
       "pos": {
-        "x": 34,
-        "y": 33.8
+        "x": 64,
+        "y": 55.8
       },
       "drift": 2
     },
@@ -671,8 +1136,8 @@
       "kind": "cell",
       "label": "Groupe de combattants (col)",
       "pos": {
-        "x": 52.5,
-        "y": 27
+        "x": 82.5,
+        "y": 49
       },
       "drift": 1.5
     },
@@ -681,8 +1146,8 @@
       "kind": "camp",
       "label": "Camp d'entraînement",
       "pos": {
-        "x": 30,
-        "y": 4.5
+        "x": 60,
+        "y": 26.5
       },
       "drift": 0
     },
@@ -691,8 +1156,8 @@
       "kind": "cache",
       "label": "Cache d'armes",
       "pos": {
-        "x": 16.5,
-        "y": 31.5
+        "x": 46.5,
+        "y": 53.5
       },
       "drift": 0
     },
@@ -701,8 +1166,8 @@
       "kind": "cell",
       "label": "Groupe de combattants (sud)",
       "pos": {
-        "x": 41,
-        "y": 41
+        "x": 71,
+        "y": 63
       },
       "drift": 1.5
     },
@@ -711,10 +1176,100 @@
       "kind": "cell",
       "label": "Combattants étrangers",
       "pos": {
-        "x": 48,
-        "y": 7
+        "x": 78,
+        "y": 29
       },
       "drift": 1
+    },
+    {
+      "id": "cell_margha",
+      "kind": "cell",
+      "label": "Combattants de Margha",
+      "pos": {
+        "x": 94,
+        "y": 16
+      },
+      "drift": 1.5
+    },
+    {
+      "id": "mortar_north",
+      "kind": "mortar",
+      "label": "Équipe mortier du nord",
+      "pos": {
+        "x": 88,
+        "y": 26
+      },
+      "drift": 1
+    },
+    {
+      "id": "hq_border",
+      "kind": "hq",
+      "label": "QG frontalier",
+      "pos": {
+        "x": 114,
+        "y": 80
+      },
+      "drift": 0
+    },
+    {
+      "id": "cell_pashmul",
+      "kind": "cell",
+      "label": "Groupe de Pashmul",
+      "pos": {
+        "x": 20,
+        "y": 57
+      },
+      "drift": 1.5
+    },
+    {
+      "id": "ied_west",
+      "kind": "ied",
+      "label": "Cellule IED de l'ouest",
+      "pos": {
+        "x": 16,
+        "y": 64
+      },
+      "drift": 2
+    },
+    {
+      "id": "camp_spin",
+      "kind": "camp",
+      "label": "Camp du Spin Ghar",
+      "pos": {
+        "x": 104,
+        "y": 6
+      },
+      "drift": 0
+    },
+    {
+      "id": "cache_regestan",
+      "kind": "cache",
+      "label": "Dépôt du Regestan",
+      "pos": {
+        "x": 66,
+        "y": 86
+      },
+      "drift": 0
+    },
+    {
+      "id": "cell_sherkhan",
+      "kind": "cell",
+      "label": "Passeurs armés de Sher Khan",
+      "pos": {
+        "x": 108,
+        "y": 74
+      },
+      "drift": 1.5
+    },
+    {
+      "id": "ied_arghandab",
+      "kind": "ied",
+      "label": "Cellule IED de l'Arghandab",
+      "pos": {
+        "x": 76,
+        "y": 70
+      },
+      "drift": 2
     }
   ],
   "intel": {
@@ -734,5 +1289,540 @@
     "ciaRevealKm": 12,
     "attackRevealReliability": 0.45,
     "eventRevealReliability": 0.6
+  },
+  "behaviour": {
+    "_doc": "Comportement des groupes ennemis mobiles : vitesse (km/h), rayon d'action autour de leur base, durées (heures). Les mortiers alternent cachette et position de tir près de la FOB (tir puis déplacement) ; les groupes de combattants patrouillent entre villages sous emprise et caches, et s'approchent parfois de la FOB ; les cellules IED posent des engins sur les routes.",
+    "cell": {
+      "speedKmh": 3,
+      "rangeKm": 14,
+      "restHours": [
+        4,
+        10
+      ],
+      "approachChance": 0.12,
+      "approachKm": [
+        3.8,
+        5
+      ],
+      "approachHours": [
+        3,
+        6
+      ]
+    },
+    "mortar": {
+      "speedKmh": 2.5,
+      "rangeKm": 20,
+      "firingKm": [
+        4,
+        6.5
+      ],
+      "firingHours": [
+        3,
+        5
+      ],
+      "hideHours": [
+        24,
+        48
+      ]
+    },
+    "ied": {
+      "speedKmh": 3,
+      "rangeKm": 16,
+      "roadKm": 15,
+      "plantHours": 2,
+      "hideHours": [
+        8,
+        16
+      ],
+      "iedLifeHours": 72,
+      "maxIeds": 3
+    },
+    "encounter": {
+      "footKm": 1.2,
+      "motorizedKm": 1.6,
+      "iedKm": 0.5,
+      "checkEveryMin": 10,
+      "ourBase": 0.35,
+      "theirBase": 0.45,
+      "nightPenalty": 0.25,
+      "enemyNightPenalty": 0.15,
+      "motorizedExposure": 0.2,
+      "heliExposure": 0.35,
+      "knownBonus": 0.3,
+      "sweepBonus": 0.15,
+      "gear": {
+        "nvg": {
+          "night": 0.25
+        },
+        "thermal": {
+          "night": 0.35,
+          "day": 0.12
+        },
+        "optics": {
+          "day": 0.15
+        },
+        "binoculars": {
+          "day": 0.1
+        }
+      },
+      "ambushCasualty": 0.25,
+      "spottedSuccess": 0.05,
+      "iedFindBase": 0.3,
+      "targetMovedKm": 1.5,
+      "targetMovedSuccess": -0.3
+    }
+  },
+  "siteKinds": {
+    "caves": {
+      "label": "Grottes",
+      "code": "G",
+      "hideout": true,
+      "desc": "Réseau de grottes dans la falaise : refuge idéal pour les combattants et leurs dépôts.",
+      "visit": {
+        "revealKm": 4,
+        "cacheChance": 0.4,
+        "ammo": [
+          20,
+          60
+        ]
+      }
+    },
+    "fort": {
+      "label": "Forteresse en ruine",
+      "code": "F",
+      "hideout": true,
+      "desc": "Vieille forteresse de pisé dominant la vallée : on y voit loin, d'autres le savent aussi.",
+      "visit": {
+        "revealKm": 8
+      }
+    },
+    "kuchi": {
+      "label": "Campement nomade",
+      "code": "N",
+      "desc": "Tentes noires des nomades kuchis et leurs troupeaux : ils voient passer tout le monde.",
+      "visit": {
+        "revealKm": 6,
+        "attitude": 3
+      }
+    },
+    "pass": {
+      "label": "Col",
+      "code": "C",
+      "desc": "Passage obligé entre deux vallées, emprunté par les caravanes… et les contrebandiers.",
+      "visit": {
+        "revealKm": 5,
+        "clearIedKm": 4
+      }
+    },
+    "quarry": {
+      "label": "Carrière abandonnée",
+      "code": "Q",
+      "hideout": true,
+      "desc": "Carrière de pierre désaffectée : galeries, explosifs oubliés, et parfois des visiteurs.",
+      "visit": {
+        "revealKm": 3,
+        "cacheChance": 0.35,
+        "ammo": [
+          15,
+          40
+        ]
+      }
+    },
+    "well": {
+      "label": "Puits du désert",
+      "code": "P",
+      "desc": "Dernier point d'eau avant le désert : bergers et voyageurs s'y arrêtent tous.",
+      "visit": {
+        "revealKm": 5,
+        "attitude": 2
+      }
+    },
+    "relay": {
+      "label": "Relais de télécommunication",
+      "code": "R",
+      "desc": "Antenne de téléphonie isolée, souvent sabotée ; ses gardiens savent qui rôde la nuit.",
+      "visit": {
+        "revealKm": 7
+      }
+    },
+    "ruins": {
+      "label": "Ruines antiques",
+      "code": "V",
+      "hideout": true,
+      "desc": "Ruines d'une cité ancienne, pillées par les trafiquants d'antiquités.",
+      "visit": {
+        "revealKm": 3,
+        "cacheChance": 0.25,
+        "ammo": [
+          10,
+          30
+        ]
+      }
+    },
+    "poppy": {
+      "label": "Champs de pavot",
+      "code": "O",
+      "desc": "Grandes parcelles de pavot : l'opium finance l'insurrection.",
+      "visit": {
+        "revealKm": 3,
+        "influence": -3
+      }
+    },
+    "smugglers": {
+      "label": "Piste de contrebande",
+      "code": "X",
+      "hideout": true,
+      "desc": "Piste discrète utilisée par les passeurs d'armes et d'opium.",
+      "visit": {
+        "revealKm": 5,
+        "cacheChance": 0.3,
+        "ammo": [
+          20,
+          50
+        ],
+        "clearIedKm": 3
+      }
+    },
+    "hamlet": {
+      "label": "Hameau isolé",
+      "code": "H",
+      "desc": "Quelques maisons loin de tout, que personne ne vient jamais voir.",
+      "visit": {
+        "revealKm": 4,
+        "attitude": 4
+      }
+    },
+    "shrine": {
+      "label": "Ziarat (sanctuaire)",
+      "code": "S",
+      "desc": "Tombeau d'un saint, fanions verts et pèlerins : lieu respecté de tous.",
+      "visit": {
+        "revealKm": 3,
+        "attitude": 5
+      }
+    }
+  },
+  "sites": [
+    {
+      "id": "caves_siah",
+      "kind": "caves",
+      "name": "Grottes du Koh-e Siah",
+      "pos": {
+        "x": 52,
+        "y": 30
+      }
+    },
+    {
+      "id": "caves_east",
+      "kind": "caves",
+      "name": "Grottes de Shirin Dara",
+      "pos": {
+        "x": 85,
+        "y": 34
+      }
+    },
+    {
+      "id": "fort_qala",
+      "kind": "fort",
+      "name": "Qala-ye Kohna",
+      "pos": {
+        "x": 63,
+        "y": 40
+      }
+    },
+    {
+      "id": "fort_south",
+      "kind": "fort",
+      "name": "Fort de Sar-e Pul",
+      "pos": {
+        "x": 48,
+        "y": 63
+      }
+    },
+    {
+      "id": "kuchi_west",
+      "kind": "kuchi",
+      "name": "Campement kuchi de Dasht-e Margo",
+      "pos": {
+        "x": 36,
+        "y": 44
+      }
+    },
+    {
+      "id": "kuchi_east",
+      "kind": "kuchi",
+      "name": "Campement kuchi de Regestan",
+      "pos": {
+        "x": 76,
+        "y": 64
+      }
+    },
+    {
+      "id": "pass_gardan",
+      "kind": "pass",
+      "name": "Col de Gardan",
+      "pos": {
+        "x": 70,
+        "y": 28.5
+      }
+    },
+    {
+      "id": "quarry_sang",
+      "kind": "quarry",
+      "name": "Carrière de Sang-e Surkh",
+      "pos": {
+        "x": 42,
+        "y": 37
+      }
+    },
+    {
+      "id": "well_dasht",
+      "kind": "well",
+      "name": "Puits de Chah-e Ab",
+      "pos": {
+        "x": 57,
+        "y": 65
+      }
+    },
+    {
+      "id": "relay_tower",
+      "kind": "relay",
+      "name": "Relais de Tepa-ye Bad",
+      "pos": {
+        "x": 68,
+        "y": 47
+      }
+    },
+    {
+      "id": "ruins_old",
+      "kind": "ruins",
+      "name": "Ruines de Shahr-e Gholghola",
+      "pos": {
+        "x": 39,
+        "y": 50
+      }
+    },
+    {
+      "id": "poppy_fields",
+      "kind": "poppy",
+      "name": "Champs de Dehqan",
+      "pos": {
+        "x": 54,
+        "y": 53.5
+      }
+    },
+    {
+      "id": "smuggler_trail",
+      "kind": "smugglers",
+      "name": "Piste des passeurs",
+      "pos": {
+        "x": 87,
+        "y": 55
+      }
+    },
+    {
+      "id": "hamlet_tangi",
+      "kind": "hamlet",
+      "name": "Hameau de Tangi",
+      "pos": {
+        "x": 75,
+        "y": 38
+      }
+    },
+    {
+      "id": "shrine_pir",
+      "kind": "shrine",
+      "name": "Ziarat de Pir Baba",
+      "pos": {
+        "x": 44,
+        "y": 43
+      }
+    },
+    {
+      "id": "hamlet_kaftar",
+      "kind": "hamlet",
+      "name": "Hameau de Kaftar Khana",
+      "pos": {
+        "x": 61,
+        "y": 48.5
+      }
+    },
+    {
+      "id": "caves_spin",
+      "kind": "caves",
+      "name": "Grottes du Spin Ghar",
+      "pos": {
+        "x": 92,
+        "y": 6
+      }
+    },
+    {
+      "id": "fort_border",
+      "kind": "fort",
+      "name": "Fort frontalier de Chaman",
+      "pos": {
+        "x": 116,
+        "y": 52
+      }
+    },
+    {
+      "id": "kuchi_regestan",
+      "kind": "kuchi",
+      "name": "Kuchis du Regestan",
+      "pos": {
+        "x": 44,
+        "y": 86
+      }
+    },
+    {
+      "id": "pass_baba",
+      "kind": "pass",
+      "name": "Col de Baba Wali",
+      "pos": {
+        "x": 16,
+        "y": 18
+      }
+    },
+    {
+      "id": "quarry_west",
+      "kind": "quarry",
+      "name": "Mine de lapis abandonnée",
+      "pos": {
+        "x": 4,
+        "y": 40
+      }
+    },
+    {
+      "id": "well_regestan",
+      "kind": "well",
+      "name": "Puits de Chah-e Mir",
+      "pos": {
+        "x": 88,
+        "y": 82
+      }
+    },
+    {
+      "id": "smugglers_border",
+      "kind": "smugglers",
+      "name": "Piste de la frontière",
+      "pos": {
+        "x": 118,
+        "y": 84
+      }
+    },
+    {
+      "id": "shrine_north",
+      "kind": "shrine",
+      "name": "Ziarat de Sheikh Ali",
+      "pos": {
+        "x": 76,
+        "y": 12
+      }
+    },
+    {
+      "id": "ruins_arghandab",
+      "kind": "ruins",
+      "name": "Ruines de Mundigak",
+      "pos": {
+        "x": 73.0,
+        "y": 54.0
+      }
+    },
+    {
+      "id": "hamlet_dand",
+      "kind": "hamlet",
+      "name": "Hameau de Dand",
+      "pos": {
+        "x": 92,
+        "y": 50
+      }
+    },
+    {
+      "id": "relay_north",
+      "kind": "relay",
+      "name": "Relais de Ghar Tepa",
+      "pos": {
+        "x": 108,
+        "y": 22
+      }
+    },
+    {
+      "id": "poppy_arghandab",
+      "kind": "poppy",
+      "name": "Champs de l'Arghandab",
+      "pos": {
+        "x": 78.5,
+        "y": 61.0
+      }
+    }
+  ],
+  "world": {
+    "_doc": "Monde vivant : patrouilles des forces afghanes (depuis les unités alliées) et circulation civile entre villages, lieux et bourgs. Leurs rencontres avec l'ennemi changent l'emprise insurgée, l'attitude des villages et la stabilité, et renseignent la base.",
+    "allied": {
+      "army": {
+        "label": "Patrouille de l'armée afghane",
+        "speedKmh": 12,
+        "power": 0.6,
+        "patrolKm": 16,
+        "restHours": [
+          2,
+          6
+        ],
+        "spawnChancePerHour": 0.06,
+        "indef": "une patrouille de l'armée afghane"
+      },
+      "police": {
+        "label": "Patrouille de police",
+        "speedKmh": 10,
+        "power": 0.35,
+        "patrolKm": 10,
+        "restHours": [
+          1,
+          4
+        ],
+        "spawnChancePerHour": 0.05,
+        "indef": "une patrouille de police"
+      }
+    },
+    "civilians": {
+      "max": 10,
+      "spawnChancePerHour": 0.45,
+      "kinds": {
+        "merchant": {
+          "label": "Camion de marchand",
+          "speedKmh": 18,
+          "weight": 3,
+          "indef": "un camion de marchand"
+        },
+        "shepherds": {
+          "label": "Bergers et troupeau",
+          "speedKmh": 2,
+          "weight": 2,
+          "indef": "des bergers et leur troupeau"
+        },
+        "pilgrims": {
+          "label": "Pèlerins",
+          "speedKmh": 3.5,
+          "weight": 1,
+          "indef": "des pèlerins"
+        },
+        "family": {
+          "label": "Famille en route vers le bazar",
+          "speedKmh": 4,
+          "weight": 2,
+          "indef": "une famille en route vers le bazar"
+        },
+        "aid": {
+          "label": "Convoi humanitaire",
+          "speedKmh": 15,
+          "weight": 1,
+          "indef": "un convoi humanitaire"
+        }
+      }
+    },
+    "encounterKm": 1.5,
+    "intelKm": 3,
+    "incidentHours": 36,
+    "visibleKm": 12
   }
 }

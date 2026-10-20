@@ -40,8 +40,8 @@ describe('IntelSystem — carte tactique et renseignement', () => {
   it('un village favorable renseigne sur les groupes proches', () => {
     const ctx = makeGame();
     ctx.state.region.villages.sangar.attitude = 80;
-    const c = ctx.state.region.contacts.mortar_hills; // à ~9 km de Sangar : on le rapproche
-    c.truePos = { x: 22, y: 21 };
+    const c = ctx.state.region.contacts.cache_karez; // cache immobile, rapprochée de Sangar
+    c.truePos = { x: 52, y: 44 };
     ctx.random = () => 0.01;
     stepTicks(ctx, 18 * 60 + 1);
     expect(c.known).toBe(true);
@@ -66,13 +66,21 @@ describe('IntelSystem — carte tactique et renseignement', () => {
     expect(ctx.sim.intel.knownContacts().length).toBe(known + 1);
   });
 
-  it('après une attaque, le groupe le plus proche est localisé approximativement', () => {
+  it('après une attaque, l’équipe qui a tiré est localisée à sa position de tir, puis décroche', () => {
     const ctx = makeGame(undefined, { agents: true });
+    const mortar = ctx.state.region.contacts.mortar_hills;
+    const fob = ctx.site.regionPos;
+    const firing = { x: fob.x + 4.5, y: fob.y };
+    mortar.truePos = { ...firing };
+    mortar.task = { type: 'firing', dest: { ...firing }, arrived: true, until: ctx.state.time.tick + 600 };
+    expect(ctx.sim.world.inPosition('mortar')?.id).toBe('mortar_hills');
     ctx.sim.attacks.start('mortar', 'shelter');
     ctx.state.combat.shellsLeft = 0;
     ctx.sim.step();
     expect(ctx.state.combat.active).toBe(false);
-    expect(ctx.sim.intel.knownContacts().some((c) => c.source === 'attack')).toBe(true);
+    expect(mortar.source).toBe('attack');
+    expect(Math.hypot(mortar.estPos.x - firing.x, mortar.estPos.y - firing.y)).toBeLessThan(2);
+    expect(mortar.task?.type).toBe('hide'); // tir puis déplacement
   });
 
   it('cote de fiabilité A à F', () => {

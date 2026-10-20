@@ -810,7 +810,7 @@ export interface MissionTypeDef {
   id: string;
   name: string;
   desc: string;
-  targets: ('contact' | 'village' | 'fob')[];
+  targets: ('contact' | 'village' | 'fob' | 'sector' | 'site')[];
   contactKinds?: string[];
   requires?: { leader?: boolean; routine?: string; sf?: number };
   minMembers: number;
@@ -900,6 +900,10 @@ export interface RadioEffects {
   morale?: number;
   /** Expérience gagnée par chaque membre. */
   xp?: number;
+  /** Pertes infligées au groupe ennemi concerné (0..1 de ses effectifs ; détruit à zéro). */
+  enemyDamage?: number;
+  /** Position du groupe ennemi concerné transmise au TOC avec cette fiabilité. */
+  revealEnemy?: number;
   cost?: ResourceBag;
   resources?: ResourceBag;
   reputation?: number;
@@ -919,7 +923,7 @@ export interface RadioConditions {
   heli?: boolean;
   /** Unité à pied (ni véhicule ni hélicoptère). */
   onFoot?: boolean;
-  targetKind?: ('contact' | 'village' | 'fob')[];
+  targetKind?: ('contact' | 'village' | 'fob' | 'sector' | 'site')[];
   minTeam?: number;
   /** Au moins un membre de l'un de ces types (medic, sf, cia, auxiliary…). */
   hasType?: string[];
@@ -928,6 +932,9 @@ export interface RadioConditions {
   /** Attitude du village visé (ou du plus proche). */
   attitudeBelow?: number;
   attitudeAbove?: number;
+  /** Un vrai groupe ennemi (de ces types) se trouve à moins de tant de km de l'unité. */
+  enemyNearKm?: number;
+  enemyKinds?: string[];
 }
 
 /** Ordre possible seulement si l'unité en a les moyens. */
@@ -1015,6 +1022,61 @@ export interface ContactKindDef {
   echelon: string;
   /** Difficulté ajoutée pour les missions visant ce type de contact. */
   strength: number;
+  /** Ce qu'une unité voit de ce groupe (textes des rencontres). */
+  sightings?: string[];
+}
+
+/** Lieu d'intérêt de la carte (grottes, fort, campement nomade…). */
+export interface SiteKindDef {
+  label: string;
+  code: string;
+  hideout?: boolean;
+  desc: string;
+  visit: { revealKm?: number; cacheChance?: number; ammo?: [number, number]; attitude?: number; influence?: number; clearIedKm?: number };
+}
+
+export interface MapSiteDef {
+  id: string;
+  kind: string;
+  name: string;
+  pos: Km;
+}
+
+/** Comportement des groupes ennemis mobiles et des rencontres. */
+export interface BehaviourDef {
+  cell: { speedKmh: number; rangeKm: number; restHours: [number, number]; approachChance: number; approachKm: [number, number]; approachHours: [number, number] };
+  mortar: { speedKmh: number; rangeKm: number; firingKm: [number, number]; firingHours: [number, number]; hideHours: [number, number] };
+  ied: { speedKmh: number; rangeKm: number; roadKm: number; plantHours: number; hideHours: [number, number]; iedLifeHours: number; maxIeds: number };
+  encounter: {
+    footKm: number;
+    motorizedKm: number;
+    iedKm: number;
+    checkEveryMin: number;
+    ourBase: number;
+    theirBase: number;
+    nightPenalty: number;
+    enemyNightPenalty: number;
+    motorizedExposure: number;
+    heliExposure: number;
+    knownBonus: number;
+    sweepBonus: number;
+    gear: Record<string, { night?: number; day?: number }>;
+    ambushCasualty: number;
+    spottedSuccess: number;
+    iedFindBase: number;
+    targetMovedKm: number;
+    targetMovedSuccess: number;
+  };
+}
+
+/** Acteurs du monde : patrouilles alliées et circulation civile. */
+export interface WorldDef {
+  allied: Record<string, { label: string; indef?: string; speedKmh: number; power: number; patrolKm: number; restHours: [number, number]; spawnChancePerHour: number }>;
+  civilians: { max: number; spawnChancePerHour: number; kinds: Record<string, { label: string; indef?: string; speedKmh: number; weight: number }> };
+  encounterKm: number;
+  intelKm: number;
+  incidentHours: number;
+  visibleKm: number;
 }
 
 export interface VillageDef {
@@ -1106,6 +1168,10 @@ export interface RegionDef {
   friendlyUnits: FriendlyUnitDef[];
   contacts: ContactDef[];
   intel: IntelConfig;
+  behaviour: BehaviourDef;
+  siteKinds: Record<string, SiteKindDef>;
+  sites: MapSiteDef[];
+  world: WorldDef;
 }
 
 // ---------------------------------------------------------------- Événements (Phase 4)
@@ -1146,6 +1212,10 @@ export interface EventConditions {
   hours?: [number, number];
   /** Un auxiliaire infiltré est présent dans la base. */
   infiltrator?: boolean;
+  /** Un groupe ennemi de ce type est arrivé en position près de la FOB (mortier en batterie…). */
+  enemyInPosition?: string;
+  /** Un engin explosif a été posé à moins de tant de km de la FOB. */
+  iedNearKm?: number;
 }
 
 export interface EventEffects {

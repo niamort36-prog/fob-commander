@@ -145,11 +145,59 @@
       }
     },
     {
+      "id": "sector_patrol",
+      "name": "Patrouille de secteur",
+      "desc": "Ratisser un secteur ou un lieu à la recherche des forces ennemies, de caches et d'engins explosifs. Les groupes rencontrés sont détectés plus facilement.",
+      "targets": [
+        "sector",
+        "site"
+      ],
+      "minMembers": 4,
+      "maxMembers": 12,
+      "objectiveHours": 4,
+      "difficulty": 0.22,
+      "risk": 0.08,
+      "skills": {
+        "stealth": 0.3,
+        "shooting": 0.3,
+        "radio": 0.2,
+        "leadership": 0.2
+      },
+      "rewards": {
+        "success": {
+          "funds": 500,
+          "reputation": 1,
+          "revealRadiusKm": 4,
+          "enemyKilled": [
+            0,
+            2
+          ]
+        },
+        "partial": {
+          "funds": 200,
+          "revealRadiusKm": 2.5
+        },
+        "failure": {
+          "reputation": -1
+        }
+      },
+      "texts": {
+        "success": "Le secteur a été ratissé méthodiquement : traces, témoignages et positions ennemies relevés.",
+        "partial": "Le ratissage a été écourté, quelques indices seulement.",
+        "failure": "Le ratissage n'a rien donné."
+      },
+      "specialistBonus": {
+        "auxiliary": 0.05,
+        "sf": 0.05
+      }
+    },
+    {
       "id": "recon",
       "name": "Reconnaissance",
       "desc": "Observer discrètement un objectif pour confirmer sa position et sa nature.",
       "targets": [
-        "contact"
+        "contact",
+        "site"
       ],
       "minMembers": 2,
       "maxMembers": 6,

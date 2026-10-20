@@ -6,6 +6,8 @@ export const mapLayers = {
   villages: true,
   personalities: true,
   coverage: true,
+  sites: true,
+  world: true,
 };
 
 export type MapLayer = keyof typeof mapLayers;

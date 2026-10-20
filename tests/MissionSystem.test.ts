@@ -122,7 +122,7 @@ describe('MissionSystem — déroulement', () => {
     const ctx = makeGame(undefined, { agents: true });
     const c = ctx.state.region.contacts.rasoul_hq;
     c.reliability = 0.4;
-    const hidden = ctx.state.region.contacts.mortar_hills;
+    const hidden = ctx.state.region.contacts.cache_karez; // cache immobile, placée près de l'objectif
     hidden.truePos = { x: c.truePos.x + 1, y: c.truePos.y };
     const m = launchQuiet(ctx, plan(ctx, 'recon', contactTarget(ctx, 'rasoul_hq'), 4));
     ctx.random = () => 0.01;

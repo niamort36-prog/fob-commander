@@ -21,7 +21,10 @@ export type MapSelection =
   | { kind: 'personality'; id: string }
   | { kind: 'friendly'; id: string }
   | { kind: 'fob' }
-  | { kind: 'mission'; id: string };
+  | { kind: 'mission'; id: string }
+  | { kind: 'site'; id: string }
+  | { kind: 'sector'; x: number; y: number }
+  | { kind: 'actor'; id: string };
 
 export type SupplyRejection = 'requires' | 'capacity' | 'passengers' | 'funds' | 'limit' | 'locked' | 'empty' | 'unknown' | 'vehicles' | 'pad';
 

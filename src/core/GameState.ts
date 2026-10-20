@@ -10,7 +10,7 @@ import type { ContentRegistry } from './ContentRegistry';
 import { carveTrack, entryCell, generateTerrain } from '../utils/terrainGen';
 
 /** Version du format de sauvegarde (incrémenter + ajouter une migration dans SaveSystem en cas de changement). */
-export const SAVE_VERSION = 12;
+export const SAVE_VERSION = 13;
 
 export type Id = string;
 
@@ -326,7 +326,7 @@ export interface VillageState {
   influence: number; // emprise insurgée 0..100
 }
 
-export type IntelSource = 'initial' | 'observation' | 'village' | 'analysis' | 'attack' | 'event' | 'cia' | 'mission';
+export type IntelSource = 'initial' | 'observation' | 'village' | 'analysis' | 'attack' | 'event' | 'cia' | 'mission' | 'allied';
 
 /** Contact ennemi : position réelle (cachée) et ce que la base en sait. */
 export interface ContactState {
@@ -340,6 +340,49 @@ export interface ContactState {
   source: IntelSource;
   /** Groupe apparu en cours de partie (réaction de l'insurrection) : sa définition. */
   dyn?: { kind: string; label: string; drift: number; home: KmPos };
+  /** Effectifs restants (1 = complet, détruit à 0). */
+  strength?: number;
+  /** Ce que fait le groupe : se déplacer vers un but, y rester jusqu'à une date. */
+  task?: EnemyTask;
+}
+
+export interface EnemyTask {
+  type: 'patrol' | 'rest' | 'approach' | 'firing' | 'hide' | 'plant';
+  dest: KmPos;
+  arrived: boolean;
+  until: number;
+}
+
+/** Acteur du monde : patrouille alliée ou civils en déplacement. */
+export interface WorldActor {
+  id: string;
+  side: 'allied' | 'civilian';
+  kind: string;
+  label: string;
+  pos: KmPos;
+  dest: KmPos;
+  /** Unité ou village d'origine (retour), destination nommée. */
+  home: KmPos;
+  destName: string;
+  phase: 'out' | 'stay' | 'back';
+  until: number;
+  strength: number;
+}
+
+/** Engin explosif posé sur une route par une cellule IED. */
+export interface PlantedIed {
+  id: string;
+  pos: KmPos;
+  tick: number;
+  by: string;
+}
+
+/** Fait marquant du monde affiché quelque temps sur la carte. */
+export interface WorldIncident {
+  pos: KmPos;
+  tick: number;
+  text: string;
+  tone: 'good' | 'bad' | 'info';
 }
 
 export interface PersonalityState {
@@ -355,10 +398,15 @@ export interface RegionState {
   stability: number;
   /** Heures-officier passées au TOC aujourd'hui (analyse du renseignement). */
   tocHoursToday: number;
+  /** Monde vivant : patrouilles alliées, civils, engins posés, faits marquants, lieux visités. */
+  actors?: Record<string, WorldActor>;
+  ieds?: PlantedIed[];
+  incidents?: WorldIncident[];
+  sitesVisited?: Record<string, number>;
 }
 
 export function emptyRegion(): RegionState {
-  return { initialized: false, villages: {}, contacts: {}, personalities: {}, stability: 50, tocHoursToday: 0 };
+  return { initialized: false, villages: {}, contacts: {}, personalities: {}, stability: 50, tocHoursToday: 0, actors: {}, ieds: [], incidents: [], sitesVisited: {} };
 }
 
 // ---------------------------------------------------------------- Visites physiques
@@ -487,7 +535,7 @@ export function emptyDiplomacy(): DiplomacyState {
 
 export type MissionPhase = 'assembling' | 'outbound' | 'objective' | 'inbound' | 'returning' | 'done';
 export type MissionResult = 'success' | 'partial' | 'failure';
-export type MissionTargetKind = 'contact' | 'village' | 'fob';
+export type MissionTargetKind = 'contact' | 'village' | 'fob' | 'sector' | 'site';
 
 export interface MissionTarget {
   kind: MissionTargetKind;
@@ -517,6 +565,10 @@ export interface MissionInstance {
   radioLog: { tick: number; text: string }[];
   /** Messages radio déjà reçus (pas deux fois la même situation). */
   radioUsed?: string[];
+  /** Groupes ennemis et engins déjà rencontrés pendant la mission. */
+  encountered?: string[];
+  /** L'ennemi visé n'était plus sur l'objectif à l'arrivée. */
+  targetMoved?: boolean;
   result: MissionResult | null;
   aborted: boolean;
   casualties: { kia: string[]; wounded: string[] };
@@ -565,7 +617,7 @@ export interface PendingRadio {
 
 export interface RadioState {
   pending: PendingRadio | null;
-  queue: { missionId: Id; radioId: string }[];
+  queue: { missionId: Id; radioId: string; contactId?: string }[];
 }
 
 // ---------------------------------------------------------------- Racine

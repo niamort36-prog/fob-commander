@@ -74,10 +74,11 @@
         "village_security",
         "special_op",
         "recon",
-        "convoy_escort"
+        "convoy_escort",
+        "sector_patrol"
       ],
       "weight": 10,
-      "text": "TOC, ici {callsign}. Troupes au contact ! Tirs nourris venant {terrain}, {dir} de {target}. {n} combattants, {weapon} repéré. Demandons instructions, à vous.",
+      "text": "TOC, ici {callsign}. Troupes au contact ! Tirs nourris venant {terrain}, {dir}, à {dist}. {n} combattants, {weapon} repéré. Probablement {enemy}, à vous.",
       "choices": [
         {
           "id": "withdraw",
@@ -103,7 +104,8 @@
               "effects": {
                 "success": 0.08,
                 "casualty": 0.15,
-                "xp": 2
+                "xp": 2,
+                "enemyDamage": 0.15
               }
             },
             {
@@ -126,7 +128,8 @@
             "cost": {
               "funds": 3000
             },
-            "collateral": 0.15
+            "collateral": 0.15,
+            "enemyDamage": 0.5
           },
           "log": "Accrochage — appui aérien engagé."
         },
@@ -144,7 +147,8 @@
               "effects": {
                 "success": 0.15,
                 "casualty": 0.2,
-                "xp": 3
+                "xp": 3,
+                "enemyDamage": 0.4
               },
               "followUp": {
                 "radio": "ambush_followup",
@@ -169,7 +173,8 @@
           "effects": {
             "success": 0.15,
             "casualty": -0.25,
-            "collateral": 0.08
+            "collateral": 0.08,
+            "enemyDamage": 0.5
           },
           "log": "Accrochage — tir de contre-batterie sur les insurgés.",
           "requires": {
@@ -183,7 +188,8 @@
           "text": "Apache en approche, guidez-le sur l'objectif.",
           "effects": {
             "success": 0.18,
-            "casualty": -0.35
+            "casualty": -0.35,
+            "enemyDamage": 0.6
           },
           "log": "Accrochage — l'hélicoptère d'attaque traite la position.",
           "requires": {
@@ -192,7 +198,10 @@
             ]
           }
         }
-      ]
+      ],
+      "when": {
+        "enemyNearKm": 3
+      }
     },
     {
       "id": "sniper",
@@ -207,7 +216,8 @@
         "village_security",
         "special_op",
         "recon",
-        "convoy_escort"
+        "convoy_escort",
+        "sector_patrol"
       ],
       "weight": 6,
       "text": "TOC, {callsign}. Tireur isolé ! Un coup unique depuis {terrain}, {dir}. Personne de touché pour l'instant mais on est cloués, à vous.",
@@ -237,7 +247,8 @@
               "log": "Tireur isolé — repéré et neutralisé.",
               "effects": {
                 "success": 0.06,
-                "xp": 3
+                "xp": 3,
+                "enemyDamage": 0.2
               }
             },
             {
@@ -266,7 +277,8 @@
                 "success": 0.05,
                 "resources": {
                   "ammo": 10
-                }
+                },
+                "enemyDamage": 0.15
               }
             },
             {
@@ -293,14 +305,18 @@
           "text": "Passez en thermique, il ne peut pas se cacher.",
           "effects": {
             "success": 0.08,
-            "xp": 2
+            "xp": 2,
+            "enemyDamage": 0.25
           },
           "log": "Tireur isolé — repéré à la caméra thermique, neutralisé.",
           "requires": {
             "gear": "thermal"
           }
         }
-      ]
+      ],
+      "when": {
+        "enemyNearKm": 3
+      }
     },
     {
       "id": "ambush_convoy",
@@ -316,7 +332,8 @@
         "recon",
         "convoy_escort",
         "meet_leader",
-        "intel"
+        "intel",
+        "sector_patrol"
       ],
       "weight": 7,
       "text": "TOC, {callsign}. Embuscade ! Le véhicule de tête a pris une roquette près {terrain}, on reçoit des tirs des deux côtés, à vous !",
@@ -362,7 +379,8 @@
               "effects": {
                 "success": 0.1,
                 "casualty": 0.2,
-                "xp": 3
+                "xp": 3,
+                "enemyDamage": 0.35
               }
             },
             {
@@ -384,7 +402,8 @@
             "cost": {
               "funds": 3000
             },
-            "collateral": 0.1
+            "collateral": 0.1,
+            "enemyDamage": 0.45
           },
           "log": "Embuscade — appui aérien, les tireurs décrochent."
         },
@@ -399,7 +418,13 @@
           "log": "Embuscade — l'unité fait demi-tour."
         }
       ],
-      "requiresVehicles": true
+      "requiresVehicles": true,
+      "when": {
+        "enemyNearKm": 3,
+        "enemyKinds": [
+          "cell"
+        ]
+      }
     },
     {
       "id": "rpg_heli",
@@ -414,7 +439,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 5,
       "text": "TOC, {callsign}. Départ de RPG vers l'hélico à l'approche de la zone de poser ! Le pilote demande s'il doit se poser ou dégager, à vous.",
@@ -464,7 +490,11 @@
         }
       ],
       "when": {
-        "heli": true
+        "heli": true,
+        "enemyNearKm": 4,
+        "enemyKinds": [
+          "cell"
+        ]
       }
     },
     {
@@ -475,10 +505,11 @@
       "types": [
         "village_security",
         "patrol",
-        "raid"
+        "raid",
+        "sector_patrol"
       ],
       "weight": 4,
-      "text": "TOC, {callsign}. On prend des obus de mortier, ça tombe à cinquante mètres. Le départ semble venir {dir}, à vous.",
+      "text": "TOC, {callsign}. On prend des obus de mortier, ça tombe à cinquante mètres. Le départ vient {dir}, environ {dist}, à vous.",
       "choices": [
         {
           "id": "scatter",
@@ -494,7 +525,8 @@
           "text": "Contre-batterie demandée sur la zone de départ.",
           "effects": {
             "success": 0.08,
-            "casualty": -0.2
+            "casualty": -0.2,
+            "enemyDamage": 0.7
           },
           "log": "Tirs de mortier — la batterie de la base réduit le mortier au silence.",
           "requires": {
@@ -517,7 +549,8 @@
               "effects": {
                 "success": 0.12,
                 "reveal": "nearest",
-                "xp": 3
+                "xp": 3,
+                "enemyDamage": 0.6
               }
             },
             {
@@ -540,7 +573,13 @@
           },
           "log": "Tirs de mortier — repli."
         }
-      ]
+      ],
+      "when": {
+        "enemyNearKm": 7,
+        "enemyKinds": [
+          "mortar"
+        ]
+      }
     },
     {
       "id": "enemy_reinforcements",
@@ -595,7 +634,8 @@
               "effects": {
                 "success": 0.12,
                 "casualty": 0.2,
-                "xp": 3
+                "xp": 3,
+                "enemyDamage": 0.45
               }
             },
             {
@@ -616,7 +656,8 @@
             "cost": {
               "funds": 3000
             },
-            "collateral": 0.1
+            "collateral": 0.1,
+            "enemyDamage": 0.5
           },
           "log": "Renforts ennemis — la colonne est traitée par l'aviation."
         },
@@ -625,7 +666,8 @@
           "text": "L'A-10 en alerte s'en occupe, signalez la cible.",
           "effects": {
             "success": 0.2,
-            "casualty": -0.2
+            "casualty": -0.2,
+            "enemyDamage": 0.65
           },
           "log": "Renforts ennemis — passe canon de l'A-10 sur la colonne.",
           "requires": {
@@ -645,7 +687,13 @@
           },
           "log": "Renforts ennemis — décrochage avant l'arrivée de l'ennemi."
         }
-      ]
+      ],
+      "when": {
+        "enemyNearKm": 6,
+        "enemyKinds": [
+          "cell"
+        ]
+      }
     },
     {
       "id": "more_enemies",
@@ -674,7 +722,8 @@
               "effects": {
                 "success": 0.15,
                 "casualty": 0.45,
-                "xp": 4
+                "xp": 4,
+                "enemyDamage": 0.6
               }
             },
             {
@@ -707,7 +756,8 @@
             "cost": {
               "funds": 3000
             },
-            "collateral": 0.2
+            "collateral": 0.2,
+            "enemyDamage": 0.6
           },
           "log": "Effectifs ennemis supérieurs — frappe aérienne puis assaut."
         },
@@ -720,7 +770,8 @@
           },
           "log": "Effectifs ennemis supérieurs — mission annulée."
         }
-      ]
+      ],
+      "when": {}
     },
     {
       "id": "ied_route",
@@ -735,7 +786,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 7,
       "text": "TOC, {callsign}. Objet suspect sur l'itinéraire près {terrain}, fil apparent sous la terre. Possible engin explosif, à vous.",
@@ -799,7 +851,8 @@
           },
           "log": "Engin balisé et signalé, itinéraire de rechange."
         }
-      ]
+      ],
+      "followUpOnly": true
     },
     {
       "id": "ied_hit",
@@ -815,7 +868,8 @@
         "recon",
         "convoy_escort",
         "meet_leader",
-        "intel"
+        "intel",
+        "sector_patrol"
       ],
       "weight": 4,
       "text": "TOC, {callsign}. Explosion sous le véhicule de tête ! Le blindage a tenu, deux blessés légers, véhicule immobilisé, à vous.",
@@ -869,7 +923,8 @@
           "log": "Engin explosif — retour à la base."
         }
       ],
-      "requiresVehicles": true
+      "requiresVehicles": true,
+      "followUpOnly": true
     },
     {
       "id": "checkpoint",
@@ -885,7 +940,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 5,
       "text": "TOC, {callsign}. Barrage sur la route près de {landmark} : des hommes armés en tenue disparate se disent « police locale ». Ils demandent un « droit de passage », à vous.",
@@ -972,7 +1028,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 3,
       "text": "TOC, {callsign}. Le pont sur l'oued est effondré, la crue l'a emporté. Gué possible un kilomètre plus loin, courant fort, à vous.",
@@ -1034,7 +1091,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 4,
       "text": "TOC, {callsign}. Panne sur un véhicule, durite du radiateur percée. On est arrêtés en terrain découvert, à vous.",
@@ -1103,7 +1161,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 6,
       "text": "TOC, {callsign}. Un blessé grave, éclat à la cuisse, il perd beaucoup de sang. Demandons évacuation sanitaire, à vous.",
@@ -1200,7 +1259,8 @@
         "patrol",
         "recon",
         "village_security",
-        "convoy_escort"
+        "convoy_escort",
+        "sector_patrol"
       ],
       "weight": 4,
       "text": "TOC, {callsign}. Cinquante degrés à l'ombre, deux gars font un coup de chaleur, l'un vomit. On a bu presque toute l'eau, à vous.",
@@ -1267,7 +1327,8 @@
         "patrol",
         "village_security",
         "meet_leader",
-        "intel"
+        "intel",
+        "sector_patrol"
       ],
       "weight": 5,
       "text": "TOC, {callsign}. Un gamin du village a marché sur une vieille mine près {terrain}. Sa famille nous supplie de l'aider, à vous.",
@@ -1352,7 +1413,8 @@
         "patrol",
         "village_security",
         "meet_leader",
-        "intel"
+        "intel",
+        "sector_patrol"
       ],
       "weight": 6,
       "text": "TOC, {callsign}. Une foule se rassemble autour de nous à {village}, le ton monte. Un ancien demande à parler à notre chef, à vous.",
@@ -1424,7 +1486,8 @@
         "village_security",
         "meet_leader",
         "intel",
-        "raid"
+        "raid",
+        "sector_patrol"
       ],
       "weight": 6,
       "text": "TOC, {callsign}. Accueil glacial à {village} : volets fermés, enfants rappelés, pas un homme en vue. On sent qu'on nous observe depuis les toits, à vous.",
@@ -1517,7 +1580,8 @@
         "patrol",
         "village_security",
         "meet_leader",
-        "intel"
+        "intel",
+        "sector_patrol"
       ],
       "weight": 5,
       "text": "TOC, {callsign}. À {village}, on nous offre le thé. Le chef de village dit que des étrangers armés sont passés il y a deux nuits, à vous.",
@@ -1591,7 +1655,8 @@
         "village_security",
         "meet_leader",
         "intel",
-        "patrol"
+        "patrol",
+        "sector_patrol"
       ],
       "weight": 3,
       "text": "TOC, {callsign}. Un mariage à {village} : coups de feu en l'air, musique, cortège sur la route. Ils nous font signe de les rejoindre, à vous.",
@@ -1634,7 +1699,8 @@
         "patrol",
         "village_security",
         "meet_leader",
-        "intel"
+        "intel",
+        "sector_patrol"
       ],
       "weight": 4,
       "text": "TOC, {callsign}. Deux familles de {village} se disputent un droit d'eau sur le karez, les fusils sont sortis. Ils veulent qu'on tranche, à vous.",
@@ -1697,7 +1763,8 @@
         "patrol",
         "village_security",
         "meet_leader",
-        "intel"
+        "intel",
+        "sector_patrol"
       ],
       "weight": 5,
       "text": "TOC, {callsign}. Un homme nous aborde discrètement derrière {landmark}. Il dit savoir où se cachent les combattants mais veut être payé, à vous.",
@@ -1778,7 +1845,8 @@
         "village_security",
         "meet_leader",
         "intel",
-        "patrol"
+        "patrol",
+        "sector_patrol"
       ],
       "weight": 3,
       "text": "TOC, {callsign}. Une nuée d'enfants nous suit en réclamant des stylos et des bonbons. Ça ralentit la progression, à vous.",
@@ -1953,7 +2021,8 @@
             ]
           }
         }
-      ]
+      ],
+      "followUpOnly": true
     },
     {
       "id": "cache_found",
@@ -1964,7 +2033,8 @@
         "patrol",
         "raid",
         "recon",
-        "village_security"
+        "village_security",
+        "sector_patrol"
       ],
       "weight": 5,
       "text": "TOC, {callsign}. On a trouvé une cache sous le sol d'une étable : obus, détonateurs, {weapon}. À vous.",
@@ -2131,7 +2201,8 @@
                 "success": 0.25,
                 "reveal": "nearest",
                 "reputation": 3,
-                "xp": 5
+                "xp": 5,
+                "enemyDamage": 0.6
               }
             },
             {
@@ -2163,7 +2234,8 @@
             "cost": {
               "funds": 3000
             },
-            "collateral": 0.25
+            "collateral": 0.25,
+            "enemyDamage": 0.6
           },
           "log": "Cible de haute valeur — frappe aérienne."
         },
@@ -2173,7 +2245,8 @@
           "effects": {
             "success": 0.3,
             "reputation": 3,
-            "xp": 4
+            "xp": 4,
+            "enemyDamage": 0.7
           },
           "log": "Cible de haute valeur — interception éclair des forces spéciales.",
           "requires": {
@@ -2183,7 +2256,14 @@
             ]
           }
         }
-      ]
+      ],
+      "when": {
+        "enemyNearKm": 3,
+        "enemyKinds": [
+          "hq",
+          "cell"
+        ]
+      }
     },
     {
       "id": "prisoner",
@@ -2195,7 +2275,8 @@
         "raid",
         "special_op",
         "patrol",
-        "village_security"
+        "village_security",
+        "sector_patrol"
       ],
       "weight": 4,
       "text": "TOC, {callsign}. Un combattant blessé s'est rendu. Il parle un peu, il a peur. On l'embarque ? À vous.",
@@ -2230,7 +2311,10 @@
           },
           "log": "Prisonnier remis aux anciens, geste remarqué."
         }
-      ]
+      ],
+      "when": {
+        "enemyNearKm": 4
+      }
     },
     {
       "id": "observation_post",
@@ -2360,7 +2444,10 @@
           },
           "log": "Repérés — mission annulée."
         }
-      ]
+      ],
+      "when": {
+        "enemyNearKm": 4
+      }
     },
     {
       "id": "drone_feed",
@@ -2411,7 +2498,8 @@
             "cost": {
               "funds": 3000
             },
-            "collateral": 0.1
+            "collateral": 0.1,
+            "enemyDamage": 0.5
           },
           "log": "Drone — frappe préventive sur les positions ennemies."
         },
@@ -2444,7 +2532,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 4,
       "text": "TOC, {callsign}. La nuit tombe plus vite que prévu, encore deux heures de route. Visibilité qui baisse, à vous.",
@@ -2506,7 +2595,8 @@
         "village_security",
         "special_op",
         "recon",
-        "convoy_escort"
+        "convoy_escort",
+        "sector_patrol"
       ],
       "weight": 4,
       "text": "TOC, {callsign}. Mouvement dans la nuit {dir}, lampes torches éteintes, des hommes progressent vers nous, à vous.",
@@ -2528,7 +2618,8 @@
               "effects": {
                 "success": 0.15,
                 "xp": 3,
-                "casualty": 0.1
+                "casualty": 0.1,
+                "enemyDamage": 0.6
               }
             },
             {
@@ -2563,7 +2654,8 @@
           "text": "Le gunship confirme et traite.",
           "effects": {
             "success": 0.15,
-            "casualty": -0.3
+            "casualty": -0.3,
+            "enemyDamage": 0.7
           },
           "log": "Contact de nuit — l'AC-130 identifie et neutralise le groupe armé.",
           "requires": {
@@ -2574,7 +2666,8 @@
         }
       ],
       "when": {
-        "night": true
+        "night": true,
+        "enemyNearKm": 3
       }
     },
     {
@@ -2592,7 +2685,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 4,
       "text": "TOC, {callsign}. Tempête de sable, visibilité à dix mètres, plus de liaison avec l'appui aérien, à vous.",
@@ -2666,7 +2760,8 @@
         "patrol",
         "convoy_escort",
         "recon",
-        "village_security"
+        "village_security",
+        "sector_patrol"
       ],
       "weight": 2,
       "text": "TOC, {callsign}. Orage sur les montagnes : l'oued se remplit d'un coup, on est coincés sur la rive, à vous.",
@@ -2716,7 +2811,8 @@
         "patrol",
         "recon",
         "intel",
-        "meet_leader"
+        "meet_leader",
+        "sector_patrol"
       ],
       "weight": 3,
       "text": "TOC, {callsign}. La carte ne correspond plus au terrain, les pistes ont été déplacées par les crues. On hésite entre deux vallées, à vous.",
@@ -3175,7 +3271,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 3,
       "text": "TOC, {callsign}. Les hommes sont épuisés, trente heures sans dormir. {member} s'est endormi pendant la halte, à vous.",
@@ -3238,7 +3335,8 @@
         "meet_leader",
         "intel",
         "patrol",
-        "raid"
+        "raid",
+        "sector_patrol"
       ],
       "weight": 2,
       "text": "TOC, {callsign}. Incident : {member} a bousculé un vieil homme pendant une fouille, le village est furieux. À vous.",
@@ -3288,7 +3386,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 6,
       "text": "TOC, {callsign}. Point de situation : RAS sur l'itinéraire, progression conforme, moral bon. Des instructions particulières ? À vous.",
@@ -3359,7 +3458,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 1,
       "text": "TOC, {callsign}. Les tireurs qui nous ont accrochés se regroupent {dir}, on voit {vehicle} qui charge des blessés, à vous.",
@@ -3422,7 +3522,8 @@
         "raid",
         "convoy_escort",
         "meet_leader",
-        "special_op"
+        "special_op",
+        "sector_patrol"
       ],
       "weight": 1,
       "text": "TOC, {callsign}. Deuxième engin trouvé à trente mètres du premier, sur la zone où on s'était regroupés. C'était un piège, à vous.",
@@ -3462,6 +3563,696 @@
         }
       ],
       "followUpOnly": true
+    },
+    {
+      "id": "enc_spot_cell",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "sector_patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "followUpOnly": true,
+      "text": "TOC, {callsign}. Contact visuel à {dist} {dir} : {enemyDesc}. Ils ne nous ont pas vus. C'est {enemy}, à vous.",
+      "choices": [
+        {
+          "id": "ambush",
+          "text": "Tendez une embuscade, ouvrez le feu à mon ordre.",
+          "effects": {},
+          "log": "Tendez une embuscade, ouvrez le feu à mon ordre.",
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "weight": 2,
+              "log": "Embuscade déclenchée sur {enemy} : le groupe est décimé.",
+              "effects": {
+                "enemyDamage": 0.7,
+                "success": 0.08,
+                "xp": 4,
+                "casualty": 0.05
+              },
+              "kind": "good"
+            },
+            {
+              "weight": 1,
+              "log": "Embuscade déclenchée trop tôt : l'ennemi décroche en ripostant.",
+              "effects": {
+                "enemyDamage": 0.3,
+                "casualty": 0.2
+              },
+              "kind": "bad"
+            }
+          ]
+        },
+        {
+          "id": "observe",
+          "text": "Restez cachés, observez et rendez compte.",
+          "effects": {
+            "revealEnemy": 0.95,
+            "duration": 1
+          },
+          "log": "Groupe ennemi observé sans être vu, position transmise."
+        },
+        {
+          "id": "arty",
+          "text": "Tir d'artillerie sur leur position, ne bougez pas.",
+          "effects": {
+            "enemyDamage": 0.6,
+            "revealEnemy": 0.9,
+            "collateral": 0.05
+          },
+          "log": "Tir d'artillerie sur {enemy}.",
+          "requires": {
+            "support": [
+              "artillery"
+            ]
+          }
+        },
+        {
+          "id": "air",
+          "text": "Frappe aérienne sur le groupe, marquez la cible.",
+          "effects": {
+            "enemyDamage": 0.8,
+            "cost": {
+              "funds": 3000
+            },
+            "collateral": 0.1
+          },
+          "log": "Frappe aérienne sur {enemy}."
+        },
+        {
+          "id": "helo",
+          "text": "L'Apache s'en charge, guidez-le.",
+          "effects": {
+            "enemyDamage": 0.75
+          },
+          "log": "L'hélicoptère d'attaque traite {enemy}.",
+          "requires": {
+            "support": [
+              "attack_helo"
+            ]
+          }
+        },
+        {
+          "id": "avoid",
+          "text": "Évitez le contact, poursuivez votre mission.",
+          "effects": {
+            "revealEnemy": 0.7
+          },
+          "log": "Contact évité, mission poursuivie."
+        }
+      ]
+    },
+    {
+      "id": "enc_spot_mortar",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "sector_patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "followUpOnly": true,
+      "text": "TOC, {callsign}. On a surpris {enemyDesc}, à {dist} {dir}. C'est sûrement l'équipe qui pilonne la base. Ils ne nous ont pas repérés, à vous.",
+      "choices": [
+        {
+          "id": "capture",
+          "text": "Interceptez-les et saisissez le tube.",
+          "effects": {},
+          "log": "Interceptez-les et saisissez le tube.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "weight": 2,
+              "log": "Équipe mortier interceptée, tube et obus saisis !",
+              "effects": {
+                "enemyDamage": 1,
+                "resources": {
+                  "ammo": 30
+                },
+                "reputation": 2,
+                "xp": 4
+              },
+              "kind": "good"
+            },
+            {
+              "weight": 1,
+              "log": "L'équipe abandonne le tube et s'enfuit dans les vergers.",
+              "effects": {
+                "enemyDamage": 0.5,
+                "resources": {
+                  "ammo": 15
+                }
+              },
+              "kind": "bad"
+            }
+          ]
+        },
+        {
+          "id": "engage",
+          "text": "Ouvrez le feu à distance.",
+          "effects": {},
+          "log": "Ouvrez le feu à distance.",
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "weight": 1,
+              "log": "Tirs précis : l'équipe mortier est neutralisée.",
+              "effects": {
+                "enemyDamage": 0.9,
+                "xp": 3
+              },
+              "kind": "good"
+            },
+            {
+              "weight": 1,
+              "log": "Ils se dispersent avec le tube.",
+              "effects": {
+                "enemyDamage": 0.3
+              },
+              "kind": "bad"
+            }
+          ]
+        },
+        {
+          "id": "follow",
+          "text": "Suivez-les jusqu'à leur cachette.",
+          "effects": {
+            "revealEnemy": 0.95,
+            "duration": 2
+          },
+          "log": "Équipe mortier filée jusqu'à sa cachette."
+        },
+        {
+          "id": "arty",
+          "text": "Contre-batterie, maintenant.",
+          "effects": {
+            "enemyDamage": 0.8
+          },
+          "log": "Contre-batterie sur l'équipe mortier.",
+          "requires": {
+            "support": [
+              "artillery"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "enc_spot_ied",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "sector_patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "followUpOnly": true,
+      "text": "TOC, {callsign}. À {dist} {dir} : {enemyDesc}. Ils posent un engin, à vous.",
+      "choices": [
+        {
+          "id": "arrest",
+          "text": "Arrêtez-les, vivants si possible.",
+          "effects": {},
+          "log": "Arrêtez-les, vivants si possible.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "weight": 2,
+              "log": "Poseurs d'engins arrêtés en flagrant délit.",
+              "effects": {
+                "enemyDamage": 1,
+                "reputation": 2,
+                "villageInfluence": -4,
+                "xp": 3
+              },
+              "kind": "good"
+            },
+            {
+              "weight": 1,
+              "log": "Ils s'enfuient à moto, l'engin est abandonné.",
+              "effects": {
+                "enemyDamage": 0.3
+              },
+              "kind": "bad"
+            }
+          ]
+        },
+        {
+          "id": "shoot",
+          "text": "Neutralisez-les.",
+          "effects": {
+            "enemyDamage": 0.9,
+            "villageInfluence": -2
+          },
+          "log": "Poseurs d'engins neutralisés."
+        },
+        {
+          "id": "watch",
+          "text": "Laissez-les finir et suivez-les.",
+          "effects": {
+            "revealEnemy": 0.95,
+            "duration": 2
+          },
+          "log": "Cellule IED suivie jusqu'à sa base, l'engin balisé."
+        }
+      ]
+    },
+    {
+      "id": "enc_spot_static",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "sector_patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "followUpOnly": true,
+      "text": "TOC, {callsign}. En passant à {dist} {dir}, on aperçoit {enemyDesc}. Ça ressemble à {enemy}, à vous.",
+      "choices": [
+        {
+          "id": "observe",
+          "text": "Relevez la position exacte et passez votre chemin.",
+          "effects": {
+            "revealEnemy": 0.95
+          },
+          "log": "Position relevée et transmise au TOC."
+        },
+        {
+          "id": "closer",
+          "text": "Approchez pour en savoir plus.",
+          "effects": {},
+          "log": "Approchez pour en savoir plus.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "weight": 1,
+              "log": "Reconnaissance rapprochée : effectifs et défenses relevés.",
+              "effects": {
+                "revealEnemy": 0.98,
+                "duration": 1,
+                "success": 0.03
+              },
+              "kind": "good"
+            },
+            {
+              "weight": 1,
+              "log": "Repérés par une sentinelle, décrochage sous le feu.",
+              "effects": {
+                "revealEnemy": 0.8,
+                "casualty": 0.2
+              },
+              "kind": "bad"
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Ne vous attardez pas.",
+          "effects": {
+            "revealEnemy": 0.7
+          },
+          "log": "Position notée, l'unité poursuit."
+        }
+      ]
+    },
+    {
+      "id": "enc_ambush",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "sector_patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "followUpOnly": true,
+      "text": "TOC, {callsign}. Embuscade ! On est pris sous le feu {dir}, ils nous attendaient. {enemy} probablement, à vous !",
+      "choices": [
+        {
+          "id": "react",
+          "text": "Ripostez, fixez-les et débordez.",
+          "effects": {},
+          "log": "Ripostez, fixez-les et débordez.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "weight": 1,
+              "log": "Embuscade retournée : l'ennemi rompt le contact avec des pertes.",
+              "effects": {
+                "enemyDamage": 0.4,
+                "casualty": 0.1,
+                "xp": 3
+              },
+              "kind": "good"
+            },
+            {
+              "weight": 1,
+              "log": "Combat confus, plusieurs blessés.",
+              "effects": {
+                "wound": 2,
+                "casualty": 0.25,
+                "enemyDamage": 0.15
+              },
+              "kind": "bad"
+            }
+          ]
+        },
+        {
+          "id": "break",
+          "text": "Rompez le contact, fumigènes, repli.",
+          "effects": {
+            "wound": 1,
+            "casualty": -0.1,
+            "success": -0.1
+          },
+          "log": "Embuscade — rupture de contact."
+        },
+        {
+          "id": "air",
+          "text": "Appui aérien en urgence.",
+          "effects": {
+            "enemyDamage": 0.5,
+            "casualty": -0.2,
+            "cost": {
+              "funds": 3000
+            },
+            "collateral": 0.12
+          },
+          "log": "Embuscade — appui aérien, l'ennemi décroche."
+        },
+        {
+          "id": "helo",
+          "text": "L'Apache arrive, tenez deux minutes.",
+          "effects": {
+            "enemyDamage": 0.6,
+            "casualty": -0.2
+          },
+          "log": "Embuscade — l'Apache prend l'ennemi à revers.",
+          "requires": {
+            "support": [
+              "attack_helo"
+            ]
+          }
+        },
+        {
+          "id": "abort",
+          "text": "Décrochez et rentrez.",
+          "effects": {
+            "abort": true,
+            "wound": 1
+          },
+          "log": "Embuscade — mission interrompue."
+        }
+      ]
+    },
+    {
+      "id": "enc_meeting",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "sector_patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "followUpOnly": true,
+      "text": "TOC, {callsign}. Rencontre frontale avec {enemy} à {dist} {dir} ! On s'est vus en même temps, échanges de tirs, à vous.",
+      "choices": [
+        {
+          "id": "fight",
+          "text": "Engagez, feu et mouvement.",
+          "effects": {},
+          "log": "Engagez, feu et mouvement.",
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "weight": 1,
+              "log": "Combat de rencontre gagné : l'ennemi se replie en laissant des morts.",
+              "effects": {
+                "enemyDamage": 0.55,
+                "casualty": 0.15,
+                "xp": 3
+              },
+              "kind": "good"
+            },
+            {
+              "weight": 1,
+              "log": "Combat indécis, l'ennemi tient ses positions.",
+              "effects": {
+                "enemyDamage": 0.2,
+                "casualty": 0.3,
+                "wound": 1
+              },
+              "kind": "bad"
+            }
+          ]
+        },
+        {
+          "id": "pin",
+          "text": "Fixez-les, l'artillerie va tirer.",
+          "effects": {
+            "enemyDamage": 0.6,
+            "casualty": 0.05
+          },
+          "log": "Ennemi fixé puis traité par l'artillerie.",
+          "requires": {
+            "support": [
+              "artillery"
+            ]
+          }
+        },
+        {
+          "id": "air",
+          "text": "Appui aérien, fixez-les en attendant.",
+          "effects": {
+            "enemyDamage": 0.65,
+            "cost": {
+              "funds": 3000
+            },
+            "collateral": 0.1
+          },
+          "log": "Ennemi fixé puis frappé par l'aviation."
+        },
+        {
+          "id": "disengage",
+          "text": "Décrochez, ce n'est pas notre mission.",
+          "effects": {
+            "success": -0.05,
+            "revealEnemy": 0.7
+          },
+          "log": "Rupture de contact."
+        }
+      ]
+    },
+    {
+      "id": "enc_evaded",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "sector_patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "followUpOnly": true,
+      "text": "TOC, {callsign}. {enemy} nous a repérés à {dist} {dir} et décroche en vitesse. On les a encore en vue, à vous.",
+      "choices": [
+        {
+          "id": "chase",
+          "text": "Poursuivez-les.",
+          "effects": {},
+          "log": "Poursuivez-les.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "weight": 1,
+              "log": "Poursuite réussie, une partie du groupe est rattrapée.",
+              "effects": {
+                "enemyDamage": 0.5,
+                "duration": 1,
+                "xp": 2
+              },
+              "kind": "good"
+            },
+            {
+              "weight": 2,
+              "log": "Ils disparaissent dans les vergers.",
+              "effects": {
+                "duration": 1,
+                "revealEnemy": 0.6
+              },
+              "kind": "bad"
+            }
+          ]
+        },
+        {
+          "id": "mark",
+          "text": "Laissez-les filer, notez la direction.",
+          "effects": {
+            "revealEnemy": 0.65
+          },
+          "log": "Direction de fuite transmise au TOC."
+        },
+        {
+          "id": "helo",
+          "text": "L'Apache les poursuit.",
+          "effects": {
+            "enemyDamage": 0.6
+          },
+          "log": "L'Apache rattrape le groupe en fuite.",
+          "requires": {
+            "support": [
+              "attack_helo"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "enc_ied_foot",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "sector_patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "followUpOnly": true,
+      "text": "TOC, {callsign}. Explosion au milieu de la colonne ! Un engin piégé sur la piste, des blessés, à vous !",
+      "choices": [
+        {
+          "id": "medevac",
+          "text": "MEDEVAC en route, sécurisez la zone.",
+          "effects": {
+            "wound": 1,
+            "casualty": -0.2,
+            "cost": {
+              "funds": 4000
+            }
+          },
+          "log": "Engin explosif — blessés évacués par hélicoptère."
+        },
+        {
+          "id": "treat",
+          "text": "Soignez sur place et poursuivez.",
+          "effects": {},
+          "log": "Soignez sur place et poursuivez.",
+          "skill": "medical",
+          "outcomes": [
+            {
+              "weight": 1,
+              "log": "Blessés stabilisés, mission poursuivie.",
+              "effects": {
+                "wound": 1,
+                "cost": {
+                  "medical": 10
+                }
+              },
+              "kind": "good"
+            },
+            {
+              "weight": 1,
+              "log": "Un blessé grave, il faut rentrer.",
+              "effects": {
+                "wound": 2,
+                "abort": true,
+                "cost": {
+                  "medical": 10
+                }
+              },
+              "kind": "bad"
+            }
+          ]
+        },
+        {
+          "id": "rtb",
+          "text": "Rentrez tous immédiatement.",
+          "effects": {
+            "wound": 1,
+            "abort": true
+          },
+          "log": "Engin explosif — retour à la base."
+        }
+      ]
     }
   ]
 }

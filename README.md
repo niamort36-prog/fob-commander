@@ -463,6 +463,39 @@ choisir l'appareil (aucun, Black Hawk, Little Bird) :
   nuit glaciale, route coupée, livraison inattendue, marché noir… Nouveaux personnages et listes de
   mots (`events.json → pools`).
 
+## Monde vivant et carte agrandie
+
+- **Carte régionale 120 × 90 km** (au lieu de 60 × 45) : la vallée de départ au centre, et autour
+  de nouvelles vallées (8 villages, routes, rivière de l'Arghandab, montagnes, 9 groupes ennemis,
+  bases de coalition voisines pensées pour un futur multijoueur, forces afghanes). Les zones
+  lointaines ne pèsent pas en début de partie ; elles deviennent l'enjeu quand la FOB s'étend,
+  et les véhicules ou l'hélicoptère deviennent indispensables pour y aller (temps de trajet à pied,
+  en véhicule et en hélicoptère affichés sur chaque fiche de la carte).
+- **Ennemis qui bougent avec de vrais objectifs** (`region.json → behaviour`, `WorldSystem`) :
+  combattants qui patrouillent entre villages sous emprise et caches, et viennent parfois rôder
+  près de la FOB ; **équipes mortier** qui sortent de leur cachette, s'installent à 4–6,5 km de la
+  base, tirent puis **changent de place** ; cellules IED qui posent de vrais engins sur les routes.
+  Les tirs de mortier, harcèlements et assauts ne se produisent qu'avec un groupe réellement en
+  position ; après une attaque, la position de tir est connue… mais l'équipe est déjà repartie.
+- **Monde vivant** (`region.json → world`) : patrouilles de l'armée et de la police afghanes,
+  marchands, bergers, pèlerins, familles, convois humanitaires circulent entre villages, bourgs et
+  lieux. Accrochages, embuscades, rackets et engins explosifs entre eux modifient l'emprise
+  insurgée, l'attitude des villages et la stabilité ; les alliés et les villages amis renseignent
+  la base. Les faits marquants s'affichent sur la carte et dans la liste « Faits marquants ».
+- **Rencontres en mission avec les vrais groupes** : à moins de 1,2 km (1,6 en véhicule), on tire qui
+  repère l'autre en premier. Nous : discrétion, transmissions, contact déjà connu, ratissage,
+  **vision nocturne et thermique la nuit, optiques et jumelles le jour**. Eux : véhicules bruyants,
+  hélicoptère, nuit qui les gêne. Repérés sans être vus → avantage (embuscade, observation, tir
+  d'appui) ; surpris → **malus** (embuscade, pertes accrues) ; les deux → combat de rencontre.
+  Les pertes infligées réduisent réellement le groupe (détruit à zéro). Les engins posés se
+  découvrent ou explosent au passage. Un raid sur un groupe qui s'est déplacé trouve l'objectif vide.
+- **Lieux d'intérêt** (28) : grottes, forts, campements nomades, cols, carrières, puits, relais,
+  ruines, champs de pavot, pistes de contrebande, hameaux isolés, sanctuaires. Une mission sur place
+  révèle les environs, peut découvrir une cache, rassurer la population ou nettoyer les engins.
+- **Patrouille de secteur** : un clic dans le vide sur la carte sélectionne un carré de 5 km ;
+  « Planifier une mission » y envoie une patrouille qui ratisse la zone (rencontres facilitées),
+  révèle les groupes et neutralise les engins posés.
+
 ## Rééquilibrage économique
 
 Fonds de départ ×1,8 (`sites.json`), budget quotidien du commandement 1 500 → 2 400 $

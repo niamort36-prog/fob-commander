@@ -27,7 +27,6 @@ export class IntelSystem implements System {
   constructor(private readonly ctx: GameContext) {
     ctx.bus.on('time:hour', () => this.hourly());
     ctx.bus.on('time:newDay', () => this.daily());
-    ctx.bus.on('combat:ended', () => this.afterAttack());
   }
 
   private get cfg() {
@@ -156,10 +155,10 @@ export class IntelSystem implements System {
     const cfg = this.cfg;
     const def = this.ctx.content.region;
 
-    // Déplacement des groupes mobiles
+    // Dérive des groupes mobiles sans comportement propre (les autres sont pilotés par WorldSystem)
     for (const c of Object.values(region.contacts)) {
       const d = this.contactDef(c.id).drift;
-      if (!d) continue;
+      if (!d || this.contactDef(c.id).kind in def.behaviour) continue;
       const home = this.contactDef(c.id).pos;
       const a = this.ctx.random() * Math.PI * 2;
       let x = c.truePos.x + Math.cos(a) * d * this.ctx.random();
@@ -219,17 +218,6 @@ export class IntelSystem implements System {
     region.tocHoursToday = 0;
   }
 
-  /** Après une attaque : le groupe ennemi le plus proche du type impliqué est localisé (approximativement). */
-  private afterAttack(): void {
-    const region = this.ctx.state.region;
-    const fob = this.fobPos();
-    const candidates = Object.values(region.contacts)
-      .filter((c) => ['mortar', 'cell'].includes(this.contactDef(c.id).kind))
-      .sort((a, b) => dist(a.truePos, fob) - dist(b.truePos, fob));
-    const c = candidates[0];
-    if (c) this.report(c.id, this.cfg.attackRevealReliability, 'attack');
-  }
-
   // ------------------------------------------------------------ Villages et personnalités
 
   adjustVillage(id: string, attitude = 0, influence = 0): void {
@@ -261,6 +249,7 @@ export function sourceLabel(source: IntelSource): string {
     event: 'source humaine',
     cia: 'agent de liaison',
     mission: 'unité en mission',
+    allied: 'forces afghanes',
   };
   return labels[source];
 }

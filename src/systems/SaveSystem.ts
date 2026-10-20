@@ -193,6 +193,26 @@ const MIGRATIONS: Record<number, (file: SaveFile, content: ContentRegistry) => S
     }
     return { ...file, version: 12, state: st };
   },
+  /** v12 → v13 : carte régionale agrandie (décalage de 30 / 22 km), monde vivant. */
+  12: (file) => {
+    const st = file.state;
+    const shift = (p: { x: number; y: number } | undefined): void => {
+      if (!p) return;
+      p.x += 30;
+      p.y += 22;
+    };
+    for (const c of Object.values(st.region.contacts)) {
+      shift(c.truePos);
+      shift(c.estPos);
+      shift(c.dyn?.home);
+    }
+    for (const m of Object.values(st.missions)) shift(m.target.pos);
+    st.region.actors ??= {};
+    st.region.ieds ??= [];
+    st.region.incidents ??= [];
+    st.region.sitesVisited ??= {};
+    return { ...file, version: 13, state: st };
+  },
 };
 
 function defaultStorage(): StorageLike | null {

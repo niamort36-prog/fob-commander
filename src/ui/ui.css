@@ -624,3 +624,9 @@
 .role-pip { display: inline-block; width: 7px; height: 7px; margin-right: 4px; border: 1px solid #14140f; vertical-align: middle; }
 .role-legend { display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: 14px; color: var(--muted, #8e8a72); margin: 2px 0 4px; }
 .role-item { white-space: nowrap; }
+
+
+/* ------------------------------------------------------------ Carte : faits marquants */
+.map-row.news-good span:last-child { color: #8fbf6a; }
+.map-row.news-bad span:last-child { color: #d88a70; }
+.map-row.news-info span:last-child { color: #d8c47a; }

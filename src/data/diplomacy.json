@@ -138,7 +138,7 @@
     "insurgency": {
       "spawnChancePerDay": 0.1,
       "minAverageInfluence": 20,
-      "maxContacts": 12,
+      "maxContacts": 26,
       "spawnKm": [
         2,
         5

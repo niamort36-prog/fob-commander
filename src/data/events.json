@@ -1048,7 +1048,8 @@
       "cooldownDays": 5,
       "conditions": {
         "minDay": 3,
-        "notFlag": "ied_on_road"
+        "notFlag": "ied_on_road",
+        "iedNearKm": 6
       },
       "speaker": "guard",
       "text": "« Poste sud, ici {speaker}. Un sac abandonné et un fil qui dépasse de la terre, sur la piste des convois, à trois cents mètres de l'entrée. Ça pue l'engin explosif. »",
@@ -1316,7 +1317,8 @@
       "weight": 7,
       "cooldownDays": 2,
       "conditions": {
-        "minDay": 2
+        "minDay": 2,
+        "enemyInPosition": "mortar"
       },
       "speaker": "guard",
       "text": "« DÉPARTS ! DÉPARTS ! Tirs indirects en approche ! Ici {speaker}, je vois les lueurs derrière la crête ! »",
@@ -1356,7 +1358,8 @@
       "weight": 6,
       "cooldownDays": 3,
       "conditions": {
-        "minDay": 3
+        "minDay": 3,
+        "enemyInPosition": "cell"
       },
       "speaker": "guard",
       "text": "« CONTACT ! Tirs d'armes légères depuis la ligne des arbres ! Je compte trois, peut-être cinq tireurs ! »",
@@ -1400,7 +1403,8 @@
         "hours": [
           21,
           4
-        ]
+        ],
+        "enemyInPosition": "cell"
       },
       "speaker": "guard",
       "text": "« Mouvements au périmètre ! Plusieurs groupes armés approchent à la faveur de la nuit ! Ils sont nombreux, {commander} ! »",

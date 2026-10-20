@@ -12,7 +12,7 @@ import { formatNumber, t } from '../utils/i18n';
 import { clear, el, setText } from './dom';
 import { drawPortrait } from './portrait';
 
-const LAYERS: MapLayer[] = ['contacts', 'uncertainty', 'friendly', 'villages', 'personalities', 'coverage'];
+const LAYERS: MapLayer[] = ['contacts', 'uncertainty', 'friendly', 'villages', 'personalities', 'coverage', 'sites', 'world'];
 
 export class MapPanel {
   private readonly top: HTMLElement;
@@ -20,6 +20,7 @@ export class MapPanel {
   private readonly info: HTMLElement;
   private readonly intelList: HTMLElement;
   private readonly peopleList: HTMLElement;
+  private readonly newsList: HTMLElement;
   private readonly status: HTMLElement;
   private open = false;
   private selected: MapSelection | null = null;
@@ -57,6 +58,7 @@ export class MapPanel {
     ]);
     this.intelList = el('div', { class: 'map-list' });
     this.peopleList = el('div', { class: 'map-list' });
+    this.newsList = el('div', { class: 'map-list' });
     this.side = el('div', { class: 'panel map-side hidden' }, [
       el('div', { class: 'section-title', text: t('map.layers') }),
       layers,
@@ -66,6 +68,8 @@ export class MapPanel {
       this.intelList,
       el('div', { class: 'section-title', text: t('map.people') }),
       this.peopleList,
+      el('div', { class: 'section-title', text: t('map.incidents') }),
+      this.newsList,
     ]);
     this.info = el('div', { class: 'panel info-panel map-info hidden' });
     parent.append(this.top, this.side, this.info);
@@ -105,7 +109,8 @@ export class MapPanel {
     // Listes (reconstruites seulement si elles changent)
     const contacts = intel.knownContacts().sort((a, b) => b.reliability - a.reliability);
     const people = def.personalities.filter((p) => region.personalities[p.id]?.known);
-    const sig = contacts.map((c) => `${c.id}${intel.grade(c)}`).join() + '|' + people.map((p) => p.id).join();
+    const news = [...(this.ctx.sim.world.region().incidents ?? [])].reverse().slice(0, 8);
+    const sig = contacts.map((c) => `${c.id}${intel.grade(c)}`).join() + '|' + people.map((p) => p.id).join() + '|' + news.map((n) => n.tick).join();
     if (sig !== this.listSig) {
       this.listSig = sig;
       clear(this.intelList);
@@ -118,6 +123,16 @@ export class MapPanel {
             el('span', { class: `grade grade-${intel.grade(c)}`, text: intel.grade(c) }),
             el('span', { text: `${label} — ${gridRef(def, c.estPos.x, c.estPos.y)}` }),
           ]),
+        );
+      }
+      clear(this.newsList);
+      if (news.length === 0) this.newsList.append(el('div', { class: 'muted small', text: t('map.noIncident') }));
+      for (const n of news) {
+        const time = this.ctx.content.balance.time;
+        const total = time.startHour * 60 + n.tick * time.minutesPerTick;
+        const stamp = `J${Math.floor(total / 1440) + 1} ${String(Math.floor((total % 1440) / 60)).padStart(2, '0')}h`;
+        this.newsList.append(
+          el('div', { class: `map-row news-${n.tone}`, onClick: () => this.select(null, n.pos) }, [el('span', { class: 'muted small', text: stamp }), el('span', { text: n.text })]),
         );
       }
       clear(this.peopleList);
@@ -144,6 +159,17 @@ export class MapPanel {
       attrs: possible ? {} : { disabled: '' },
       onClick: () => this.ctx.bus.emit('ui:planMission', { target: s }),
     });
+  }
+
+  /** Distance depuis la FOB et durée du trajet selon le moyen (à pied, véhicule, hélicoptère). */
+  private travelRows(p: { x: number; y: number }): [string, string][] {
+    const fob = this.ctx.sim.intel.fobPos();
+    const d = Math.hypot(p.x - fob.x, p.y - fob.y);
+    const cfg = this.ctx.content.missions.config;
+    return [
+      [t('map.distance'), `${d.toFixed(1)} km`],
+      ['', t('map.travel', { foot: (d / cfg.footSpeedKmh).toFixed(1), car: (d / cfg.vehicleSpeedKmh).toFixed(1), heli: Math.max(1, Math.round((d / cfg.heli.speedKmh) * 60)) })],
+    ];
   }
 
   private bar(label: string, value: number, min: number, max: number, color: string): HTMLElement {
@@ -185,6 +211,7 @@ export class MapPanel {
       rows.push([t('map.stance'), dip.stance(st.attitude).label]);
       if (v.needs.length) rows.push([t('map.needs'), dip.needs(v.id).map((n) => (n.satisfied ? `✓ ${t(`need.${n.need}`)}` : n.progress !== null ? `◷ ${t(`need.${n.need}`)}` : t(`need.${n.need}`))).join(', ')]);
       rows.push([t('map.informants'), st.attitude >= def.intel.informantAttitude ? t('map.yes') : t('map.no')]);
+      rows.push(...this.travelRows(v.pos));
       if (vd?.auxiliaries) rows.push([t('map.auxiliaries'), String(vd.auxiliaries)]);
       if (vd?.promise) rows.push([t('map.promise'), t(`need.${vd.promise.need}`)]);
       if (vd?.demand) rows.push([t('map.demand'), t(`need.${vd.demand.need}`)]);
@@ -207,7 +234,32 @@ export class MapPanel {
         [t('map.lastSeen'), t('map.hoursAgo', { h: Math.round(intel.ageHours(c)) })],
         [t('map.source'), sourceLabel(c.source)],
       );
+      rows.push(...this.travelRows(c.estPos));
       extra.push(this.planButton(s));
+    } else if (s.kind === 'site') {
+      const site = def.sites.find((x) => x.id === s.id)!;
+      const kind = def.siteKinds[site.kind];
+      title = site.name;
+      subtitle = `${t('map.siteKind')} — ${kind.label}`;
+      desc = kind.desc;
+      const seen = this.ctx.sim.world.region().sitesVisited?.[site.id];
+      const days = seen !== undefined ? Math.floor(((this.ctx.state.time.tick - seen) * this.ctx.content.balance.time.minutesPerTick) / 1440) : null;
+      rows.push([t('map.grid'), gridRef(def, site.pos.x, site.pos.y)], [t('map.visited'), days === null ? t('map.never') : t('map.daysAgo', { d: days })]);
+      rows.push(...this.travelRows(site.pos));
+      extra.push(this.planButton(s));
+    } else if (s.kind === 'sector') {
+      const target = this.ctx.sim.missions.targetFrom(s)!;
+      title = target.name;
+      subtitle = gridRef(def, target.pos.x, target.pos.y);
+      desc = t('map.sectorDesc', { km: def.gridKm });
+      rows.push(...this.travelRows(target.pos));
+      extra.push(this.planButton(s));
+    } else if (s.kind === 'actor') {
+      const a = this.ctx.sim.world.region().actors?.[s.id];
+      if (!a) return this.info.classList.add('hidden');
+      title = a.label;
+      subtitle = t(a.side === 'allied' ? 'map.actor.allied' : 'map.actor.civilian');
+      rows.push([t('map.actor.dest'), `${a.destName} (${t(`map.actor.phase.${a.phase}`)})`], [t('map.grid'), gridRef(def, a.pos.x, a.pos.y)]);
     } else if (s.kind === 'personality') {
       const p = def.personalities.find((x) => x.id === s.id)!;
       const v = def.villages.find((x) => x.id === p.village)!;

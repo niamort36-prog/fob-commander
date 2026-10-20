@@ -13,7 +13,7 @@ import { mapLayers } from '../render/mapState';
 import { drawRegionBase } from '../render/regionMap';
 import { drawSymbol, type Affiliation } from '../render/mapSymbols';
 
-export const MAP_PX_PER_KM = 32;
+export const MAP_PX_PER_KM = 24;
 export const MAP_MARGIN = 32;
 const FOG_PX_PER_KM = 8;
 const DRAG_THRESHOLD = 5;
@@ -85,7 +85,7 @@ export class MapScene extends Phaser.Scene {
     const w = def.size.width * MAP_PX_PER_KM + MAP_MARGIN * 2;
     const h = def.size.height * MAP_PX_PER_KM + MAP_MARGIN * 2;
     cam.setBounds(-300, -300, w + 600, h + 600);
-    cam.setZoom(Math.max(0.45, Math.min(1, this.scale.width / (w * 0.6))));
+    cam.setZoom(Math.max(0.45, Math.min(1, this.scale.width / (w * 0.35))));
     const fob = this.ctx.site.regionPos;
     cam.centerOn(this.px(fob.x), this.px(fob.y));
     this.bindInput();
@@ -136,7 +136,7 @@ export class MapScene extends Phaser.Scene {
     });
     this.input.on('wheel', (p: Phaser.Input.Pointer, _o: unknown, _dx: number, dy: number) => {
       const z0 = cam.zoom;
-      const z1 = Phaser.Math.Clamp(z0 * (dy > 0 ? 0.88 : 1.12), 0.3, 2.5);
+      const z1 = Phaser.Math.Clamp(z0 * (dy > 0 ? 0.88 : 1.12), 0.2, 2.5);
       const wx = cam.scrollX + cam.width / 2 + (p.x - cam.width / 2) / z0;
       const wy = cam.scrollY + cam.height / 2 + (p.y - cam.height / 2) / z0;
       cam.setZoom(z1);
@@ -252,6 +252,75 @@ export class MapScene extends Phaser.Scene {
           g.lineStyle(2 * k, 0xffe24a, 1);
           g.strokeCircle(x, y, 22 * k);
         }
+      }
+    }
+
+    // Secteur sélectionné (carré du carroyage)
+    if (sel?.kind === 'sector') {
+      const gk = def.gridKm;
+      const x0 = this.px(Math.floor(sel.x / gk) * gk);
+      const y0 = this.px(Math.floor(sel.y / gk) * gk);
+      g.fillStyle(0xffe24a, 0.12);
+      g.fillRect(x0, y0, gk * MAP_PX_PER_KM, gk * MAP_PX_PER_KM);
+      g.lineStyle(2 * k, 0xffe24a, 0.9);
+      g.strokeRect(x0, y0, gk * MAP_PX_PER_KM, gk * MAP_PX_PER_KM);
+    }
+
+    // Lieux d'intérêt (grottes, fort, nomades, col…)
+    if (mapLayers.sites) {
+      for (const site of def.sites) {
+        const kind = def.siteKinds[site.kind];
+        if (!kind) continue;
+        const x = this.px(site.pos.x);
+        const y = this.px(site.pos.y);
+        const s = 9 * k;
+        g.fillStyle(0x6a4a2a, 0.9);
+        g.fillRect(x - s, y - s, s * 2, s * 2);
+        g.lineStyle(1.5 * k, 0x1a1208, 1);
+        g.strokeRect(x - s, y - s, s * 2, s * 2);
+        const code = this.add.text(x, y, kind.code, { fontFamily: 'VT323, monospace', fontSize: `${Math.round(15 * k)}px`, color: '#f0e6c8' }).setOrigin(0.5).setResolution(2);
+        this.labels.push(code);
+        if (zoom > 0.55) this.label(x, y + s + 2 * k, site.name, fs * 0.75, '#3a2410');
+        this.pickables.push({ x, y, r: 14 * k, target: { kind: 'site', id: site.id } });
+        if (isSel({ kind: 'site', id: site.id })) this.highlight(x, y, 12 * k);
+      }
+    }
+
+    // Monde vivant : patrouilles alliées, civils (vus près de la base et des forces amies), incidents
+    if (mapLayers.world) {
+      const world = this.ctx.sim.world;
+      const r = world.region();
+      const wcfg = def.world;
+      const fobPos = intel.fobPos();
+      const allies = Object.values(r.actors!).filter((a) => a.side === 'allied');
+      const watchers = [fobPos, ...def.friendlyUnits.map((u) => u.pos), ...allies.map((a) => a.pos)];
+      for (const a of Object.values(r.actors!)) {
+        const x = this.px(a.pos.x);
+        const y = this.px(a.pos.y);
+        if (a.side === 'allied') {
+          const box = this.symbol(x, y, S * 0.75, 'friend', a.kind === 'police' ? 'police' : 'infantry', false, '');
+          if (zoom > 0.5) this.label(x, y + box.hh + 2 * k, a.label, fs * 0.7, '#1a3a6a');
+          this.pickables.push({ x, y, r: S * 0.75, target: { kind: 'actor', id: a.id } });
+          if (isSel({ kind: 'actor', id: a.id })) this.highlight(x, y, S * 0.75);
+        } else if (watchers.some((p) => Math.hypot(p.x - a.pos.x, p.y - a.pos.y) <= wcfg.visibleKm)) {
+          g.fillStyle(0xe8e0c8, 1);
+          g.fillCircle(x, y, 4.5 * k);
+          g.lineStyle(1.2 * k, 0x3a3a30, 1);
+          g.strokeCircle(x, y, 4.5 * k);
+          this.pickables.push({ x, y, r: 8 * k, target: { kind: 'actor', id: a.id } });
+          if (isSel({ kind: 'actor', id: a.id })) this.highlight(x, y, 6 * k);
+        }
+      }
+      const now = this.ctx.state.time.tick;
+      const life = (wcfg.incidentHours * 60) / this.ctx.content.balance.time.minutesPerTick;
+      for (const inc of r.incidents!) {
+        const fade = Math.max(0.25, 1 - (now - inc.tick) / life);
+        const x = this.px(inc.pos.x);
+        const y = this.px(inc.pos.y);
+        const color = inc.tone === 'good' ? 0x3a9a4a : inc.tone === 'bad' ? 0xd04030 : 0xd8a030;
+        const s = 7 * k;
+        g.fillStyle(color, fade);
+        g.fillPoints([{ x, y: y - s }, { x: x + s * 0.3, y: y - s * 0.3 }, { x: x + s, y }, { x: x + s * 0.3, y: y + s * 0.3 }, { x, y: y + s }, { x: x - s * 0.3, y: y + s * 0.3 }, { x: x - s, y }, { x: x - s * 0.3, y: y - s * 0.3 }], true);
       }
     }
 
@@ -389,7 +458,14 @@ export class MapScene extends Phaser.Scene {
         best = p;
       }
     }
-    this.ctx.bus.emit('ui:mapSelect', { target: best?.target ?? null });
+    if (best) return this.ctx.bus.emit('ui:mapSelect', { target: best.target });
+    // Clic dans le vide : sélection du secteur (carré du carroyage) sous le curseur
+    const def = this.ctx.content.region;
+    const kx = (wx - MAP_MARGIN) / MAP_PX_PER_KM;
+    const ky = (wy - MAP_MARGIN) / MAP_PX_PER_KM;
+    const inside = kx >= 0 && ky >= 0 && kx < def.size.width && ky < def.size.height;
+    const already = this.selected?.kind === 'sector' && Math.floor(this.selected.x / def.gridKm) === Math.floor(kx / def.gridKm) && Math.floor(this.selected.y / def.gridKm) === Math.floor(ky / def.gridKm);
+    this.ctx.bus.emit('ui:mapSelect', { target: inside && !already ? { kind: 'sector', x: kx, y: ky } : null });
   }
 
   private cleanup(): void {

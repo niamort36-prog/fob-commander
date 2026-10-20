@@ -18,6 +18,7 @@ import { pushLog } from '../core/Log';
 import { bagEntries, canAfford, gain, spend } from '../core/resources';
 import { t } from '../utils/i18n';
 import type { System } from './System';
+import { bearingText } from './WorldSystem';
 
 export class RadioSystem implements System {
   readonly id = 'radio';
@@ -85,6 +86,7 @@ export class RadioSystem implements System {
     if (c.minTeam !== undefined && members.length < c.minTeam) return false;
     if (c.hasType && !members.some((a) => c.hasType!.includes(a.defId))) return false;
     if (c.support && !c.support.includes(m.support ?? 'none')) return false;
+    if (c.enemyNearKm !== undefined && !this.enemyNear(m, c.enemyNearKm, c.enemyKinds)) return false;
     if (c.attitudeBelow !== undefined || c.attitudeAbove !== undefined) {
       const vid = this.villageOf(m);
       const att = vid ? (this.ctx.state.region.villages[vid]?.attitude ?? 0) : 0;
@@ -92,6 +94,26 @@ export class RadioSystem implements System {
       if (c.attitudeAbove !== undefined && att <= c.attitudeAbove) return false;
     }
     return true;
+  }
+
+  /** Groupe ennemi réel le plus proche de l'unité (dans le rayon, de ces types). */
+  enemyNear(m: MissionInstance, km: number, kinds?: string[]): string | null {
+    const pos = this.ctx.sim.missions.position(m);
+    // Sur l'objectif d'un raid, l'ennemi visé compte (s'il est bien là)
+    if (m.phase === 'objective' && m.target.kind === 'contact' && m.target.id && !m.targetMoved && this.ctx.state.region.contacts[m.target.id]) return m.target.id;
+    let best: string | null = null;
+    let bestD = km;
+    for (const c of Object.values(this.ctx.state.region.contacts)) {
+      const kind = this.ctx.sim.intel.contactDef(c.id).kind;
+      if (kinds && !kinds.includes(kind)) continue;
+      if (!kinds && !['cell', 'mortar', 'ied'].includes(kind)) continue;
+      const d = Math.hypot(c.truePos.x - pos.x, c.truePos.y - pos.y);
+      if (d <= bestD) {
+        bestD = d;
+        best = c.id;
+      }
+    }
+    return best;
   }
 
   /** Raison pour laquelle un ordre est impossible (clé de texte), ou null. */
@@ -113,7 +135,7 @@ export class RadioSystem implements System {
   }
 
   /** Variables d'un message : indicatif, objectif, membres, village et détails tirés au hasard. */
-  private makeVars(m: MissionInstance, msg: RadioMessageDef): Record<string, string> {
+  private makeVars(m: MissionInstance, msg: RadioMessageDef, contactId?: string): Record<string, string> {
     const members = this.members(m);
     const name = (a: Agent | undefined): string => (a ? `${a.rank} ${a.lastName}` : 'le chef de groupe');
     const leader = [...members].sort((a, b) => (b.skills.leadership ?? 0) - (a.skills.leadership ?? 0))[0];
@@ -128,10 +150,24 @@ export class RadioSystem implements System {
       village: this.ctx.content.region.villages.find((v) => v.id === vid)?.name ?? m.target.name,
       team: String(members.length),
     };
+    // Le groupe ennemi réel concerné : nom, ce qu'on en voit, direction et distance vraies
+    const cid = contactId ?? (msg.when?.enemyNearKm !== undefined ? this.enemyNear(m, msg.when.enemyNearKm, msg.when.enemyKinds) : null);
+    const contact = cid ? this.ctx.state.region.contacts[cid] : undefined;
+    if (contact) {
+      const cdef = this.ctx.sim.intel.contactDef(contact.id);
+      const kind = this.ctx.content.region.contactKinds[cdef.kind];
+      const pos = this.ctx.sim.missions.position(m);
+      vars.contactId = contact.id;
+      vars.enemy = contact.known && contact.reliability >= 0.3 ? cdef.label : kind.label.toLowerCase();
+      vars.enemyDesc = kind.sightings?.[Math.floor(this.ctx.random() * kind.sightings.length)] ?? kind.label.toLowerCase();
+      vars.dir = bearingText(pos, contact.truePos);
+      const d = Math.hypot(contact.truePos.x - pos.x, contact.truePos.y - pos.y);
+      vars.dist = d < 1 ? `${Math.max(100, Math.round((d * 1000) / 100) * 100)} mètres` : `${d.toFixed(1).replace('.', ',')} kilomètres`;
+    }
     const pools = this.ctx.content.radio.pools ?? {};
     const texts = [msg.text, ...msg.choices.flatMap((c) => [c.text, c.log, ...(c.outcomes ?? []).map((o) => o.log)])].join(' ');
     for (const [k, list] of Object.entries(pools)) {
-      if (list.length && texts.includes(`{${k}}`)) vars[k] = list[Math.floor(this.ctx.random() * list.length)];
+      if (list.length && texts.includes(`{${k}}`) && !(k in vars)) vars[k] = list[Math.floor(this.ctx.random() * list.length)];
     }
     return vars;
   }
@@ -189,7 +225,7 @@ export class RadioSystem implements System {
       const m = s.missions[next.missionId];
       if (!m || m.phase === 'done') return;
       const msgDef = this.ctx.content.radioMessage(next.radioId);
-      s.radio.pending = { missionId: m.id, radioId: next.radioId, resumeSpeed: s.time.speed === 0 ? 1 : s.time.speed, answer: null, vars: this.makeVars(m, msgDef) };
+      s.radio.pending = { missionId: m.id, radioId: next.radioId, resumeSpeed: s.time.speed === 0 ? 1 : s.time.speed, answer: null, vars: this.makeVars(m, msgDef, next.contactId) };
       if (s.time.speed !== 0) {
         s.time.speed = 0;
         this.ctx.bus.emit('time:speedChanged', { speed: 0 });
@@ -292,6 +328,16 @@ export class RadioSystem implements System {
       }
     }
     if (e.morale) for (const a of Object.values(s.agents)) a.needs.morale = Math.max(0, Math.min(100, a.needs.morale + e.morale));
+    // Le groupe ennemi réel concerné par le message
+    const cid = this.pending?.vars?.contactId;
+    if (cid && this.ctx.state.region.contacts[cid]) {
+      if (e.revealEnemy) this.ctx.sim.intel.report(cid, e.revealEnemy, 'mission');
+      if (e.enemyDamage) {
+        const label = this.ctx.sim.intel.contactDef(cid).label;
+        if (this.ctx.sim.world.damageEnemy(cid, e.enemyDamage * (0.7 + 0.6 * this.ctx.random()), 'coalition')) notes.push(t('fx.enemyDestroyed', { label }));
+        m.enemyKilled += Math.round(1 + e.enemyDamage * 6 * this.ctx.random());
+      }
+    }
     if (e.xp) for (const a of this.members(m)) a.xp += e.xp;
     if (e.success) m.mods.success += e.success;
     if (e.casualty) m.mods.casualty += e.casualty;

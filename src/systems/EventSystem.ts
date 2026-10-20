@@ -68,6 +68,8 @@ export class EventSystem implements System {
     if (c.requiresBuilding && !Object.values(s.fob.buildings).some((b) => b.defId === c.requiresBuilding && b.state !== 'construction')) return false;
     for (const [id, v] of bagEntries(c.resourceBelow)) if (s.resources.stock[id] >= v) return false;
     for (const [id, v] of bagEntries(c.resourceAbove)) if (s.resources.stock[id] <= v) return false;
+    if (c.enemyInPosition && !this.ctx.sim.world.inPosition(c.enemyInPosition)) return false;
+    if (c.iedNearKm !== undefined && this.ctx.sim.world.iedsNear(c.iedNearKm).length === 0) return false;
     if (c.hours) {
       const h = Math.floor(s.time.minuteOfDay / 60);
       const [a, b] = c.hours;
@@ -109,6 +111,15 @@ export class EventSystem implements System {
     if (last !== undefined && def.cooldownDays && this.now - last < this.hoursToTicks(def.cooldownDays * 24)) return false;
     if (def.category === 'attack' && this.now - ev.lastAttackTick < this.hoursToTicks(this.ctx.content.events.config.attackGapHours)) return false;
     return this.checkConditions(def.conditions);
+  }
+
+  /** Déclenche un événement s'il est admissible maintenant (rien d'autre en cours). */
+  tryTrigger(eventId: string): boolean {
+    const s = this.ctx.state;
+    if (s.events.active || s.combat.active || s.radio.pending || s.visit) return false;
+    const def = this.ctx.content.event(eventId);
+    if (!this.eligible(def)) return false;
+    return this.trigger(eventId);
   }
 
   /** Tirage horaire d'un événement aléatoire. */
@@ -201,6 +212,8 @@ export class EventSystem implements System {
       outcome: null,
     };
     if (speaker.personality) this.ctx.sim.intel.meet(speaker.personality);
+    // L'engin découvert près de la base est celui qu'une cellule a posé
+    if (def.conditions?.iedNearKm !== undefined) this.ctx.sim.world.takeIedNear(def.conditions.iedNearKm);
     s.events.cooldowns[eventId] = this.now;
     s.events.lastEventTick = this.now;
     if (def.category === 'attack') s.events.lastAttackTick = this.now;

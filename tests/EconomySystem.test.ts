@@ -36,11 +36,14 @@ describe('EconomySystem', () => {
   it('verse un budget modulé par l’évaluation du commandement', () => {
     const ctx = makeGame();
     const funds = ctx.state.resources.stock.funds;
+    let paid = 0;
+    ctx.bus.on('progression:evaluated', ({ budget }) => (paid = budget));
     stepTicks(ctx, 18 * 60); // 06:00 → 00:00 du jour 2
     expect(ctx.state.time.day).toBe(2);
     const rating = ctx.state.progression.lastRating!;
     expect(rating).toBeGreaterThan(0);
-    expect(ctx.state.resources.stock.funds).toBe(funds + ctx.sim.economy.dailyBudget(rating));
+    expect(paid).toBeGreaterThan(0);
+    expect(ctx.state.resources.stock.funds).toBe(funds + paid);
     expect(ctx.state.progression.reputation).toBeCloseTo((rating - 0.5) * ctx.content.balance.command.reputationPerPoint, 5);
   });
 

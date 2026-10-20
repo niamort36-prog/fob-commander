@@ -25,6 +25,7 @@ import { IntelSystem } from '../systems/IntelSystem';
 import { VisitSystem } from '../systems/VisitSystem';
 import { GroupSystem } from '../systems/GroupSystem';
 import { LogisticsSystem } from '../systems/LogisticsSystem';
+import { WorldSystem } from '../systems/WorldSystem';
 
 export class Simulation {
   readonly time: TimeSystem;
@@ -42,6 +43,7 @@ export class Simulation {
   readonly visits: VisitSystem;
   readonly groups: GroupSystem;
   readonly logistics: LogisticsSystem;
+  readonly world: WorldSystem;
   readonly save: SaveSystem;
 
   /** Ordre d'exécution à chaque tick. */
@@ -67,6 +69,7 @@ export class Simulation {
     this.visits = new VisitSystem(ctx);
     this.groups = new GroupSystem(ctx);
     this.logistics = new LogisticsSystem(ctx);
+    this.world = new WorldSystem(ctx);
     this.save = new SaveSystem(ctx, storage);
     this.systems = [
       this.time,
@@ -80,6 +83,7 @@ export class Simulation {
       this.groups,
       this.attacks,
       this.missions,
+      this.world, // après MissionSystem : rencontres des unités en mission
       this.radio,
       this.events,
       this.intel,
