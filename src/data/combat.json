@@ -1,0 +1,120 @@
+{
+  "config": {
+    "shotCooldown": [
+      3,
+      6
+    ],
+    "baseHitChance": 0.16,
+    "nightHitMult": 0.7,
+    "coverMult": 0.45,
+    "proneMult": 0.5,
+    "towerBonus": 0.08,
+    "towerRangeBonus": 3,
+    "defenderRange": 8,
+    "ammoPerShot": 0.5,
+    "damage": [
+      20,
+      45
+    ],
+    "buildingDamagePerHit": 0.004,
+    "retreatAtLosses": 0.5,
+    "spawnDistance": 14,
+    "fearMorale": -6,
+    "victoryMorale": 4,
+    "lossMorale": -10,
+    "spotChancePerImpact": 0.08,
+    "spotEngageMult": 1.6,
+    "insideProtection": 0.35,
+    "proneProtection": 0.5,
+    "healingMult": 4,
+    "medicalPerHealHour": 1,
+    "floodlightsWanted": 4,
+    "artillery": {
+      "intervalMin": [
+        4,
+        7
+      ],
+      "ammoPerSalvo": 12,
+      "damage": [
+        45,
+        95
+      ],
+      "radius": 1.8,
+      "dangerClose": 4,
+      "counterBatteryChance": 0.3,
+      "flightTicks": 1
+    },
+    "heli": {
+      "burstMin": [
+        2,
+        4
+      ],
+      "damage": [
+        35,
+        80
+      ],
+      "ammoPerBurst": 4,
+      "range": 7,
+      "counterBatteryChance": 0.25
+    }
+  },
+  "enemies": [
+    {
+      "id": "insurgent",
+      "name": "Insurgé",
+      "health": 70,
+      "skill": [
+        30,
+        55
+      ],
+      "speed": 0.55,
+      "range": 8,
+      "visual": {
+        "color": "#4f4436",
+        "accent": "#d8d2c0",
+        "headwear": "turban"
+      }
+    }
+  ],
+  "attacks": {
+    "mortar": {
+      "type": "indirect",
+      "name": "Tirs de mortier",
+      "shells": [
+        4,
+        9
+      ],
+      "intervalMin": [
+        3,
+        7
+      ],
+      "radius": 1.6,
+      "buildingDamage": [
+        0.15,
+        0.4
+      ],
+      "agentDamage": [
+        35,
+        80
+      ]
+    },
+    "harassment": {
+      "type": "ground",
+      "name": "Harcèlement",
+      "enemies": [
+        3,
+        5
+      ],
+      "durationMin": 90
+    },
+    "assault": {
+      "type": "ground",
+      "name": "Assaut nocturne",
+      "enemies": [
+        6,
+        10
+      ],
+      "durationMin": 150
+    }
+  }
+}

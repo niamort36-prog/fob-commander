@@ -1,0 +1,91 @@
+{
+  "_doc": "Tutoriel guidé (Phase 8). Chaque étape se valide par : ack (bouton Suivant), building { defId, count } (bâtiments posés, chantiers compris) ou event { event } (événement du jeu ou de l'interface). highlight : sélecteur CSS de l'élément à mettre en évidence.",
+  "steps": [
+    {
+      "id": "welcome",
+      "title": "Bienvenue, mon capitaine",
+      "text": "Vous prenez le commandement d'une FOB à peine installée dans le district de Sarband. Ce tutoriel vous guide pendant les premières heures. Le temps continue de s'écouler : n'hésitez pas à mettre en pause (Espace).",
+      "done": { "type": "ack" }
+    },
+    {
+      "id": "camera",
+      "title": "Observer la base",
+      "text": "Déplacez la vue avec le clic droit glissé ou les touches ZQSD, et zoomez à la molette. Un clic gauche sur un soldat, un bâtiment ou un véhicule affiche sa fiche.",
+      "done": { "type": "ack" }
+    },
+    {
+      "id": "tents",
+      "title": "Loger vos hommes",
+      "text": "Vos soldats dorment à la belle étoile. Ouvrez l'onglet LOG du menu de construction et posez deux tentes de groupe à l'intérieur du périmètre (R pour pivoter, clic droit pour annuler).",
+      "highlight": ".build-menu",
+      "done": { "type": "building", "defId": "tent_group", "count": 2 }
+    },
+    {
+      "id": "speed",
+      "title": "Le temps",
+      "text": "Les chantiers avancent avec le temps et plus vite si des soldats y travaillent. Accélérez le jeu avec les boutons ▶▶ / ▶▶▶ ou les touches 2 et 3.",
+      "highlight": ".speeds",
+      "done": { "type": "event", "event": "time:speedChanged" }
+    },
+    {
+      "id": "roster",
+      "title": "Votre personnel",
+      "text": "Chaque soldat a ses besoins (faim, sommeil, hygiène, moral) et ses compétences. Ouvrez la liste du personnel avec le bouton Personnel ou la touche P.",
+      "highlight": ".hud-system",
+      "done": { "type": "event", "event": "ui:toggleRoster" }
+    },
+    {
+      "id": "supply",
+      "title": "Le ravitaillement",
+      "text": "Eau, vivres, munitions et carburant arrivent par convoi ou par hélicoptère. Ouvrez la Logistique (L) et commandez un ravitaillement : le camion devra être déchargé à la zone de déchargement.",
+      "highlight": ".hud-system",
+      "done": { "type": "event", "event": "supply:ordered" }
+    },
+    {
+      "id": "guard",
+      "title": "Défendre la base",
+      "text": "Les insurgés observent la FOB. Construisez une tour de garde (onglet DEF) : un fantassin de quart y montera, et la surveillance de la carte s'étendra.",
+      "highlight": ".build-menu",
+      "done": { "type": "building", "defId": "watchtower", "count": 1 }
+    },
+    {
+      "id": "lights",
+      "title": "Tenir la nuit",
+      "text": "La nuit, la base est plongée dans le noir et les défenseurs tirent moins bien. Construisez un groupe électrogène puis un mât d'éclairage (onglet INF).",
+      "highlight": ".build-menu",
+      "done": { "type": "building", "defId": "floodlight", "count": 1 }
+    },
+    {
+      "id": "map",
+      "title": "La carte tactique",
+      "text": "Ouvrez la carte du district (M) : villages, routes, unités alliées et groupes ennemis renseignés, avec leur fiabilité.",
+      "highlight": ".hud-system",
+      "done": { "type": "event", "event": "ui:toggleMap" }
+    },
+    {
+      "id": "mission",
+      "title": "Première patrouille",
+      "text": "Sur la carte, sélectionnez un village proche puis « Planifier une mission ». Choisissez Patrouille, cochez une escouade et lancez la mission.",
+      "done": { "type": "event", "event": "mission:launched" }
+    },
+    {
+      "id": "village",
+      "title": "La population",
+      "text": "La population est l'enjeu de la campagne. Sélectionnez un village et ouvrez sa fenêtre Diplomatie : aide, shura avec les anciens, projets, auxiliaires locaux.",
+      "done": { "type": "event", "event": "ui:openVillage" }
+    },
+    {
+      "id": "campaign",
+      "title": "La campagne",
+      "text": "Les objectifs du commandement et la stabilité régionale se suivent dans le panneau Campagne (C ou clic sur STAB). La stabilité conditionne votre budget et la menace sur la base.",
+      "highlight": ".hud-stability",
+      "done": { "type": "event", "event": "ui:toggleCampaign" }
+    },
+    {
+      "id": "end",
+      "title": "À vous de jouer",
+      "text": "Vous connaissez l'essentiel. Surveillez les stocks, le moral et la radio, tenez vos promesses… et bonne chance. Les options (son, vitesse des textes, intensité de la nuit) sont accessibles depuis la barre du haut.",
+      "done": { "type": "ack" }
+    }
+  ]
+}

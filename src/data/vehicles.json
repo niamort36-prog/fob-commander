@@ -1,0 +1,292 @@
+[
+  {
+    "id": "cargo_truck",
+    "name": "Camion logistique FMTV",
+    "kind": "road",
+    "speed": 0.9,
+    "capacity": 800,
+    "passengers": 8,
+    "visual": {
+      "style": "truck",
+      "color": "#6e6b4b",
+      "accent": "#8a7f5a",
+      "length": 2,
+      "height": 24
+    }
+  },
+  {
+    "id": "water_tanker",
+    "name": "Camion-citerne HEMTT (eau)",
+    "kind": "road",
+    "speed": 0.8,
+    "pumpPerMinute": 40,
+    "visual": {
+      "style": "tanker",
+      "color": "#6e6b4b",
+      "accent": "#7f8f86",
+      "placard": "#3f78b0",
+      "length": 2,
+      "height": 28
+    }
+  },
+  {
+    "id": "fuel_tanker",
+    "name": "Camion-citerne HEMTT (carburant)",
+    "kind": "road",
+    "speed": 0.8,
+    "pumpPerMinute": 40,
+    "visual": {
+      "style": "tanker",
+      "color": "#6e6b4b",
+      "accent": "#a89a72",
+      "placard": "#d07a2a",
+      "length": 2,
+      "height": 28
+    }
+  },
+  {
+    "id": "helicopter",
+    "name": "CH-47 Chinook",
+    "kind": "air",
+    "speed": 3,
+    "capacity": 250,
+    "passengers": 6,
+    "visual": {
+      "style": "chinook",
+      "color": "#5a5e42",
+      "accent": "#4a4d36",
+      "length": 3,
+      "height": 40,
+      "rotors": [
+        {
+          "u": 2.56,
+          "z": 30,
+          "radius": 1.3,
+          "blades": 3
+        },
+        {
+          "u": 0.34,
+          "z": 37,
+          "radius": 1.3,
+          "blades": 3
+        }
+      ],
+      "tailRotor": false
+    }
+  },
+  {
+    "id": "forklift",
+    "name": "Chariot élévateur",
+    "desc": "Décharge les camions bien plus vite que le personnel. Rattaché à une zone de déchargement, consomme du carburant.",
+    "kind": "base",
+    "speed": 0.7,
+    "carryCapacity": 80,
+    "price": 6000,
+    "upkeepPerDay": {
+      "fuel": 4
+    },
+    "requires": "unloading_zone",
+    "maxPerZone": 2,
+    "visual": {
+      "style": "forklift",
+      "color": "#d4a72c",
+      "accent": "#3a3a34",
+      "length": 2,
+      "height": 32
+    },
+    "role": "forklift"
+  },
+  {
+    "id": "mrap",
+    "name": "MRAP MaxxPro",
+    "desc": "Véhicule résistant aux mines. Transporte 5 soldats en mission : trajets bien plus rapides et meilleure protection. Consomme du carburant.",
+    "kind": "base",
+    "role": "patrol",
+    "speed": 1.0,
+    "passengers": 5,
+    "price": 15000,
+    "upkeepPerDay": {
+      "parts": 1
+    },
+    "requires": "vehicle_park",
+    "maxPerZone": 4,
+    "visual": {
+      "style": "mrap",
+      "color": "#b39a6b",
+      "accent": "#8a7a5a",
+      "length": 2,
+      "height": 40
+    },
+    "protection": 0.5
+  },
+  {
+    "id": "humvee",
+    "name": "Humvee M1151",
+    "desc": "Tout-terrain léger et rapide pour 4 soldats. Moins cher qu'un MRAP, mais bien moins protégé contre les mines et les tirs.",
+    "kind": "base",
+    "role": "patrol",
+    "speed": 1.25,
+    "passengers": 4,
+    "price": 7000,
+    "protection": 0.8,
+    "upkeepPerDay": {
+      "parts": 0.5
+    },
+    "requires": "vehicle_park",
+    "maxPerZone": 4,
+    "visual": {
+      "style": "humvee",
+      "color": "#b8a175",
+      "accent": "#8a7a5a",
+      "length": 2,
+      "height": 26
+    }
+  },
+  {
+    "id": "c130",
+    "name": "C-130 Hercules",
+    "kind": "plane",
+    "speed": 7,
+    "groundSpeed": 1.6,
+    "taxiSpeed": 0.9,
+    "capacity": 3000,
+    "passengers": 40,
+    "vehicleSlots": 2,
+    "haulers": 10,
+    "visual": {
+      "style": "c130",
+      "color": "#6b7064",
+      "accent": "#4f5449",
+      "length": 6,
+      "width": 7,
+      "height": 46
+    }
+  },
+  {
+    "id": "a10",
+    "name": "A-10 Thunderbolt II",
+    "kind": "plane",
+    "speed": 12,
+    "visual": {
+      "style": "a10",
+      "color": "#7d8178",
+      "accent": "#5a5e57",
+      "length": 3,
+      "width": 3.4,
+      "height": 30
+    }
+  },
+  {
+    "id": "cart",
+    "name": "Charrette à âne",
+    "kind": "road",
+    "speed": 0.35,
+    "visual": {
+      "style": "cart",
+      "color": "#7a5a38",
+      "accent": "#8a8478",
+      "length": 2,
+      "height": 22
+    }
+  },
+  {
+    "id": "pmc_suv",
+    "name": "Land Cruiser blindé (société privée)",
+    "kind": "road",
+    "speed": 1.0,
+    "visual": {
+      "style": "suv",
+      "color": "#2e2f2b",
+      "accent": "#5a5244",
+      "length": 2,
+      "height": 32
+    }
+  },
+  {
+    "id": "attack_helo",
+    "name": "AH-64 Apache",
+    "desc": "Hélicoptère d'attaque biplace (canon de 30 mm, roquettes). Appuie les missions et défend la base pendant les attaques au sol. Stationne sur une hélisurface (un appareil par hélisurface).",
+    "kind": "air",
+    "role": "attack",
+    "speed": 3.5,
+    "price": 45000,
+    "protection": 0.6,
+    "upkeepPerDay": {
+      "fuel": 8,
+      "parts": 2
+    },
+    "requires": "helipad",
+    "maxPerZone": 1,
+    "visual": {
+      "style": "attack_helo",
+      "color": "#4a4f3a",
+      "accent": "#2e3226",
+      "length": 3,
+      "height": 36
+    }
+  },
+  {
+    "id": "transport_helo",
+    "name": "UH-60 Black Hawk",
+    "desc": "Hélicoptère de manœuvre (8 soldats) : héliportage des équipes en mission, bien plus rapide et sûr que la route. Stationne sur une hélisurface (un appareil par hélisurface).",
+    "kind": "air",
+    "role": "transport",
+    "speed": 3,
+    "passengers": 8,
+    "price": 28000,
+    "protection": 0.7,
+    "upkeepPerDay": {
+      "fuel": 6,
+      "parts": 1
+    },
+    "requires": "helipad",
+    "maxPerZone": 1,
+    "visual": {
+      "style": "blackhawk",
+      "color": "#55593f",
+      "accent": "#43462f",
+      "length": 3,
+      "height": 36
+    }
+  },
+  {
+    "id": "little_bird",
+    "name": "MH-6 Little Bird",
+    "desc": "Hélicoptère léger des forces spéciales : 4 opérateurs assis sur les banquettes extérieures. Très rapide et discret (approche à basse altitude, assaut éclair sur l'objectif), mais sans aucune protection : les pertes sont plus lourdes si l'affaire tourne mal. Stationne sur une hélisurface (un appareil par hélisurface).",
+    "kind": "air",
+    "role": "transport",
+    "speed": 4,
+    "passengers": 4,
+    "price": 18000,
+    "protection": 1.3,
+    "heliSpeedKmh": 200,
+    "heliFuelMult": 0.5,
+    "stealthBonus": 0.12,
+    "objectiveMult": 0.6,
+    "upkeepPerDay": {
+      "fuel": 3,
+      "parts": 1
+    },
+    "requires": "helipad",
+    "maxPerZone": 1,
+    "visual": {
+      "style": "littlebird",
+      "color": "#2c2e2a",
+      "accent": "#3a3d36",
+      "length": 2,
+      "height": 30,
+      "rotors": [
+        {
+          "u": 1.15,
+          "z": 21,
+          "radius": 0.95,
+          "blades": 6
+        }
+      ],
+      "tailRotorPos": {
+        "u": 0.06,
+        "z": 17
+      }
+    }
+  }
+]

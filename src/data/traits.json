@@ -1,0 +1,14 @@
+[
+  { "id": "endurant",    "name": "Endurant",       "desc": "Supporte mieux le manque de sommeil.",                 "needDecay": { "sleep": 0.8 } },
+  { "id": "big_eater",   "name": "Gros mangeur",   "desc": "A faim plus souvent que les autres.",                  "needDecay": { "food": 1.3 } },
+  { "id": "fastidious",  "name": "Maniaque",       "desc": "Très attaché à l'hygiène ; content quand tout est propre.", "needDecay": { "hygiene": 1.4 }, "moraleBase": 3 },
+  { "id": "grumbler",    "name": "Râleur",         "desc": "Toujours quelque chose à redire.",                     "moraleBase": -8 },
+  { "id": "optimist",    "name": "Optimiste",      "desc": "Garde le sourire en toutes circonstances.",            "moraleBase": 8 },
+  { "id": "veteran",     "name": "Vétéran",        "desc": "Plusieurs déploiements derrière lui. Efficace et calme.", "efficiency": 1.1, "skills": { "shooting": 10, "leadership": 5 } },
+  { "id": "rookie",      "name": "Bleu",           "desc": "Premier déploiement. Apprend vite, mais manque d'assurance.", "efficiency": 0.9, "xpMult": 1.5 },
+  { "id": "insomniac",   "name": "Insomniaque",    "desc": "Dort mal et se fatigue vite.",                         "needDecay": { "sleep": 1.25 } },
+  { "id": "born_leader", "name": "Meneur",         "desc": "Les autres le suivent naturellement.",                 "moraleBase": 3, "skills": { "leadership": 15 } },
+  { "id": "hothead",     "name": "Tête brûlée",    "desc": "Courageux jusqu'à l'imprudence, prompt à s'emporter.", "moraleBase": -2, "skills": { "shooting": 8 }, "incidentMult": 2 },
+  { "id": "handy",       "name": "Bricoleur",      "desc": "Sait tout réparer avec du ruban adhésif.",             "skills": { "mechanics": 15 } },
+  { "id": "stoic",       "name": "Stoïque",        "desc": "Le moral varie peu, en bien comme en mal.",            "moraleDrift": 0.5 }
+]

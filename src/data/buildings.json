@@ -1,0 +1,1741 @@
+[
+  {
+    "id": "hesco",
+    "name": "Mur HESCO",
+    "desc": "Gabions grillagés remplis de terre. Pose en ligne par glisser. Bloque le passage : prévoyez une entrée pour le personnel et les véhicules.",
+    "category": "defense",
+    "footprint": [
+      1,
+      1
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": true
+    },
+    "cost": {
+      "funds": 150
+    },
+    "buildTimeMin": 30,
+    "upkeepPerDay": {
+      "funds": 1
+    },
+    "hp": 400,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.hesco",
+      "style": "hesco",
+      "color": "#b39a6b",
+      "accent": "#c9b07c",
+      "height": 22
+    }
+  },
+  {
+    "id": "watchtower",
+    "name": "Tour de garde",
+    "desc": "Poste d'observation surélevé avec sacs de sable. Un fantassin de quart y monte la garde.",
+    "category": "defense",
+    "footprint": [
+      1,
+      1
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": false
+    },
+    "cost": {
+      "funds": 850
+    },
+    "buildTimeMin": 240,
+    "upkeepPerDay": {
+      "funds": 15
+    },
+    "consumptionPerDay": {
+      "ammo": 5
+    },
+    "powerDemand": 2,
+    "wearPerDay": 0.01,
+    "services": {
+      "guard": {
+        "slots": 1,
+        "standZ": 40,
+        "hidePx": 8
+      }
+    },
+    "levels": [
+      {
+        "name": "Tour renforcée",
+        "cost": {
+          "funds": 650
+        },
+        "buildTimeMin": 180,
+        "services": {
+          "guard": {
+            "slots": 2,
+            "standZ": 40,
+            "hidePx": 8
+          }
+        },
+        "consumptionPerDay": {
+          "ammo": 8
+        }
+      }
+    ],
+    "hp": 250,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.watchtower",
+      "style": "tower",
+      "color": "#7b6a4f",
+      "accent": "#b39a6b",
+      "height": 74
+    },
+    "light": {
+      "radius": 3,
+      "color": "#fff1c8",
+      "power": true
+    },
+    "supplies": {
+      "ammo": {
+        "capacity": 25,
+        "refillBelow": 10
+      }
+    }
+  },
+  {
+    "id": "bunker",
+    "name": "Abri bétonné",
+    "desc": "Abri enterré sous sacs de sable. Pendant une attaque, le personnel qui s'y réfugie est à l'abri des éclats.",
+    "category": "defense",
+    "footprint": [
+      2,
+      2
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 1400
+    },
+    "buildTimeMin": 240,
+    "upkeepPerDay": {
+      "funds": 5
+    },
+    "wearPerDay": 0.003,
+    "services": {
+      "shelter": {
+        "slots": 10
+      }
+    },
+    "hp": 600,
+    "unlock": {
+      "reputation": 0,
+      "points": 6
+    },
+    "visual": {
+      "key": "bld.bunker",
+      "style": "bunker",
+      "color": "#8a7a5a",
+      "accent": "#a8936a",
+      "height": 16
+    },
+    "light": {
+      "radius": 1.2,
+      "color": "#ffd38a",
+      "power": true
+    },
+    "entrance": true
+  },
+  {
+    "id": "tent_group",
+    "name": "Tente de groupe",
+    "desc": "Grande tente pour une escouade. Chaque couchage est attribué à un soldat.",
+    "category": "housing",
+    "footprint": [
+      3,
+      2
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 550
+    },
+    "buildTimeMin": 180,
+    "upkeepPerDay": {
+      "funds": 10
+    },
+    "wearPerDay": 0.02,
+    "services": {
+      "sleep": {
+        "slots": 8
+      }
+    },
+    "levels": [
+      {
+        "name": "Tente renforcée",
+        "cost": {
+          "funds": 350
+        },
+        "buildTimeMin": 120,
+        "services": {
+          "sleep": {
+            "slots": 10
+          }
+        }
+      }
+    ],
+    "hp": 100,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.tent_group",
+      "style": "tent",
+      "color": "#7d7a52",
+      "height": 26
+    },
+    "light": {
+      "radius": 1.3,
+      "color": "#ffd38a",
+      "power": true
+    },
+    "entrance": true,
+    "modules": [
+      {
+        "id": "beds",
+        "name": "Lits et matelas",
+        "desc": "Vrais lits à sommier et matelas à la place des lits picots : sommeil plus réparateur.",
+        "cost": {
+          "funds": 450,
+          "parts": 10
+        },
+        "buildTimeMin": 120,
+        "serviceEffects": {
+          "sleep": {
+            "sleep": 4
+          }
+        },
+        "residentMorale": 3
+      },
+      {
+        "id": "ac",
+        "name": "Climatisation",
+        "desc": "Climatiseur mural et gaine : des nuits supportables sous la tente. Consomme de l'électricité.",
+        "cost": {
+          "funds": 1100,
+          "parts": 20
+        },
+        "buildTimeMin": 180,
+        "visual": "ac",
+        "powerDemand": 2,
+        "serviceEffects": {
+          "sleep": {
+            "sleep": 3
+          }
+        },
+        "residentMorale": 6
+      },
+      {
+        "id": "sandbags",
+        "name": "Murets de sacs de sable",
+        "desc": "Murets à hauteur de lit autour de la tente : protège les occupants et la toile des éclats.",
+        "cost": {
+          "funds": 300,
+          "parts": 5
+        },
+        "buildTimeMin": 240,
+        "visual": "sandbags",
+        "blastProtection": 0.5
+      }
+    ]
+  },
+  {
+    "id": "toc",
+    "name": "Centre d'opérations (TOC)",
+    "desc": "Cœur de la base : officiers et commandant y planifient les opérations.",
+    "category": "command",
+    "footprint": [
+      3,
+      3
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 3500
+    },
+    "buildTimeMin": 480,
+    "upkeepPerDay": {
+      "funds": 40
+    },
+    "powerDemand": 20,
+    "wearPerDay": 0.01,
+    "services": {
+      "command": {
+        "slots": 4
+      }
+    },
+    "hp": 300,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.toc",
+      "style": "building",
+      "color": "#8a8468",
+      "accent": "#5c6b3c",
+      "height": 32,
+      "antenna": true
+    },
+    "light": {
+      "radius": 2.6,
+      "color": "#ffe2a8",
+      "power": true
+    },
+    "entrance": true,
+    "modules": [
+      {
+        "id": "radio_mast",
+        "name": "Antenne radio longue portée",
+        "desc": "Mât haubané et émetteur puissant : liaison radio fiable avec les unités lointaines.",
+        "cost": {
+          "funds": 2250,
+          "parts": 30
+        },
+        "buildTimeMin": 240,
+        "visual": "mast",
+        "powerDemand": 2,
+        "comms": {
+          "rangeKm": 15,
+          "success": 0.02
+        }
+      },
+      {
+        "id": "satcom",
+        "name": "Liaison satellite",
+        "desc": "Terminal satellite : liaison permanente avec toutes les unités, où qu'elles soient, et images en temps réel.",
+        "cost": {
+          "funds": 6750,
+          "parts": 40
+        },
+        "buildTimeMin": 360,
+        "visual": "dish",
+        "requires": "radio_mast",
+        "powerDemand": 3,
+        "comms": {
+          "global": true,
+          "success": 0.04
+        }
+      },
+      {
+        "id": "computers",
+        "name": "Informatique et cartographie numérique",
+        "desc": "Postes de travail, serveur et logiciels de cartographie : analyse du renseignement bien plus efficace.",
+        "cost": {
+          "funds": 3750,
+          "parts": 30
+        },
+        "buildTimeMin": 300,
+        "visual": "servers",
+        "powerDemand": 4,
+        "intel": {
+          "refine": 0.1,
+          "extraAnalysis": 0.5
+        }
+      }
+    ]
+  },
+  {
+    "id": "unloading_zone",
+    "name": "Zone de déchargement",
+    "desc": "Aire compactée où se garent les camions de palettes. Le personnel y décharge la cargaison et la porte jusqu'au stockage. Doit être accessible par la route.",
+    "category": "logistics",
+    "footprint": [
+      4,
+      3
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 1050
+    },
+    "buildTimeMin": 120,
+    "upkeepPerDay": {
+      "funds": 5
+    },
+    "powerDemand": 3,
+    "services": {
+      "parking": {
+        "slots": 2
+      }
+    },
+    "acceptsCargo": [
+      "food",
+      "ammo",
+      "parts",
+      "medical"
+    ],
+    "walkSpeedMult": 1.3,
+    "hp": 500,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.unloading_zone",
+      "style": "flat",
+      "color": "#79725f",
+      "accent": "#c9a227",
+      "height": 0,
+      "markings": "parking"
+    },
+    "light": {
+      "radius": 2.6,
+      "color": "#fff1c8",
+      "power": true
+    },
+    "materialDepot": true
+  },
+  {
+    "id": "vehicle_park",
+    "name": "Parc véhicules",
+    "desc": "Aire de stationnement et d'entretien des véhicules blindés. Nécessaire pour acquérir des MRAP (4 par parc).",
+    "category": "logistics",
+    "footprint": [
+      5,
+      4
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 2100
+    },
+    "buildTimeMin": 240,
+    "upkeepPerDay": {
+      "funds": 10
+    },
+    "powerDemand": 2,
+    "services": {
+      "parking": {
+        "slots": 4
+      }
+    },
+    "walkSpeedMult": 1.3,
+    "hp": 500,
+    "unlock": {
+      "reputation": 0,
+      "points": 6
+    },
+    "visual": {
+      "key": "bld.vehicle_park",
+      "style": "flat",
+      "color": "#6e685a",
+      "accent": "#d8d2c0",
+      "height": 0,
+      "markings": "parking"
+    },
+    "light": {
+      "radius": 2.2,
+      "color": "#fff1c8",
+      "power": true
+    }
+  },
+  {
+    "id": "warehouse",
+    "name": "Entrepôt",
+    "desc": "Stockage couvert des rations, pièces et fournitures médicales. Les palettes déchargées y sont portées en priorité.",
+    "category": "logistics",
+    "footprint": [
+      4,
+      3
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 2100
+    },
+    "buildTimeMin": 360,
+    "upkeepPerDay": {
+      "funds": 15
+    },
+    "powerDemand": 2,
+    "wearPerDay": 0.01,
+    "storage": {
+      "food": 3000,
+      "parts": 500,
+      "medical": 300
+    },
+    "levels": [
+      {
+        "name": "Entrepôt agrandi",
+        "cost": {
+          "funds": 1750
+        },
+        "buildTimeMin": 240,
+        "storage": {
+          "food": 6000,
+          "parts": 1000,
+          "medical": 600
+        }
+      }
+    ],
+    "hp": 250,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.warehouse",
+      "style": "building",
+      "color": "#7f7a62",
+      "accent": "#5f6b4a",
+      "height": 30
+    },
+    "light": {
+      "radius": 1.8,
+      "color": "#ffe2a8",
+      "power": true
+    },
+    "entrance": true,
+    "materialDepot": true
+  },
+  {
+    "id": "ammo_depot",
+    "name": "Dépôt de munitions",
+    "desc": "Casemate protégée par des merlons. Stocke les munitions.",
+    "category": "logistics",
+    "footprint": [
+      3,
+      3
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 2450
+    },
+    "buildTimeMin": 360,
+    "upkeepPerDay": {
+      "funds": 15
+    },
+    "wearPerDay": 0.005,
+    "storage": {
+      "ammo": 4000
+    },
+    "hp": 400,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.ammo_depot",
+      "style": "building",
+      "color": "#6a6950",
+      "accent": "#a83a2a",
+      "height": 20
+    },
+    "light": {
+      "radius": 1.6,
+      "color": "#ffe2a8",
+      "power": true
+    },
+    "entrance": true
+  },
+  {
+    "id": "water_tank",
+    "name": "Citerne d'eau",
+    "desc": "Réservoir souple sur dalle. Les camions-citernes doivent pouvoir se garer à côté pour la remplir.",
+    "category": "logistics",
+    "footprint": [
+      2,
+      2
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 1750
+    },
+    "buildTimeMin": 240,
+    "upkeepPerDay": {
+      "funds": 20
+    },
+    "wearPerDay": 0.01,
+    "storage": {
+      "water": 5000
+    },
+    "levels": [
+      {
+        "name": "Citerne double",
+        "cost": {
+          "funds": 1400
+        },
+        "buildTimeMin": 180,
+        "storage": {
+          "water": 9000
+        }
+      }
+    ],
+    "hp": 150,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.water_tank",
+      "style": "tank",
+      "color": "#5f7466",
+      "accent": "#8a8f86",
+      "height": 30
+    }
+  },
+  {
+    "id": "fuel_tank",
+    "name": "Réservoir de carburant",
+    "desc": "Cuve de gazole pour les groupes électrogènes et les véhicules. Les camions-citernes doivent pouvoir se garer à côté.",
+    "category": "logistics",
+    "footprint": [
+      2,
+      2
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 1750
+    },
+    "buildTimeMin": 240,
+    "upkeepPerDay": {
+      "funds": 15
+    },
+    "wearPerDay": 0.01,
+    "storage": {
+      "fuel": 4000
+    },
+    "hp": 150,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.fuel_tank",
+      "style": "tank",
+      "color": "#6f604a",
+      "accent": "#8a8f86",
+      "height": 26
+    }
+  },
+  {
+    "id": "water_well",
+    "name": "Forage d'eau",
+    "desc": "Pompe électrique sur forage profond. Produit de l'eau en continu et libère des camions-citernes. Nécessite de l'électricité.",
+    "category": "logistics",
+    "footprint": [
+      2,
+      2
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 2100
+    },
+    "buildTimeMin": 360,
+    "upkeepPerDay": {
+      "funds": 20
+    },
+    "productionPerDay": {
+      "water": 150
+    },
+    "powerDemand": 25,
+    "wearPerDay": 0.02,
+    "hp": 150,
+    "unlock": {
+      "reputation": 10,
+      "points": 15
+    },
+    "visual": {
+      "key": "bld.water_well",
+      "style": "building",
+      "color": "#6f7a72",
+      "accent": "#4f6f8a",
+      "height": 16
+    },
+    "light": {
+      "radius": 1.2,
+      "color": "#ffe2a8",
+      "power": true
+    },
+    "entrance": true
+  },
+  {
+    "id": "workshop",
+    "name": "Atelier de maintenance",
+    "desc": "Établis et outillage. Double la vitesse des réparations effectuées par le personnel de soutien.",
+    "category": "logistics",
+    "footprint": [
+      3,
+      3
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 2800
+    },
+    "buildTimeMin": 360,
+    "upkeepPerDay": {
+      "funds": 20
+    },
+    "powerDemand": 8,
+    "wearPerDay": 0.01,
+    "provides": {
+      "maintenance": 1
+    },
+    "hp": 250,
+    "unlock": {
+      "reputation": 0,
+      "points": 8
+    },
+    "visual": {
+      "key": "bld.workshop",
+      "style": "building",
+      "color": "#7a705a",
+      "accent": "#c98d5a",
+      "height": 28
+    },
+    "light": {
+      "radius": 2.2,
+      "color": "#ffe2a8",
+      "power": true
+    },
+    "entrance": true,
+    "materialDepot": true
+  },
+  {
+    "id": "dfac",
+    "name": "Réfectoire (DFAC)",
+    "desc": "Repas chauds préparés par les cuisiniers avec les rations livrées depuis l'entrepôt. Sans cuisinier ni rations, ce sera ration froide. Fonctionne au ralenti sans électricité.",
+    "category": "life",
+    "footprint": [
+      4,
+      3
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 2450
+    },
+    "buildTimeMin": 360,
+    "upkeepPerDay": {
+      "funds": 30
+    },
+    "powerDemand": 15,
+    "wearPerDay": 0.015,
+    "services": {
+      "meal": {
+        "slots": 12
+      },
+      "kitchen": {
+        "slots": 2
+      }
+    },
+    "levels": [
+      {
+        "name": "Réfectoire agrandi",
+        "cost": {
+          "funds": 2100
+        },
+        "buildTimeMin": 300,
+        "services": {
+          "meal": {
+            "slots": 20
+          },
+          "kitchen": {
+            "slots": 3
+          }
+        }
+      }
+    ],
+    "hp": 200,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.dfac",
+      "style": "building",
+      "color": "#8b8162",
+      "accent": "#a8624a",
+      "height": 28
+    },
+    "light": {
+      "radius": 2.4,
+      "color": "#ffd38a",
+      "power": true
+    },
+    "entrance": true,
+    "modules": [
+      {
+        "id": "kitchen",
+        "name": "Cuisine équipée",
+        "desc": "Fours, chambres froides et cuisiniers : de vrais repas chauds.",
+        "cost": {
+          "funds": 1900,
+          "parts": 20
+        },
+        "buildTimeMin": 240,
+        "visual": "chimney",
+        "powerDemand": 3,
+        "serviceEffects": {
+          "meal": {
+            "morale": 4
+          }
+        }
+      },
+      {
+        "id": "ac",
+        "name": "Climatisation",
+        "desc": "Une salle fraîche pour manger au calme.",
+        "cost": {
+          "funds": 1350,
+          "parts": 20
+        },
+        "buildTimeMin": 180,
+        "visual": "ac",
+        "powerDemand": 2,
+        "serviceEffects": {
+          "meal": {
+            "morale": 2
+          }
+        }
+      }
+    ],
+    "supplies": {
+      "food": {
+        "capacity": 90,
+        "refillBelow": 45
+      }
+    },
+    "kitchen": {
+      "mealCapacity": 40
+    },
+    "cleaning": {
+      "dirtPerUse": 0.004
+    }
+  },
+  {
+    "id": "showers",
+    "name": "Douches et latrines",
+    "desc": "Conteneurs sanitaires. Indispensables à l'hygiène ; consomment de l'eau à chaque passage et se salissent : le soutien doit les nettoyer.",
+    "category": "life",
+    "footprint": [
+      2,
+      2
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 1050
+    },
+    "buildTimeMin": 180,
+    "upkeepPerDay": {
+      "funds": 15
+    },
+    "powerDemand": 5,
+    "wearPerDay": 0.02,
+    "services": {
+      "hygiene": {
+        "slots": 4
+      }
+    },
+    "levels": [
+      {
+        "name": "Bloc sanitaire",
+        "cost": {
+          "funds": 850
+        },
+        "buildTimeMin": 150,
+        "services": {
+          "hygiene": {
+            "slots": 7
+          }
+        }
+      }
+    ],
+    "hp": 120,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.showers",
+      "style": "building",
+      "color": "#9a958a",
+      "accent": "#4f6f8a",
+      "height": 24
+    },
+    "light": {
+      "radius": 1.6,
+      "color": "#ffe2a8",
+      "power": true
+    },
+    "entrance": true,
+    "modules": [
+      {
+        "id": "heater",
+        "name": "Chauffe-eau",
+        "desc": "Réservoir sur le toit et résistance électrique : des douches chaudes.",
+        "cost": {
+          "funds": 900,
+          "parts": 15
+        },
+        "buildTimeMin": 180,
+        "visual": "roof_tank",
+        "powerDemand": 2,
+        "serviceEffects": {
+          "hygiene": {
+            "morale": 4
+          }
+        }
+      }
+    ],
+    "cleaning": {
+      "dirtPerUse": 0.012
+    }
+  },
+  {
+    "id": "infirmary",
+    "name": "Infirmerie",
+    "desc": "Poste de soins. Le personnel médical y travaille et accélère la guérison des malades.",
+    "category": "life",
+    "footprint": [
+      3,
+      2
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 2100
+    },
+    "buildTimeMin": 300,
+    "upkeepPerDay": {
+      "funds": 25
+    },
+    "powerDemand": 10,
+    "wearPerDay": 0.01,
+    "services": {
+      "medical": {
+        "slots": 2
+      }
+    },
+    "hp": 150,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.infirmary",
+      "style": "building",
+      "color": "#a39d88",
+      "accent": "#b03a2e",
+      "height": 26
+    },
+    "light": {
+      "radius": 2.2,
+      "color": "#e8f0ff",
+      "power": true
+    },
+    "entrance": true,
+    "modules": [
+      {
+        "id": "surgery",
+        "name": "Bloc de soins avancés",
+        "desc": "Table d'opération, oxygène et éclairage chirurgical : les blessés guérissent plus vite.",
+        "cost": {
+          "funds": 4500,
+          "medical": 40
+        },
+        "buildTimeMin": 360,
+        "visual": "redcross",
+        "powerDemand": 4,
+        "healingMult": 1.6
+      }
+    ],
+    "supplies": {
+      "medical": {
+        "capacity": 30,
+        "refillBelow": 12
+      }
+    }
+  },
+  {
+    "id": "gym",
+    "name": "Salle de sport",
+    "desc": "Tente équipée d'haltères et de sacs de frappe. Exutoire précieux pour le moral.",
+    "category": "life",
+    "footprint": [
+      3,
+      2
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 1400
+    },
+    "buildTimeMin": 240,
+    "upkeepPerDay": {
+      "funds": 15
+    },
+    "powerDemand": 4,
+    "wearPerDay": 0.02,
+    "services": {
+      "fitness": {
+        "slots": 6
+      }
+    },
+    "hp": 100,
+    "unlock": {
+      "reputation": 0,
+      "points": 4
+    },
+    "visual": {
+      "key": "bld.gym",
+      "style": "tent",
+      "color": "#6e6c50",
+      "height": 24
+    },
+    "light": {
+      "radius": 1.6,
+      "color": "#ffd38a",
+      "power": true
+    },
+    "entrance": true,
+    "modules": [
+      {
+        "id": "weights",
+        "name": "Bancs et charges guidées",
+        "desc": "Bancs, barres olympiques et machines guidées : des séances bien plus profitables.",
+        "cost": {
+          "funds": 900,
+          "parts": 15
+        },
+        "buildTimeMin": 120,
+        "serviceEffects": {
+          "fitness": {
+            "morale": 3
+          }
+        },
+        "skillMult": 1.0
+      },
+      {
+        "id": "cardio",
+        "name": "Tapis de course et vélos",
+        "desc": "Cardio à l'abri de la chaleur. Consomme de l'électricité.",
+        "cost": {
+          "funds": 1100,
+          "parts": 15
+        },
+        "buildTimeMin": 120,
+        "powerDemand": 2,
+        "serviceEffects": {
+          "fitness": {
+            "morale": 2,
+            "sleep": 1
+          }
+        }
+      },
+      {
+        "id": "boxing",
+        "name": "Ring et sacs de frappe",
+        "desc": "Un exutoire : les tensions retombent, les bagarres se font plus rares.",
+        "cost": {
+          "funds": 700,
+          "parts": 5
+        },
+        "buildTimeMin": 90,
+        "serviceEffects": {
+          "fitness": {
+            "morale": 2
+          }
+        }
+      },
+      {
+        "id": "ac",
+        "name": "Climatisation",
+        "desc": "S'entraîner sans étouffer sous la toile.",
+        "cost": {
+          "funds": 1100,
+          "parts": 15
+        },
+        "buildTimeMin": 180,
+        "visual": "ac",
+        "powerDemand": 2,
+        "serviceEffects": {
+          "fitness": {
+            "morale": 2
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "generator",
+    "name": "Groupe électrogène",
+    "desc": "Produit l'électricité de la base en brûlant du carburant. Sans carburant, plus de courant.",
+    "category": "infrastructure",
+    "footprint": [
+      2,
+      2
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 1750
+    },
+    "buildTimeMin": 180,
+    "upkeepPerDay": {
+      "funds": 10
+    },
+    "consumptionPerDay": {
+      "fuel": 30
+    },
+    "powerSupply": 60,
+    "wearPerDay": 0.03,
+    "levels": [
+      {
+        "name": "Groupe électrogène lourd",
+        "cost": {
+          "funds": 1400
+        },
+        "buildTimeMin": 180,
+        "powerSupply": 100,
+        "consumptionPerDay": {
+          "fuel": 45
+        }
+      }
+    ],
+    "hp": 150,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.generator",
+      "style": "building",
+      "color": "#59613f",
+      "accent": "#c9a227",
+      "height": 18
+    },
+    "light": {
+      "radius": 1.4,
+      "color": "#ffd38a",
+      "power": false
+    },
+    "entrance": true,
+    "supplies": {
+      "fuel": {
+        "capacity": 45,
+        "refillBelow": 20
+      }
+    }
+  },
+  {
+    "id": "helipad",
+    "name": "Hélisurface",
+    "desc": "Aire de poser balisée pour les rotations d'hélicoptères. Les palettes y sont déchargées comme sur une zone de déchargement.",
+    "category": "infrastructure",
+    "footprint": [
+      4,
+      4
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 4200
+    },
+    "buildTimeMin": 480,
+    "upkeepPerDay": {
+      "funds": 20
+    },
+    "powerDemand": 3,
+    "services": {
+      "parking": {
+        "slots": 1
+      }
+    },
+    "acceptsCargo": [
+      "food",
+      "ammo",
+      "parts",
+      "medical"
+    ],
+    "walkSpeedMult": 1.3,
+    "hp": 500,
+    "unlock": {
+      "reputation": 10,
+      "points": 15
+    },
+    "visual": {
+      "key": "bld.helipad",
+      "style": "flat",
+      "color": "#6f6a5a",
+      "accent": "#e8e2d0",
+      "height": 0,
+      "markings": "helipad"
+    },
+    "light": {
+      "radius": 3,
+      "color": "#ffeedd",
+      "power": true
+    },
+    "materialDepot": true
+  },
+  {
+    "id": "road",
+    "name": "Route en gravier",
+    "desc": "Piste compactée. Pose en ligne par glisser. Accélère le personnel et surtout les véhicules.",
+    "category": "infrastructure",
+    "footprint": [
+      1,
+      1
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": true
+    },
+    "cost": {
+      "funds": 20
+    },
+    "buildTimeMin": 10,
+    "upkeepPerDay": {},
+    "walkSpeedMult": 1.6,
+    "hp": 1000,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.road",
+      "style": "flat",
+      "color": "#6b6253",
+      "accent": "#857b69",
+      "height": 0
+    }
+  },
+  {
+    "id": "floodlight",
+    "name": "Mât d'éclairage",
+    "desc": "Projecteurs sur mât télescopique. Éclaire les abords la nuit : les défenseurs y voient leurs cibles (consomme de l'électricité).",
+    "category": "infrastructure",
+    "footprint": [
+      1,
+      1
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": false
+    },
+    "cost": {
+      "funds": 450
+    },
+    "buildTimeMin": 60,
+    "upkeepPerDay": {
+      "funds": 2
+    },
+    "powerDemand": 3,
+    "wearPerDay": 0.01,
+    "hp": 60,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "light": {
+      "radius": 6,
+      "color": "#fff4d6",
+      "power": true
+    },
+    "visual": {
+      "key": "bld.floodlight",
+      "style": "pole",
+      "color": "#5d5f52",
+      "accent": "#fff1c8",
+      "height": 58
+    }
+  },
+  {
+    "id": "airstrip",
+    "name": "Piste d'aviation",
+    "desc": "Piste en terre compactée et grillage PSP pour les avions de transport C-130 Hercules : rotations à grande capacité (ressources, renforts, véhicules) et base avancée de l'appui aérien (A-10, AC-130).",
+    "category": "infrastructure",
+    "footprint": [
+      4,
+      22
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 28000,
+      "parts": 150
+    },
+    "buildTimeMin": 2880,
+    "upkeepPerDay": {
+      "funds": 120
+    },
+    "powerDemand": 6,
+    "wearPerDay": 0.01,
+    "services": {
+      "parking": {
+        "slots": 1
+      }
+    },
+    "acceptsCargo": [
+      "food",
+      "ammo",
+      "parts",
+      "medical"
+    ],
+    "walkSpeedMult": 1.3,
+    "hp": 2000,
+    "unlock": {
+      "reputation": 30,
+      "points": 40
+    },
+    "light": {
+      "radius": 1.1,
+      "color": "#ffd890",
+      "power": true,
+      "spacing": 3
+    },
+    "visual": {
+      "key": "bld.airstrip",
+      "style": "flat",
+      "color": "#7a7058",
+      "accent": "#e8e2d0",
+      "height": 0,
+      "markings": "runway"
+    },
+    "materialDepot": true
+  },
+  {
+    "id": "artillery",
+    "name": "Batterie d'obusiers",
+    "desc": "Deux obusiers de 155 mm en alvéoles de sacs de sable. Appuient les missions jusqu'à 25 km, pilonnent les assaillants pendant les attaques au sol et ripostent aux tirs de mortier (contre-batterie).",
+    "category": "defense",
+    "footprint": [
+      4,
+      4
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 12600
+    },
+    "buildTimeMin": 720,
+    "upkeepPerDay": {
+      "funds": 40
+    },
+    "consumptionPerDay": {
+      "ammo": 4
+    },
+    "wearPerDay": 0.015,
+    "hp": 600,
+    "unlock": {
+      "reputation": 20,
+      "points": 30
+    },
+    "visual": {
+      "key": "bld.artillery",
+      "style": "howitzer",
+      "color": "#5d6342",
+      "accent": "#b39a6b",
+      "height": 26
+    },
+    "supplies": {
+      "ammo": {
+        "capacity": 60,
+        "refillBelow": 25
+      }
+    }
+  },
+  {
+    "id": "shooting_range",
+    "name": "Stand de tir",
+    "desc": "Pas de tir couvert, cibles et merlon pare-balles. Les soldats y améliorent leur tir… en consommant des munitions. Bruyant : à éloigner des tentes.",
+    "category": "training",
+    "footprint": [
+      8,
+      3
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 2800
+    },
+    "buildTimeMin": 360,
+    "upkeepPerDay": {
+      "funds": 15
+    },
+    "wearPerDay": 0.01,
+    "services": {
+      "shooting": {
+        "slots": 4
+      }
+    },
+    "noise": {
+      "radius": 10,
+      "sleepMult": 0.4,
+      "moralePerHour": -3
+    },
+    "hp": 300,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "modules": [
+      {
+        "id": "targets",
+        "name": "Cibles mobiles électriques",
+        "desc": "Silhouettes escamotables commandées à distance : un entraînement bien plus efficace.",
+        "cost": {
+          "funds": 1500,
+          "parts": 20
+        },
+        "buildTimeMin": 180,
+        "powerDemand": 2,
+        "skillMult": 1.5
+      },
+      {
+        "id": "berms",
+        "name": "Merlons antibruit",
+        "desc": "Merlons de sacs de sable autour du pas de tir : le bruit porte deux fois moins loin.",
+        "cost": {
+          "funds": 900,
+          "parts": 10
+        },
+        "buildTimeMin": 300,
+        "visual": "sandbags",
+        "noiseMult": 0.5
+      }
+    ],
+    "visual": {
+      "key": "bld.shooting_range",
+      "style": "range",
+      "color": "#7d6a4a",
+      "accent": "#5d6342",
+      "height": 22
+    },
+    "supplies": {
+      "ammo": {
+        "capacity": 40,
+        "refillBelow": 15
+      }
+    }
+  },
+  {
+    "id": "obstacle_course",
+    "name": "Parcours du combattant",
+    "desc": "Murs, poutres, fosse et filet de ramping : endurance, discrétion et cohésion. Fatigant et salissant.",
+    "category": "training",
+    "footprint": [
+      6,
+      4
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 1800
+    },
+    "buildTimeMin": 300,
+    "upkeepPerDay": {
+      "funds": 8
+    },
+    "wearPerDay": 0.01,
+    "services": {
+      "drill": {
+        "slots": 6
+      }
+    },
+    "hp": 200,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.obstacle_course",
+      "style": "course",
+      "color": "#8a7a5c",
+      "accent": "#6b5434",
+      "height": 16
+    }
+  },
+  {
+    "id": "killhouse",
+    "name": "Maison de combat (CQB)",
+    "desc": "Pièces en contreplaqué sans toit pour le combat rapproché en milieu bâti : tir, progression et commandement. Tirs à blanc (un peu de munitions), un peu bruyant.",
+    "category": "training",
+    "footprint": [
+      4,
+      4
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 3200
+    },
+    "buildTimeMin": 420,
+    "upkeepPerDay": {
+      "funds": 12
+    },
+    "wearPerDay": 0.015,
+    "services": {
+      "cqb": {
+        "slots": 4
+      }
+    },
+    "noise": {
+      "radius": 6,
+      "sleepMult": 0.6,
+      "moralePerHour": -2
+    },
+    "hp": 200,
+    "unlock": {
+      "reputation": 5,
+      "points": 6
+    },
+    "visual": {
+      "key": "bld.killhouse",
+      "style": "killhouse",
+      "color": "#a08a62",
+      "accent": "#6b5a40",
+      "height": 18
+    },
+    "supplies": {
+      "ammo": {
+        "capacity": 20,
+        "refillBelow": 8
+      }
+    }
+  },
+  {
+    "id": "workout_area",
+    "name": "Aire de musculation",
+    "desc": "Barres de traction, banc et haltères en plein air : quand la salle de sport est pleine, on s'entraîne dehors.",
+    "category": "training",
+    "footprint": [
+      3,
+      3
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 700
+    },
+    "buildTimeMin": 120,
+    "upkeepPerDay": {
+      "funds": 3
+    },
+    "wearPerDay": 0.01,
+    "services": {
+      "outdoor_fitness": {
+        "slots": 4
+      }
+    },
+    "hp": 120,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.workout_area",
+      "style": "workout",
+      "color": "#5d5f52",
+      "accent": "#8a7a58",
+      "height": 40
+    }
+  }
+]

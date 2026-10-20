@@ -1,0 +1,42 @@
+[
+  {
+    "id": "dirt",
+    "name": "Terre battue",
+    "color": "#a88a5f",
+    "variance": 0.03,
+    "buildable": true,
+    "decor": "none"
+  },
+  {
+    "id": "sand",
+    "name": "Sable",
+    "color": "#cdb588",
+    "variance": 0.03,
+    "buildable": true,
+    "decor": "none"
+  },
+  {
+    "id": "gravel",
+    "name": "Gravier",
+    "color": "#9d978a",
+    "variance": 0.04,
+    "buildable": true,
+    "decor": "pebbles"
+  },
+  {
+    "id": "rock",
+    "name": "Rochers",
+    "color": "#7c7063",
+    "variance": 0.05,
+    "buildable": false,
+    "decor": "rocks"
+  },
+  {
+    "id": "track",
+    "name": "Piste",
+    "color": "#94795a",
+    "variance": 0.02,
+    "buildable": true,
+    "decor": "ruts"
+  }
+]

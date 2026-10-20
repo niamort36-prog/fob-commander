@@ -1,0 +1,3467 @@
+{
+  "_doc": "Messages radio des unités en mission. Situations tirées selon le contexte (when) ; ordres possibles selon les moyens de l'unité (requires) ; issues aléatoires (outcomes) favorisées par la compétence (skill) ; suites (followUp). Variables : {callsign}, {target}, {village}, {leader}, {member}, {medic}, {team} et les listes de pools. Lieux et personnages fictifs.",
+  "pools": {
+    "dir": [
+      "au nord",
+      "au nord-est",
+      "à l'est",
+      "au sud-est",
+      "au sud",
+      "au sud-ouest",
+      "à l'ouest",
+      "au nord-ouest"
+    ],
+    "terrain": [
+      "d'un verger de grenadiers",
+      "d'un oued asséché",
+      "d'un champ de pavot",
+      "d'une crête rocheuse",
+      "des murets d'un karez",
+      "d'une ruelle étroite",
+      "d'un vieux cimetière",
+      "d'une qalat en pisé",
+      "de vignes en terrasses",
+      "d'un pont de pierre",
+      "d'une bergerie abandonnée",
+      "d'un séchoir à raisin"
+    ],
+    "landmark": [
+      "la mosquée",
+      "le puits",
+      "l'école",
+      "le bazar",
+      "le gué",
+      "la station-service abandonnée",
+      "le poste de police",
+      "la tour du moulin",
+      "la maison du chef",
+      "le dispensaire"
+    ],
+    "n": [
+      "trois ou quatre",
+      "une demi-douzaine",
+      "une dizaine",
+      "une quinzaine",
+      "au moins vingt"
+    ],
+    "weapon": [
+      "des kalachnikovs",
+      "une mitrailleuse PKM",
+      "un lance-roquettes RPG",
+      "un fusil de précision Dragunov",
+      "un mortier léger",
+      "une mitrailleuse lourde DShK"
+    ],
+    "vehicle": [
+      "une moto",
+      "un pick-up Toyota",
+      "une camionnette Hilux",
+      "un tracteur",
+      "un minibus Corolla",
+      "un camion décoré"
+    ]
+  },
+  "messages": [
+    {
+      "id": "tic",
+      "phases": [
+        "outbound",
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "raid",
+        "village_security",
+        "special_op",
+        "recon",
+        "convoy_escort"
+      ],
+      "weight": 10,
+      "text": "TOC, ici {callsign}. Troupes au contact ! Tirs nourris venant {terrain}, {dir} de {target}. {n} combattants, {weapon} repéré. Demandons instructions, à vous.",
+      "choices": [
+        {
+          "id": "withdraw",
+          "text": "Décrochez par bonds, regroupez-vous sur un point sûr.",
+          "effects": {
+            "success": -0.25,
+            "casualty": -0.5,
+            "abort": true
+          },
+          "log": "Accrochage — décrochage ordonné."
+        },
+        {
+          "id": "hold",
+          "text": "Tenez la position, ripostez et rendez compte.",
+          "effects": {},
+          "log": "Tenez la position, ripostez et rendez compte.",
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Accrochage — l'unité tient et repousse les tireurs.",
+              "effects": {
+                "success": 0.08,
+                "casualty": 0.15,
+                "xp": 2
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Accrochage — l'unité tient mais encaisse le feu.",
+              "effects": {
+                "casualty": 0.35,
+                "wound": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "air",
+          "text": "Appui aérien en route. Marquez vos positions.",
+          "effects": {
+            "success": 0.2,
+            "casualty": -0.3,
+            "cost": {
+              "funds": 3000
+            },
+            "collateral": 0.15
+          },
+          "log": "Accrochage — appui aérien engagé."
+        },
+        {
+          "id": "push",
+          "text": "Fixez-les par le feu et débordez {dir}.",
+          "effects": {},
+          "log": "Fixez-les par le feu et débordez {dir}.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Accrochage — débordement réussi, les insurgés se dispersent.",
+              "effects": {
+                "success": 0.15,
+                "casualty": 0.2,
+                "xp": 3
+              },
+              "followUp": {
+                "radio": "ambush_followup",
+                "delayMin": 45
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Accrochage — le débordement tombe sur une seconde position.",
+              "effects": {
+                "success": 0.05,
+                "casualty": 0.55,
+                "wound": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "arty",
+          "text": "Tir d'artillerie demandé sur leur position, gardez vos distances.",
+          "effects": {
+            "success": 0.15,
+            "casualty": -0.25,
+            "collateral": 0.08
+          },
+          "log": "Accrochage — tir de contre-batterie sur les insurgés.",
+          "requires": {
+            "support": [
+              "artillery"
+            ]
+          }
+        },
+        {
+          "id": "helo",
+          "text": "Apache en approche, guidez-le sur l'objectif.",
+          "effects": {
+            "success": 0.18,
+            "casualty": -0.35
+          },
+          "log": "Accrochage — l'hélicoptère d'attaque traite la position.",
+          "requires": {
+            "support": [
+              "attack_helo"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sniper",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "raid",
+        "village_security",
+        "special_op",
+        "recon",
+        "convoy_escort"
+      ],
+      "weight": 6,
+      "text": "TOC, {callsign}. Tireur isolé ! Un coup unique depuis {terrain}, {dir}. Personne de touché pour l'instant mais on est cloués, à vous.",
+      "choices": [
+        {
+          "id": "smoke",
+          "text": "Fumigènes et repli à couvert.",
+          "effects": {
+            "duration": 1,
+            "casualty": -0.1
+          },
+          "log": "Tireur isolé — fumigènes, l'unité se met à couvert."
+        },
+        {
+          "id": "locate",
+          "text": "Localisez-le à l'optique et neutralisez-le.",
+          "effects": {},
+          "log": "Localisez-le à l'optique et neutralisez-le.",
+          "requires": {
+            "gear": "optics"
+          },
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Tireur isolé — repéré et neutralisé.",
+              "effects": {
+                "success": 0.06,
+                "xp": 3
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Tireur isolé — il change de position et touche un soldat.",
+              "effects": {
+                "wound": 1,
+                "casualty": 0.15
+              }
+            }
+          ]
+        },
+        {
+          "id": "rush",
+          "text": "Assaut sur sa position, maintenant.",
+          "effects": {},
+          "log": "Assaut sur sa position, maintenant.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Tireur isolé — position enlevée, le tireur s'enfuit en abandonnant son arme.",
+              "effects": {
+                "success": 0.05,
+                "resources": {
+                  "ammo": 10
+                }
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Tireur isolé — l'assaut à découvert coûte cher.",
+              "effects": {
+                "wound": 2,
+                "casualty": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Ne vous attardez pas, poursuivez en bondissant.",
+          "effects": {
+            "casualty": 0.2
+          },
+          "log": "Tireur isolé — l'unité poursuit sous le feu."
+        },
+        {
+          "id": "thermal",
+          "text": "Passez en thermique, il ne peut pas se cacher.",
+          "effects": {
+            "success": 0.08,
+            "xp": 2
+          },
+          "log": "Tireur isolé — repéré à la caméra thermique, neutralisé.",
+          "requires": {
+            "gear": "thermal"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ambush_convoy",
+      "phases": [
+        "outbound",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "raid",
+        "village_security",
+        "special_op",
+        "recon",
+        "convoy_escort",
+        "meet_leader",
+        "intel"
+      ],
+      "weight": 7,
+      "text": "TOC, {callsign}. Embuscade ! Le véhicule de tête a pris une roquette près {terrain}, on reçoit des tirs des deux côtés, à vous !",
+      "choices": [
+        {
+          "id": "drive",
+          "text": "Ne vous arrêtez pas, foncez hors de la zone de tir !",
+          "effects": {},
+          "log": "Ne vous arrêtez pas, foncez hors de la zone de tir !",
+          "skill": "mechanics",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Embuscade — le convoi force le passage sans s'arrêter.",
+              "effects": {
+                "casualty": 0.1
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Embuscade — un véhicule reste bloqué, l'équipage est récupéré sous le feu.",
+              "effects": {
+                "wound": 1,
+                "casualty": 0.3,
+                "duration": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "dismount",
+          "text": "Débarquez et réduisez l'embuscade.",
+          "effects": {},
+          "log": "Débarquez et réduisez l'embuscade.",
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Embuscade — riposte débarquée, les insurgés rompent le contact.",
+              "effects": {
+                "success": 0.1,
+                "casualty": 0.2,
+                "xp": 3
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Embuscade — combat confus, plusieurs blessés.",
+              "effects": {
+                "wound": 2,
+                "casualty": 0.35
+              }
+            }
+          ]
+        },
+        {
+          "id": "air",
+          "text": "Appui aérien en route, tenez bon.",
+          "effects": {
+            "casualty": -0.3,
+            "cost": {
+              "funds": 3000
+            },
+            "collateral": 0.1
+          },
+          "log": "Embuscade — appui aérien, les tireurs décrochent."
+        },
+        {
+          "id": "back",
+          "text": "Demi-tour, rentrez à la base.",
+          "effects": {
+            "abort": true,
+            "success": -0.2,
+            "casualty": -0.3
+          },
+          "log": "Embuscade — l'unité fait demi-tour."
+        }
+      ],
+      "requiresVehicles": true
+    },
+    {
+      "id": "rpg_heli",
+      "phases": [
+        "outbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. Départ de RPG vers l'hélico à l'approche de la zone de poser ! Le pilote demande s'il doit se poser ou dégager, à vous.",
+      "choices": [
+        {
+          "id": "land",
+          "text": "Posez-vous plus loin, sur la zone de rechange.",
+          "effects": {
+            "duration": 1
+          },
+          "log": "Héliportage — poser sur la zone de rechange, marche d'approche."
+        },
+        {
+          "id": "hot",
+          "text": "Poser d'assaut sur la zone prévue.",
+          "effects": {},
+          "log": "Poser d'assaut sur la zone prévue.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Héliportage — poser d'assaut réussi, effet de surprise conservé.",
+              "effects": {
+                "success": 0.1
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Héliportage — poser sous le feu, des blessés au débarquement.",
+              "effects": {
+                "wound": 1,
+                "casualty": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "id": "abort",
+          "text": "Annulez, retour à la base.",
+          "effects": {
+            "abort": true,
+            "success": -0.2
+          },
+          "log": "Héliportage annulé sous la menace."
+        }
+      ],
+      "when": {
+        "heli": true
+      }
+    },
+    {
+      "id": "mortar_on_us",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "village_security",
+        "patrol",
+        "raid"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. On prend des obus de mortier, ça tombe à cinquante mètres. Le départ semble venir {dir}, à vous.",
+      "choices": [
+        {
+          "id": "scatter",
+          "text": "Dispersez-vous et changez de position.",
+          "effects": {
+            "duration": 1,
+            "casualty": 0.05
+          },
+          "log": "Tirs de mortier — l'unité se disperse et change de position."
+        },
+        {
+          "id": "cb",
+          "text": "Contre-batterie demandée sur la zone de départ.",
+          "effects": {
+            "success": 0.08,
+            "casualty": -0.2
+          },
+          "log": "Tirs de mortier — la batterie de la base réduit le mortier au silence.",
+          "requires": {
+            "support": [
+              "artillery"
+            ]
+          }
+        },
+        {
+          "id": "hunt",
+          "text": "Envoyez un groupe chercher l'équipe de mortier.",
+          "effects": {},
+          "log": "Envoyez un groupe chercher l'équipe de mortier.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Tirs de mortier — l'équipe de mortier est surprise et capturée.",
+              "effects": {
+                "success": 0.12,
+                "reveal": "nearest",
+                "xp": 3
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Tirs de mortier — le groupe revient bredouille, l'équipe a filé.",
+              "effects": {
+                "duration": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "leave",
+          "text": "Quittez la zone immédiatement.",
+          "effects": {
+            "abort": true,
+            "success": -0.15,
+            "casualty": -0.2
+          },
+          "log": "Tirs de mortier — repli."
+        }
+      ]
+    },
+    {
+      "id": "enemy_reinforcements",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "raid",
+        "special_op",
+        "village_security"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. Des renforts ennemis arrivent {dir} : {vehicle} et {n} hommes armés. On sera débordés d'ici vingt minutes, à vous.",
+      "choices": [
+        {
+          "id": "finish",
+          "text": "Accélérez, terminez et exfiltrez avant leur arrivée.",
+          "effects": {},
+          "log": "Accélérez, terminez et exfiltrez avant leur arrivée.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Renforts ennemis — objectif bouclé à temps, exfiltration propre.",
+              "effects": {
+                "success": 0.05
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Renforts ennemis — l'exfiltration se fait au contact.",
+              "effects": {
+                "casualty": 0.35,
+                "wound": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "block",
+          "text": "Établissez un barrage sur leur axe d'arrivée.",
+          "effects": {},
+          "log": "Établissez un barrage sur leur axe d'arrivée.",
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Renforts ennemis — barrage efficace, le véhicule est stoppé.",
+              "effects": {
+                "success": 0.12,
+                "casualty": 0.2,
+                "xp": 3
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Renforts ennemis — le barrage est contourné.",
+              "effects": {
+                "casualty": 0.4
+              }
+            }
+          ]
+        },
+        {
+          "id": "air",
+          "text": "Appui aérien sur la colonne ennemie.",
+          "effects": {
+            "success": 0.15,
+            "cost": {
+              "funds": 3000
+            },
+            "collateral": 0.1
+          },
+          "log": "Renforts ennemis — la colonne est traitée par l'aviation."
+        },
+        {
+          "id": "a10",
+          "text": "L'A-10 en alerte s'en occupe, signalez la cible.",
+          "effects": {
+            "success": 0.2,
+            "casualty": -0.2
+          },
+          "log": "Renforts ennemis — passe canon de l'A-10 sur la colonne.",
+          "requires": {
+            "support": [
+              "a10",
+              "ac130"
+            ]
+          }
+        },
+        {
+          "id": "withdraw",
+          "text": "Décrochez maintenant.",
+          "effects": {
+            "abort": true,
+            "success": -0.1,
+            "casualty": -0.3
+          },
+          "log": "Renforts ennemis — décrochage avant l'arrivée de l'ennemi."
+        }
+      ]
+    },
+    {
+      "id": "more_enemies",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "raid",
+        "special_op",
+        "village_security"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. Ils sont bien plus nombreux que prévu sur l'objectif : {n} combattants retranchés près de {landmark}, à vous.",
+      "choices": [
+        {
+          "id": "assault",
+          "text": "Assaut quand même, c'est maintenant ou jamais.",
+          "effects": {},
+          "log": "Assaut quand même, c'est maintenant ou jamais.",
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Effectifs ennemis supérieurs — assaut mené avec succès.",
+              "effects": {
+                "success": 0.15,
+                "casualty": 0.45,
+                "xp": 4
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Effectifs ennemis supérieurs — l'assaut est repoussé.",
+              "effects": {
+                "success": -0.05,
+                "casualty": 0.55,
+                "wound": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "siege",
+          "text": "Bouclez la zone et attendez qu'ils sortent.",
+          "effects": {
+            "duration": 3,
+            "success": 0.05,
+            "casualty": 0.1
+          },
+          "log": "Effectifs ennemis supérieurs — encerclement, attente."
+        },
+        {
+          "id": "air",
+          "text": "Frappe aérienne d'abord, assaut ensuite.",
+          "effects": {
+            "success": 0.2,
+            "cost": {
+              "funds": 3000
+            },
+            "collateral": 0.2
+          },
+          "log": "Effectifs ennemis supérieurs — frappe aérienne puis assaut."
+        },
+        {
+          "id": "abort",
+          "text": "Annulez, on reviendra en force.",
+          "effects": {
+            "abort": true,
+            "success": -0.15
+          },
+          "log": "Effectifs ennemis supérieurs — mission annulée."
+        }
+      ]
+    },
+    {
+      "id": "ied_route",
+      "phases": [
+        "outbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 7,
+      "text": "TOC, {callsign}. Objet suspect sur l'itinéraire près {terrain}, fil apparent sous la terre. Possible engin explosif, à vous.",
+      "choices": [
+        {
+          "id": "bypass",
+          "text": "Contournez par les champs.",
+          "effects": {
+            "duration": 2
+          },
+          "log": "Engin suspect contourné."
+        },
+        {
+          "id": "clear",
+          "text": "Neutralisez-le vous-mêmes.",
+          "effects": {},
+          "log": "Neutralisez-le vous-mêmes.",
+          "skill": "mechanics",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Engin neutralisé par l'unité.",
+              "effects": {
+                "reputation": 1,
+                "xp": 2
+              },
+              "followUp": {
+                "radio": "eod_secondary",
+                "delayMin": 20
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Engin — explosion pendant la neutralisation.",
+              "effects": {
+                "wound": 1,
+                "casualty": 0.25
+              }
+            }
+          ]
+        },
+        {
+          "id": "eod",
+          "text": "Attendez l'équipe de déminage.",
+          "effects": {
+            "duration": 1,
+            "cost": {
+              "funds": 1500
+            }
+          },
+          "log": "Engin neutralisé par le déminage."
+        },
+        {
+          "id": "mark",
+          "text": "Balisez-le, signalez-le et passez par l'autre piste.",
+          "effects": {
+            "duration": 1,
+            "villageAttitude": 1
+          },
+          "log": "Engin balisé et signalé, itinéraire de rechange."
+        }
+      ]
+    },
+    {
+      "id": "ied_hit",
+      "phases": [
+        "outbound",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "raid",
+        "village_security",
+        "special_op",
+        "recon",
+        "convoy_escort",
+        "meet_leader",
+        "intel"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Explosion sous le véhicule de tête ! Le blindage a tenu, deux blessés légers, véhicule immobilisé, à vous.",
+      "choices": [
+        {
+          "id": "tow",
+          "text": "Remorquez le véhicule et poursuivez.",
+          "effects": {},
+          "log": "Remorquez le véhicule et poursuivez.",
+          "skill": "mechanics",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Engin explosif — véhicule remorqué, mission poursuivie.",
+              "effects": {
+                "duration": 1
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Engin explosif — le remorquage échoue, on attend du renfort.",
+              "effects": {
+                "duration": 3,
+                "cost": {
+                  "parts": 15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "medevac",
+          "text": "MEDEVAC pour les blessés, le reste continue.",
+          "effects": {
+            "casualty": -0.2,
+            "cost": {
+              "funds": 3000
+            }
+          },
+          "log": "Engin explosif — blessés évacués, mission poursuivie."
+        },
+        {
+          "id": "rtb",
+          "text": "Rentrez tous, on récupère le véhicule demain.",
+          "effects": {
+            "abort": true,
+            "success": -0.15
+          },
+          "log": "Engin explosif — retour à la base."
+        }
+      ],
+      "requiresVehicles": true
+    },
+    {
+      "id": "checkpoint",
+      "phases": [
+        "outbound",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. Barrage sur la route près de {landmark} : des hommes armés en tenue disparate se disent « police locale ». Ils demandent un « droit de passage », à vous.",
+      "choices": [
+        {
+          "id": "pay",
+          "text": "Payez, on n'a pas le temps.",
+          "effects": {
+            "cost": {
+              "funds": 400
+            },
+            "villageInfluence": 2
+          },
+          "log": "Barrage — droit de passage payé."
+        },
+        {
+          "id": "talk",
+          "text": "Négociez, vérifiez leurs papiers.",
+          "effects": {},
+          "log": "Négociez, vérifiez leurs papiers.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Barrage — vrais policiers, ils laissent passer et donnent des nouvelles du secteur.",
+              "effects": {
+                "success": 0.05,
+                "revealRadiusKm": 6
+              }
+            },
+            {
+              "weight": 1,
+              "log": "Barrage — palabres, ils finissent par lever la barrière.",
+              "effects": {
+                "duration": 1
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Barrage — faux policiers : ils décrochent en tirant.",
+              "effects": {
+                "casualty": 0.2
+              }
+            }
+          ]
+        },
+        {
+          "id": "force",
+          "text": "Forcez le passage.",
+          "effects": {
+            "villageAttitude": -3,
+            "casualty": 0.1
+          },
+          "log": "Barrage forcé."
+        },
+        {
+          "id": "interp",
+          "text": "Laissez l'auxiliaire leur parler en pachto.",
+          "effects": {
+            "success": 0.04,
+            "villageAttitude": 1
+          },
+          "log": "Barrage — l'auxiliaire désamorce la situation.",
+          "requires": {
+            "types": [
+              "auxiliary"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "bridge_out",
+      "phases": [
+        "outbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. Le pont sur l'oued est effondré, la crue l'a emporté. Gué possible un kilomètre plus loin, courant fort, à vous.",
+      "choices": [
+        {
+          "id": "ford",
+          "text": "Passez au gué, assurez-vous avec des cordes.",
+          "effects": {},
+          "log": "Passez au gué, assurez-vous avec des cordes.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Crue — passage du gué sans incident.",
+              "effects": {}
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Crue — un soldat emporté, rattrapé de justesse.",
+              "effects": {
+                "wound": 1,
+                "duration": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "detour",
+          "text": "Prenez le grand détour par la route du nord.",
+          "effects": {
+            "duration": 3
+          },
+          "log": "Crue — long détour."
+        },
+        {
+          "id": "abort",
+          "text": "Annulez, on reprogrammera.",
+          "effects": {
+            "abort": true,
+            "success": -0.1
+          },
+          "log": "Crue — mission annulée."
+        }
+      ]
+    },
+    {
+      "id": "vehicle_breakdown",
+      "phases": [
+        "outbound",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Panne sur un véhicule, durite du radiateur percée. On est arrêtés en terrain découvert, à vous.",
+      "choices": [
+        {
+          "id": "fix",
+          "text": "Réparez sur place, sécurisez le périmètre.",
+          "effects": {},
+          "log": "Réparez sur place, sécurisez le périmètre.",
+          "skill": "mechanics",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Panne réparée en quarante minutes.",
+              "effects": {
+                "duration": 1
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Panne — réparation longue, des guetteurs nous observent.",
+              "effects": {
+                "duration": 2,
+                "casualty": 0.15
+              }
+            }
+          ]
+        },
+        {
+          "id": "tow",
+          "text": "Remorquez-le avec l'autre véhicule.",
+          "effects": {
+            "duration": 2,
+            "cost": {
+              "parts": 5
+            }
+          },
+          "log": "Panne — remorquage, progression ralentie."
+        },
+        {
+          "id": "leave",
+          "text": "Laissez-le, entassez-vous dans les autres.",
+          "effects": {
+            "cost": {
+              "parts": 20
+            }
+          },
+          "log": "Panne — véhicule abandonné, récupéré plus tard."
+        }
+      ],
+      "requiresVehicles": true
+    },
+    {
+      "id": "wounded",
+      "phases": [
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 6,
+      "text": "TOC, {callsign}. Un blessé grave, éclat à la cuisse, il perd beaucoup de sang. Demandons évacuation sanitaire, à vous.",
+      "choices": [
+        {
+          "id": "medevac",
+          "text": "MEDEVAC autorisée, hélicoptère en route.",
+          "effects": {
+            "casualty": -0.4,
+            "cost": {
+              "funds": 4000
+            }
+          },
+          "log": "Blessé évacué par hélicoptère."
+        },
+        {
+          "id": "treat",
+          "text": "Soignez-le sur place et poursuivez.",
+          "effects": {},
+          "log": "Soignez-le sur place et poursuivez.",
+          "skill": "medical",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Blessé stabilisé sur place, mission poursuivie.",
+              "effects": {
+                "casualty": 0.05,
+                "cost": {
+                  "medical": 10
+                }
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Blessé — son état s'aggrave pendant la mission.",
+              "effects": {
+                "casualty": 0.3,
+                "cost": {
+                  "medical": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "medic",
+          "text": "{medic}, garrot et perfusion, il tiendra jusqu'au retour.",
+          "effects": {
+            "casualty": -0.25,
+            "cost": {
+              "medical": 5
+            }
+          },
+          "log": "Blessé pris en charge par l'infirmier de l'unité.",
+          "requires": {
+            "types": [
+              "medic"
+            ]
+          }
+        },
+        {
+          "id": "heli",
+          "text": "L'hélicoptère de l'unité l'évacue, il revient vous chercher ensuite.",
+          "effects": {
+            "casualty": -0.35,
+            "duration": 1
+          },
+          "log": "Blessé évacué par l'hélicoptère de la mission.",
+          "requires": {
+            "heli": true
+          }
+        },
+        {
+          "id": "rtb",
+          "text": "Rentrez immédiatement à la base.",
+          "effects": {
+            "casualty": -0.3,
+            "success": -0.2,
+            "abort": true
+          },
+          "log": "Retour anticipé avec le blessé."
+        }
+      ]
+    },
+    {
+      "id": "heat",
+      "phases": [
+        "outbound",
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "village_security",
+        "convoy_escort"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Cinquante degrés à l'ombre, deux gars font un coup de chaleur, l'un vomit. On a bu presque toute l'eau, à vous.",
+      "choices": [
+        {
+          "id": "rest",
+          "text": "Pause à l'ombre une heure, réhydratez.",
+          "effects": {
+            "duration": 1
+          },
+          "log": "Coup de chaleur — pause, les hommes récupèrent."
+        },
+        {
+          "id": "push",
+          "text": "Serrez les dents, on termine.",
+          "effects": {},
+          "log": "Serrez les dents, on termine.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Coup de chaleur — l'unité tient le coup.",
+              "effects": {}
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Coup de chaleur — un soldat s'effondre.",
+              "effects": {
+                "wound": 1,
+                "success": -0.05
+              }
+            }
+          ]
+        },
+        {
+          "id": "well",
+          "text": "Ravitaillez-vous au puits du village.",
+          "effects": {
+            "villageAttitude": 2,
+            "duration": 1
+          },
+          "log": "Coup de chaleur — eau du village, les anciens apprécient qu'on demande."
+        }
+      ],
+      "when": {
+        "onFoot": true
+      }
+    },
+    {
+      "id": "civilian_hurt",
+      "phases": [
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "raid",
+        "village_security",
+        "special_op",
+        "recon",
+        "convoy_escort",
+        "patrol",
+        "village_security",
+        "meet_leader",
+        "intel"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. Un gamin du village a marché sur une vieille mine près {terrain}. Sa famille nous supplie de l'aider, à vous.",
+      "choices": [
+        {
+          "id": "treat",
+          "text": "Prodiguez les premiers soins.",
+          "effects": {},
+          "log": "Prodiguez les premiers soins.",
+          "skill": "medical",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Enfant blessé — soins de l'unité, il est sauvé.",
+              "effects": {
+                "villageAttitude": 6,
+                "cost": {
+                  "medical": 8
+                }
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Enfant blessé — malgré les soins, il ne survit pas.",
+              "effects": {
+                "villageAttitude": 1,
+                "morale": -3,
+                "cost": {
+                  "medical": 8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "medevac",
+          "text": "Évacuez-le vers l'hôpital de la base.",
+          "effects": {
+            "villageAttitude": 9,
+            "reputation": 2,
+            "cost": {
+              "funds": 3500
+            }
+          },
+          "log": "Enfant évacué vers la base, la famille ne l'oubliera pas."
+        },
+        {
+          "id": "medic",
+          "text": "{medic} s'en occupe, les autres sécurisent.",
+          "effects": {
+            "villageAttitude": 7,
+            "cost": {
+              "medical": 6
+            }
+          },
+          "log": "Enfant soigné par l'infirmier de l'unité.",
+          "requires": {
+            "types": [
+              "medic"
+            ]
+          }
+        },
+        {
+          "id": "decline",
+          "text": "Ce n'est pas notre mission, poursuivez.",
+          "effects": {
+            "villageAttitude": -8,
+            "morale": -2
+          },
+          "log": "Enfant blessé — l'unité poursuit sans s'arrêter."
+        }
+      ]
+    },
+    {
+      "id": "crowd",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "village_security",
+        "meet_leader",
+        "intel"
+      ],
+      "weight": 6,
+      "text": "TOC, {callsign}. Une foule se rassemble autour de nous à {village}, le ton monte. Un ancien demande à parler à notre chef, à vous.",
+      "choices": [
+        {
+          "id": "talk",
+          "text": "{leader}, écoutez-le, prenez le temps qu'il faut.",
+          "effects": {},
+          "log": "{leader}, écoutez-le, prenez le temps qu'il faut.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Foule — discussion apaisée, l'ancien remercie.",
+              "effects": {
+                "villageAttitude": 5,
+                "duration": 1,
+                "success": 0.05
+              }
+            },
+            {
+              "weight": 1,
+              "log": "Foule — palabres sans fin, la foule se disperse d'elle-même.",
+              "effects": {
+                "duration": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "disperse",
+          "text": "Faites disperser la foule.",
+          "effects": {
+            "villageAttitude": -5
+          },
+          "log": "Foule dispersée sans ménagement."
+        },
+        {
+          "id": "gifts",
+          "text": "Distribuez des rations et de l'eau.",
+          "effects": {
+            "villageAttitude": 6,
+            "cost": {
+              "food": 30,
+              "water": 30
+            }
+          },
+          "log": "Foule — distribution de vivres, l'ambiance change."
+        },
+        {
+          "id": "leave",
+          "text": "Quittez les lieux.",
+          "effects": {
+            "success": -0.15,
+            "abort": true
+          },
+          "log": "L'unité quitte le village sous les huées."
+        }
+      ]
+    },
+    {
+      "id": "hostile_village",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "village_security",
+        "meet_leader",
+        "intel",
+        "raid"
+      ],
+      "weight": 6,
+      "text": "TOC, {callsign}. Accueil glacial à {village} : volets fermés, enfants rappelés, pas un homme en vue. On sent qu'on nous observe depuis les toits, à vous.",
+      "choices": [
+        {
+          "id": "patrol",
+          "text": "Patrouille lente et visible, saluez, ne fouillez rien.",
+          "effects": {},
+          "log": "Patrouille lente et visible, saluez, ne fouillez rien.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Village hostile — patrouille calme, quelques regards changent.",
+              "effects": {
+                "villageAttitude": 3
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Village hostile — jets de pierres, l'unité garde son calme.",
+              "effects": {
+                "villageAttitude": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "search",
+          "text": "Fouillez les maisons suspectes.",
+          "effects": {},
+          "log": "Fouillez les maisons suspectes.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Village hostile — fouille fructueuse, une cache d'armes saisie.",
+              "effects": {
+                "success": 0.1,
+                "resources": {
+                  "ammo": 20
+                },
+                "villageInfluence": -6,
+                "villageAttitude": -3
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 2,
+              "log": "Village hostile — fouille vaine, colère des familles.",
+              "effects": {
+                "villageAttitude": -7
+              }
+            }
+          ]
+        },
+        {
+          "id": "mullah",
+          "text": "Demandez à voir le mollah à la mosquée.",
+          "effects": {
+            "villageAttitude": 2,
+            "duration": 1,
+            "revealRadiusKm": 4
+          },
+          "log": "Village hostile — échange tendu mais respectueux avec le mollah."
+        },
+        {
+          "id": "leave",
+          "text": "Ne forcez pas, repli en ordre.",
+          "effects": {
+            "success": -0.1,
+            "abort": true
+          },
+          "log": "Village hostile — repli sans incident."
+        }
+      ],
+      "when": {
+        "attitudeBelow": -5
+      }
+    },
+    {
+      "id": "friendly_village",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "village_security",
+        "meet_leader",
+        "intel"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. À {village}, on nous offre le thé. Le chef de village dit que des étrangers armés sont passés il y a deux nuits, à vous.",
+      "choices": [
+        {
+          "id": "tea",
+          "text": "Acceptez, prenez le temps, écoutez tout.",
+          "effects": {
+            "villageAttitude": 4,
+            "duration": 1,
+            "revealRadiusKm": 8
+          },
+          "log": "Village ami — thé partagé, renseignements recueillis."
+        },
+        {
+          "id": "details",
+          "text": "Demandez des détails précis : nombre, armes, direction.",
+          "effects": {},
+          "log": "Demandez des détails précis : nombre, armes, direction.",
+          "skill": "radio",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Village ami — renseignement précis transmis au TOC.",
+              "effects": {
+                "reveal": "nearest",
+                "success": 0.05
+              }
+            },
+            {
+              "weight": 1,
+              "log": "Village ami — témoignages vagues et contradictoires.",
+              "effects": {}
+            }
+          ]
+        },
+        {
+          "id": "aid",
+          "text": "Offrez du matériel médical pour le dispensaire.",
+          "effects": {
+            "villageAttitude": 6,
+            "reputation": 1,
+            "cost": {
+              "medical": 15
+            }
+          },
+          "log": "Village ami — don au dispensaire, très apprécié."
+        },
+        {
+          "id": "decline",
+          "text": "Pas le temps, on doit avancer.",
+          "effects": {
+            "villageAttitude": -2
+          },
+          "log": "Village ami — l'unité décline poliment l'invitation."
+        }
+      ],
+      "when": {
+        "attitudeAbove": 15
+      }
+    },
+    {
+      "id": "wedding",
+      "phases": [
+        "outbound",
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "village_security",
+        "meet_leader",
+        "intel",
+        "patrol"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. Un mariage à {village} : coups de feu en l'air, musique, cortège sur la route. Ils nous font signe de les rejoindre, à vous.",
+      "choices": [
+        {
+          "id": "join",
+          "text": "Saluez les mariés, une demi-heure, pas plus.",
+          "effects": {
+            "villageAttitude": 5,
+            "duration": 1,
+            "morale": 1
+          },
+          "log": "Mariage — l'unité félicite les familles, moment rare."
+        },
+        {
+          "id": "wait",
+          "text": "Attendez que le cortège passe, armes basses.",
+          "effects": {
+            "villageAttitude": 2,
+            "duration": 1
+          },
+          "log": "Mariage — cortège laissé passer avec respect."
+        },
+        {
+          "id": "detour",
+          "text": "Contournez largement, trop de tirs en l'air.",
+          "effects": {
+            "duration": 1
+          },
+          "log": "Mariage — contourné."
+        }
+      ]
+    },
+    {
+      "id": "farmer_dispute",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "village_security",
+        "meet_leader",
+        "intel"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Deux familles de {village} se disputent un droit d'eau sur le karez, les fusils sont sortis. Ils veulent qu'on tranche, à vous.",
+      "choices": [
+        {
+          "id": "mediate",
+          "text": "Proposez une médiation devant les anciens.",
+          "effects": {},
+          "log": "Proposez une médiation devant les anciens.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Litige — accord trouvé devant les anciens, la coalition gagne en crédit.",
+              "effects": {
+                "villageAttitude": 6,
+                "duration": 2
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Litige — une des familles se sent lésée.",
+              "effects": {
+                "villageAttitude": -2,
+                "duration": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "pay",
+          "text": "Financez la réfection du canal pour tous.",
+          "effects": {
+            "villageAttitude": 8,
+            "villageInfluence": -3,
+            "cost": {
+              "funds": 1500
+            }
+          },
+          "log": "Litige — réfection du karez financée, tout le monde y gagne."
+        },
+        {
+          "id": "stay_out",
+          "text": "Ne vous en mêlez pas.",
+          "effects": {
+            "villageAttitude": -1
+          },
+          "log": "Litige — l'unité reste neutre."
+        }
+      ]
+    },
+    {
+      "id": "informant_contact",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "village_security",
+        "meet_leader",
+        "intel"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. Un homme nous aborde discrètement derrière {landmark}. Il dit savoir où se cachent les combattants mais veut être payé, à vous.",
+      "choices": [
+        {
+          "id": "pay",
+          "text": "Payez-le et prenez l'information.",
+          "effects": {},
+          "log": "Payez-le et prenez l'information.",
+          "skill": "radio",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Informateur payé — renseignement solide.",
+              "effects": {
+                "reveal": "nearest",
+                "cost": {
+                  "funds": 800
+                }
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Informateur payé — il a menti, piste fausse.",
+              "effects": {
+                "cost": {
+                  "funds": 800
+                },
+                "duration": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "protect",
+          "text": "Proposez-lui notre protection plutôt que de l'argent.",
+          "effects": {
+            "revealRadiusKm": 6,
+            "villageAttitude": 2
+          },
+          "log": "Informateur — accepte la protection, renseignement partiel."
+        },
+        {
+          "id": "cia",
+          "text": "Laissez l'officier de renseignement l'évaluer.",
+          "effects": {
+            "reveal": "nearest",
+            "success": 0.06,
+            "cost": {
+              "funds": 400
+            }
+          },
+          "log": "Informateur évalué par la CIA — renseignement recoupé et fiable.",
+          "requires": {
+            "types": [
+              "cia"
+            ]
+          }
+        },
+        {
+          "id": "refuse",
+          "text": "Refusez, trop risqué.",
+          "effects": {},
+          "log": "Informateur éconduit."
+        }
+      ]
+    },
+    {
+      "id": "kids_asking",
+      "phases": [
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "village_security",
+        "meet_leader",
+        "intel",
+        "patrol"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. Une nuée d'enfants nous suit en réclamant des stylos et des bonbons. Ça ralentit la progression, à vous.",
+      "choices": [
+        {
+          "id": "give",
+          "text": "Donnez ce qu'on a dans les poches.",
+          "effects": {
+            "villageAttitude": 3,
+            "cost": {
+              "food": 5
+            }
+          },
+          "log": "Enfants — distribution de friandises et de stylos, sourires garantis."
+        },
+        {
+          "id": "ask",
+          "text": "Demandez-leur discrètement s'ils ont vu des étrangers.",
+          "effects": {},
+          "log": "Demandez-leur discrètement s'ils ont vu des étrangers.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Enfants — un gamin indique une maison où des hommes armés dorment.",
+              "effects": {
+                "revealRadiusKm": 5
+              }
+            },
+            {
+              "weight": 2,
+              "log": "Enfants — beaucoup de rires, aucun renseignement.",
+              "effects": {}
+            }
+          ]
+        },
+        {
+          "id": "shoo",
+          "text": "Éloignez-les gentiment.",
+          "effects": {},
+          "log": "Enfants éloignés."
+        }
+      ]
+    },
+    {
+      "id": "shura_invite",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "meet_leader",
+        "village_security",
+        "intel"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Le chef de {village} improvise une choura avec les anciens. Ils veulent des engagements concrets : école, puits ou sécurité de nuit, à vous.",
+      "choices": [
+        {
+          "id": "school",
+          "text": "Promettez de financer l'école.",
+          "effects": {
+            "villageAttitude": 8,
+            "cost": {
+              "funds": 2000
+            }
+          },
+          "log": "Choura — engagement pour l'école, accueil chaleureux."
+        },
+        {
+          "id": "well",
+          "text": "Promettez un nouveau puits.",
+          "effects": {
+            "villageAttitude": 7,
+            "villageInfluence": -2,
+            "cost": {
+              "funds": 1500
+            }
+          },
+          "log": "Choura — engagement pour le puits."
+        },
+        {
+          "id": "patrols",
+          "text": "Promettez des patrouilles de nuit régulières.",
+          "effects": {
+            "villageAttitude": 4,
+            "villageInfluence": -4
+          },
+          "log": "Choura — engagement de sécurité, les anciens restent prudents."
+        },
+        {
+          "id": "listen",
+          "text": "Écoutez sans rien promettre.",
+          "effects": {
+            "villageAttitude": -1,
+            "duration": 1
+          },
+          "log": "Choura — écoute polie, déception palpable."
+        }
+      ]
+    },
+    {
+      "id": "target_absent",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "raid",
+        "special_op",
+        "recon"
+      ],
+      "weight": 6,
+      "text": "TOC, {callsign}. L'objectif est vide. Thé encore chaud, traces de pas fraîches vers {terrain}, à vous.",
+      "choices": [
+        {
+          "id": "pursue",
+          "text": "Suivez la piste.",
+          "effects": {},
+          "log": "Suivez la piste.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Objectif vide — poursuite, la cible est rattrapée.",
+              "effects": {
+                "success": 0.15,
+                "casualty": 0.2,
+                "duration": 2
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Objectif vide — la piste se perd dans les vergers.",
+              "effects": {
+                "duration": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "search",
+          "text": "Fouillez les lieux à fond.",
+          "effects": {
+            "reveal": "nearest",
+            "duration": 1
+          },
+          "log": "Objectif vide — fouille, documents récupérés."
+        },
+        {
+          "id": "rtb",
+          "text": "Rentrez, l'oiseau s'est envolé.",
+          "effects": {
+            "success": -0.1,
+            "abort": true
+          },
+          "log": "Objectif vide — retour à la base."
+        },
+        {
+          "id": "sf_track",
+          "text": "Les opérateurs prennent la traque à leur compte.",
+          "effects": {
+            "success": 0.2,
+            "duration": 2
+          },
+          "log": "Objectif vide — traque des forces spéciales, cible capturée.",
+          "requires": {
+            "types": [
+              "sf",
+              "sf_commander"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "cache_found",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "raid",
+        "recon",
+        "village_security"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. On a trouvé une cache sous le sol d'une étable : obus, détonateurs, {weapon}. À vous.",
+      "choices": [
+        {
+          "id": "destroy",
+          "text": "Détruisez-la sur place.",
+          "effects": {
+            "success": 0.08,
+            "villageInfluence": -5
+          },
+          "log": "Cache détruite sur place."
+        },
+        {
+          "id": "recover",
+          "text": "Récupérez ce qui peut servir.",
+          "effects": {},
+          "log": "Récupérez ce qui peut servir.",
+          "skill": "mechanics",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Cache — munitions récupérées sans incident.",
+              "effects": {
+                "resources": {
+                  "ammo": 25
+                }
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Cache — un détonateur instable explose.",
+              "effects": {
+                "resources": {
+                  "ammo": 10
+                },
+                "wound": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "watch",
+          "text": "Surveillez-la de nuit, ils reviendront la chercher.",
+          "effects": {},
+          "log": "Surveillez-la de nuit, ils reviendront la chercher.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Cache — embuscade réussie sur les insurgés venus la vider.",
+              "effects": {
+                "success": 0.18,
+                "casualty": 0.2,
+                "duration": 4,
+                "reveal": "nearest"
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Cache — personne ne vient, nuit blanche pour rien.",
+              "effects": {
+                "duration": 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "documents",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "raid",
+        "special_op",
+        "recon",
+        "special_op",
+        "intel"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. On a récupéré un téléphone et un carnet sur un corps : noms, numéros, croquis de la base, à vous.",
+      "choices": [
+        {
+          "id": "send",
+          "text": "Transmettez tout au TOC pour exploitation.",
+          "effects": {},
+          "log": "Transmettez tout au TOC pour exploitation.",
+          "skill": "radio",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Documents — exploitation rapide, un réseau identifié.",
+              "effects": {
+                "reveal": "nearest",
+                "revealRadiusKm": 6
+              }
+            },
+            {
+              "weight": 1,
+              "log": "Documents — contenu codé, exploitation lente.",
+              "effects": {
+                "revealRadiusKm": 3
+              }
+            }
+          ]
+        },
+        {
+          "id": "call",
+          "text": "Appelez le dernier numéro composé, voyez qui répond.",
+          "effects": {
+            "reveal": "nearest",
+            "success": 0.05
+          },
+          "log": "Documents — l'appel trahit une position ennemie.",
+          "requires": {
+            "types": [
+              "cia",
+              "auxiliary"
+            ]
+          }
+        },
+        {
+          "id": "keep",
+          "text": "Gardez-les, on verra au retour.",
+          "effects": {
+            "revealRadiusKm": 3
+          },
+          "log": "Documents rapportés à la base."
+        }
+      ]
+    },
+    {
+      "id": "hvt_spotted",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "raid",
+        "special_op",
+        "recon"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. Cible de haute valeur identifiée : barbe teinte au henné, garde rapprochée, {vehicle}. Il quitte {landmark}, à vous.",
+      "choices": [
+        {
+          "id": "grab",
+          "text": "Interceptez-le, vivant si possible.",
+          "effects": {},
+          "log": "Interceptez-le, vivant si possible.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Cible de haute valeur — interceptée et capturée vivante !",
+              "effects": {
+                "success": 0.25,
+                "reveal": "nearest",
+                "reputation": 3,
+                "xp": 5
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Cible de haute valeur — échange de tirs, elle s'échappe.",
+              "effects": {
+                "casualty": 0.4,
+                "wound": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "track",
+          "text": "Ne bougez pas, suivez-le à distance.",
+          "effects": {
+            "revealRadiusKm": 10,
+            "reveal": "nearest",
+            "duration": 2
+          },
+          "log": "Cible de haute valeur — filée jusqu'à son repaire."
+        },
+        {
+          "id": "strike",
+          "text": "Frappe aérienne quand il sera isolé.",
+          "effects": {
+            "success": 0.2,
+            "cost": {
+              "funds": 3000
+            },
+            "collateral": 0.25
+          },
+          "log": "Cible de haute valeur — frappe aérienne."
+        },
+        {
+          "id": "sf",
+          "text": "Les opérateurs prennent l'interception.",
+          "effects": {
+            "success": 0.3,
+            "reputation": 3,
+            "xp": 4
+          },
+          "log": "Cible de haute valeur — interception éclair des forces spéciales.",
+          "requires": {
+            "types": [
+              "sf",
+              "sf_commander"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "prisoner",
+      "phases": [
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "raid",
+        "special_op",
+        "patrol",
+        "village_security"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Un combattant blessé s'est rendu. Il parle un peu, il a peur. On l'embarque ? À vous.",
+      "choices": [
+        {
+          "id": "bring",
+          "text": "Ramenez-le pour interrogatoire.",
+          "effects": {
+            "reveal": "nearest",
+            "duration": 1
+          },
+          "log": "Prisonnier ramené à la base."
+        },
+        {
+          "id": "treat",
+          "text": "Soignez-le d'abord.",
+          "effects": {
+            "reveal": "nearest",
+            "villageAttitude": 2,
+            "cost": {
+              "medical": 5
+            }
+          },
+          "log": "Prisonnier soigné, il coopère volontiers."
+        },
+        {
+          "id": "release",
+          "text": "Laissez-le aux anciens du village.",
+          "effects": {
+            "villageAttitude": 4,
+            "villageInfluence": 1
+          },
+          "log": "Prisonnier remis aux anciens, geste remarqué."
+        }
+      ]
+    },
+    {
+      "id": "observation_post",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "recon",
+        "intel"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. Poste d'observation installé {terrain}. Mouvements sur la piste : {vehicle} toutes les deux heures, des hommes armés descendent, à vous.",
+      "choices": [
+        {
+          "id": "stay",
+          "text": "Restez en observation, notez tout.",
+          "effects": {},
+          "log": "Restez en observation, notez tout.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Observation — schéma des allées et venues établi.",
+              "effects": {
+                "revealRadiusKm": 10,
+                "duration": 2,
+                "success": 0.08
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Observation — un berger repère le poste, il faut partir.",
+              "effects": {
+                "duration": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "photo",
+          "text": "Photographiez les visages au téléobjectif.",
+          "effects": {
+            "reveal": "nearest"
+          },
+          "log": "Observation — visages identifiés.",
+          "requires": {
+            "gear": "optics"
+          }
+        },
+        {
+          "id": "night",
+          "text": "Restez cette nuit en vision nocturne.",
+          "effects": {
+            "revealRadiusKm": 12,
+            "success": 0.1,
+            "duration": 3
+          },
+          "log": "Observation de nuit — dépôt nocturne repéré.",
+          "requires": {
+            "gear": "nvg"
+          }
+        },
+        {
+          "id": "leave",
+          "text": "Assez vu, décrochez.",
+          "effects": {},
+          "log": "Observation terminée."
+        }
+      ]
+    },
+    {
+      "id": "compromised",
+      "phases": [
+        "outbound",
+        "objective"
+      ],
+      "types": [
+        "recon",
+        "special_op",
+        "intel"
+      ],
+      "weight": 5,
+      "text": "TOC, {callsign}. On est grillés : un gamin sur un âne nous a vus et file vers {village} en criant. À vous.",
+      "choices": [
+        {
+          "id": "continue",
+          "text": "Accélérez, ils n'auront pas le temps de s'organiser.",
+          "effects": {},
+          "log": "Accélérez, ils n'auront pas le temps de s'organiser.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Repérés — l'unité devance l'alerte.",
+              "effects": {
+                "success": 0.02
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Repérés — l'ennemi est prévenu, l'objectif s'est vidé.",
+              "effects": {
+                "success": -0.15
+              }
+            }
+          ]
+        },
+        {
+          "id": "relocate",
+          "text": "Changez d'axe et attendez la nuit.",
+          "effects": {
+            "duration": 3,
+            "success": 0.05
+          },
+          "log": "Repérés — changement d'axe, attente de la nuit."
+        },
+        {
+          "id": "abort",
+          "text": "Annulez, l'effet de surprise est perdu.",
+          "effects": {
+            "abort": true,
+            "success": -0.1
+          },
+          "log": "Repérés — mission annulée."
+        }
+      ]
+    },
+    {
+      "id": "drone_feed",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "raid",
+        "special_op",
+        "recon",
+        "special_op",
+        "intel"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. Le drone nous montre {n} silhouettes chaudes qui se déploient autour de l'objectif. Ils nous attendaient, à vous.",
+      "choices": [
+        {
+          "id": "change",
+          "text": "Changez de plan d'approche, par {dir}.",
+          "effects": {},
+          "log": "Changez de plan d'approche, par {dir}.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Drone — approche modifiée, l'ennemi est pris à revers.",
+              "effects": {
+                "success": 0.12,
+                "xp": 3
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Drone — la nouvelle approche est piégée elle aussi.",
+              "effects": {
+                "casualty": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "id": "strike",
+          "text": "Frappe sur les positions ennemies avant l'assaut.",
+          "effects": {
+            "success": 0.15,
+            "cost": {
+              "funds": 3000
+            },
+            "collateral": 0.1
+          },
+          "log": "Drone — frappe préventive sur les positions ennemies."
+        },
+        {
+          "id": "abort",
+          "text": "Annulez, c'est un piège.",
+          "effects": {
+            "abort": true,
+            "casualty": -0.4
+          },
+          "log": "Drone — piège déjoué, mission annulée."
+        }
+      ],
+      "when": {
+        "targetKind": [
+          "contact"
+        ]
+      }
+    },
+    {
+      "id": "nightfall",
+      "phases": [
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. La nuit tombe plus vite que prévu, encore deux heures de route. Visibilité qui baisse, à vous.",
+      "choices": [
+        {
+          "id": "push",
+          "text": "Continuez de nuit, prudence.",
+          "effects": {},
+          "log": "Continuez de nuit, prudence.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Retour de nuit sans incident.",
+              "effects": {}
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Retour de nuit — chute dans un canal, un blessé.",
+              "effects": {
+                "wound": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "nvg",
+          "text": "Jumelles de vision nocturne, continuez.",
+          "effects": {
+            "casualty": -0.1
+          },
+          "log": "Retour de nuit sous vision nocturne.",
+          "requires": {
+            "gear": "nvg"
+          }
+        },
+        {
+          "id": "harbor",
+          "text": "Bivouaquez sur place et repartez à l'aube.",
+          "effects": {
+            "duration": 6,
+            "casualty": -0.1
+          },
+          "log": "Bivouac de nuit."
+        }
+      ]
+    },
+    {
+      "id": "night_contact",
+      "phases": [
+        "outbound",
+        "objective"
+      ],
+      "types": [
+        "patrol",
+        "raid",
+        "village_security",
+        "special_op",
+        "recon",
+        "convoy_escort"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Mouvement dans la nuit {dir}, lampes torches éteintes, des hommes progressent vers nous, à vous.",
+      "choices": [
+        {
+          "id": "ambush",
+          "text": "Laissez-les approcher, embuscade.",
+          "effects": {},
+          "log": "Laissez-les approcher, embuscade.",
+          "requires": {
+            "gear": "nvg"
+          },
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Contact de nuit — embuscade dévastatrice.",
+              "effects": {
+                "success": 0.15,
+                "xp": 3,
+                "casualty": 0.1
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Contact de nuit — c'étaient des bergers, tir évité de justesse.",
+              "effects": {
+                "villageAttitude": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "flare",
+          "text": "Fusée éclairante, sommations.",
+          "effects": {
+            "duration": 1
+          },
+          "log": "Contact de nuit — fusée éclairante, les silhouettes s'enfuient."
+        },
+        {
+          "id": "withdraw",
+          "text": "Repliez-vous sans bruit.",
+          "effects": {
+            "success": -0.05,
+            "casualty": -0.2
+          },
+          "log": "Contact de nuit — repli silencieux."
+        },
+        {
+          "id": "ac130",
+          "text": "Le gunship confirme et traite.",
+          "effects": {
+            "success": 0.15,
+            "casualty": -0.3
+          },
+          "log": "Contact de nuit — l'AC-130 identifie et neutralise le groupe armé.",
+          "requires": {
+            "support": [
+              "ac130"
+            ]
+          }
+        }
+      ],
+      "when": {
+        "night": true
+      }
+    },
+    {
+      "id": "sandstorm",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Tempête de sable, visibilité à dix mètres, plus de liaison avec l'appui aérien, à vous.",
+      "choices": [
+        {
+          "id": "wait",
+          "text": "Abritez-vous et attendez que ça passe.",
+          "effects": {
+            "duration": 2
+          },
+          "log": "Tempête de sable — attente à l'abri."
+        },
+        {
+          "id": "push",
+          "text": "Continuez au GPS, serrez les rangs.",
+          "effects": {},
+          "log": "Continuez au GPS, serrez les rangs.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Tempête de sable — progression à l'aveugle réussie.",
+              "effects": {}
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Tempête de sable — deux hommes perdus, retrouvés une heure plus tard.",
+              "effects": {
+                "duration": 1,
+                "casualty": 0.1
+              }
+            }
+          ]
+        },
+        {
+          "id": "use",
+          "text": "Profitez-en pour approcher sans être vus.",
+          "effects": {},
+          "log": "Profitez-en pour approcher sans être vus.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Tempête de sable — approche invisible, surprise totale.",
+              "effects": {
+                "success": 0.15
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Tempête de sable — l'unité se perd et tombe sur un groupe armé.",
+              "effects": {
+                "casualty": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "flash_flood",
+      "phases": [
+        "outbound",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "convoy_escort",
+        "recon",
+        "village_security"
+      ],
+      "weight": 2,
+      "text": "TOC, {callsign}. Orage sur les montagnes : l'oued se remplit d'un coup, on est coincés sur la rive, à vous.",
+      "choices": [
+        {
+          "id": "wait",
+          "text": "Attendez la décrue sur les hauteurs.",
+          "effects": {
+            "duration": 4
+          },
+          "log": "Crue subite — attente sur les hauteurs."
+        },
+        {
+          "id": "cross",
+          "text": "Traversez avant que ça monte encore.",
+          "effects": {},
+          "log": "Traversez avant que ça monte encore.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Crue subite — traversée in extremis.",
+              "effects": {}
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Crue subite — un véhicule emporté, l'équipage sauvé.",
+              "effects": {
+                "wound": 1,
+                "cost": {
+                  "parts": 25
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lost",
+      "phases": [
+        "outbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "meet_leader"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. La carte ne correspond plus au terrain, les pistes ont été déplacées par les crues. On hésite entre deux vallées, à vous.",
+      "choices": [
+        {
+          "id": "guide",
+          "text": "Prenez un guide local au prochain hameau.",
+          "effects": {
+            "cost": {
+              "funds": 200
+            },
+            "villageAttitude": 1
+          },
+          "log": "Égarés — un berger guide l'unité contre quelques billets."
+        },
+        {
+          "id": "aux",
+          "text": "Laissez l'auxiliaire choisir, il connaît la région.",
+          "effects": {},
+          "log": "Égarés — l'auxiliaire retrouve la bonne vallée.",
+          "requires": {
+            "types": [
+              "auxiliary"
+            ]
+          }
+        },
+        {
+          "id": "guess",
+          "text": "Prenez la vallée de gauche.",
+          "effects": {},
+          "log": "Prenez la vallée de gauche.",
+          "skill": "radio",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Égarés — bon choix, l'unité retrouve l'itinéraire.",
+              "effects": {}
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Égarés — mauvaise vallée, demi-tour.",
+              "effects": {
+                "duration": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "convoy_stall",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "convoy_escort"
+      ],
+      "weight": 6,
+      "text": "TOC, {callsign}. Les camions civils du convoi refusent d'avancer : les chauffeurs ont entendu parler d'un barrage taliban plus loin, à vous.",
+      "choices": [
+        {
+          "id": "reassure",
+          "text": "Rassurez-les, nous ouvrons la route.",
+          "effects": {},
+          "log": "Rassurez-les, nous ouvrons la route.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Convoi — les chauffeurs reprennent courage.",
+              "effects": {}
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Convoi — deux camions font demi-tour.",
+              "effects": {
+                "success": -0.08
+              }
+            }
+          ]
+        },
+        {
+          "id": "pay",
+          "text": "Proposez une prime de risque.",
+          "effects": {
+            "cost": {
+              "funds": 900
+            }
+          },
+          "log": "Convoi — prime versée, tout le monde repart."
+        },
+        {
+          "id": "scout",
+          "text": "Envoyez un véhicule reconnaître la route.",
+          "effects": {
+            "duration": 1,
+            "success": 0.05
+          },
+          "log": "Convoi — route reconnue, pas de barrage.",
+          "requires": {
+            "vehicles": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "fuel_theft",
+      "phases": [
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "convoy_escort"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. Un chauffeur siphonne le carburant de son camion pour le revendre au bazar, on vient de le surprendre, à vous.",
+      "choices": [
+        {
+          "id": "fire",
+          "text": "Renvoyez-le, on reprend le camion.",
+          "effects": {
+            "villageAttitude": -1
+          },
+          "log": "Convoi — chauffeur renvoyé."
+        },
+        {
+          "id": "fine",
+          "text": "Retenue sur sa paie, il reste.",
+          "effects": {},
+          "log": "Convoi — chauffeur sanctionné."
+        },
+        {
+          "id": "ignore",
+          "text": "Fermez les yeux, ils sont mal payés.",
+          "effects": {
+            "cost": {
+              "fuel": 40
+            },
+            "villageAttitude": 1
+          },
+          "log": "Convoi — on ferme les yeux."
+        }
+      ]
+    },
+    {
+      "id": "leader_demand",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "meet_leader"
+      ],
+      "weight": 6,
+      "text": "TOC, {callsign}. Le chef de {village} veut bien coopérer, mais exige que nous libérions son neveu arrêté le mois dernier, à vous.",
+      "choices": [
+        {
+          "id": "promise",
+          "text": "Promettez d'examiner son dossier.",
+          "effects": {},
+          "log": "Promettez d'examiner son dossier.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Rencontre — la promesse suffit, coopération obtenue.",
+              "effects": {
+                "villageAttitude": 4,
+                "success": 0.1
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Rencontre — il veut des actes, pas des promesses.",
+              "effects": {
+                "villageAttitude": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "Refusez fermement.",
+          "effects": {
+            "villageAttitude": -5,
+            "success": -0.1
+          },
+          "log": "Rencontre — refus, le chef se ferme."
+        },
+        {
+          "id": "trade",
+          "text": "Libération contre renseignements sur les caches.",
+          "effects": {
+            "villageAttitude": 3,
+            "reveal": "nearest",
+            "reputation": -1
+          },
+          "log": "Rencontre — marché conclu, renseignements obtenus."
+        }
+      ]
+    },
+    {
+      "id": "leader_gift",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "meet_leader"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Le chef nous offre un agneau et attend un présent en retour. Ses gardes observent notre réaction, à vous.",
+      "choices": [
+        {
+          "id": "gift",
+          "text": "Offrez une radio et des lampes solaires.",
+          "effects": {
+            "villageAttitude": 6,
+            "cost": {
+              "funds": 500
+            }
+          },
+          "log": "Rencontre — échange de présents, honneur sauf."
+        },
+        {
+          "id": "food",
+          "text": "Offrez des vivres pour le village.",
+          "effects": {
+            "villageAttitude": 4,
+            "cost": {
+              "food": 40
+            }
+          },
+          "log": "Rencontre — vivres offerts, apprécié."
+        },
+        {
+          "id": "nothing",
+          "text": "Remerciez sans rien offrir.",
+          "effects": {
+            "villageAttitude": -4
+          },
+          "log": "Rencontre — maladresse, le chef se vexe."
+        }
+      ]
+    },
+    {
+      "id": "rival_faction",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "meet_leader",
+        "village_security"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. Un second chef arrive avec ses hommes et conteste l'autorité de notre interlocuteur. Ça peut dégénérer, à vous.",
+      "choices": [
+        {
+          "id": "both",
+          "text": "Invitez les deux à la même table.",
+          "effects": {},
+          "log": "Invitez les deux à la même table.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Rivalité — les deux chefs acceptent de parler, prestige pour la coalition.",
+              "effects": {
+                "villageAttitude": 6,
+                "duration": 2
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Rivalité — la discussion tourne mal, coups de feu en l'air.",
+              "effects": {
+                "villageAttitude": -3,
+                "casualty": 0.1
+              }
+            }
+          ]
+        },
+        {
+          "id": "back_ours",
+          "text": "Soutenez ouvertement notre contact.",
+          "effects": {
+            "villageAttitude": 2,
+            "villageInfluence": 3
+          },
+          "log": "Rivalité — soutien affiché à notre contact."
+        },
+        {
+          "id": "leave",
+          "text": "Retirez-vous, ce n'est pas notre affaire.",
+          "effects": {
+            "success": -0.1
+          },
+          "log": "Rivalité — l'unité se retire."
+        }
+      ]
+    },
+    {
+      "id": "sf_option",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "special_op",
+        "raid"
+      ],
+      "weight": 4,
+      "text": "TOC, {callsign}. Les opérateurs proposent une infiltration par les toits pendant que le reste fait diversion côté {landmark}, à vous.",
+      "choices": [
+        {
+          "id": "go",
+          "text": "Feu vert pour l'infiltration.",
+          "effects": {},
+          "log": "Feu vert pour l'infiltration.",
+          "requires": {
+            "types": [
+              "sf",
+              "sf_commander"
+            ]
+          },
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Infiltration par les toits — objectif pris par surprise.",
+              "effects": {
+                "success": 0.2,
+                "xp": 4
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Infiltration par les toits — repérés, fusillade à bout portant.",
+              "effects": {
+                "casualty": 0.4,
+                "wound": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "classic",
+          "text": "Non, assaut classique, tous ensemble.",
+          "effects": {
+            "casualty": 0.15,
+            "success": 0.05
+          },
+          "log": "Assaut classique ordonné."
+        },
+        {
+          "id": "wait",
+          "text": "Attendez la nuit pour tenter l'infiltration.",
+          "effects": {
+            "duration": 3,
+            "success": 0.1
+          },
+          "log": "Infiltration reportée à la nuit."
+        }
+      ],
+      "when": {
+        "hasType": [
+          "sf",
+          "sf_commander"
+        ]
+      }
+    },
+    {
+      "id": "cia_source",
+      "phases": [
+        "objective"
+      ],
+      "types": [
+        "intel",
+        "special_op",
+        "meet_leader"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. L'officier de renseignement a rendez-vous avec une source dans une arrière-boutique du bazar. Il demande deux hommes de couverture, à vous.",
+      "choices": [
+        {
+          "id": "cover",
+          "text": "Couverture discrète, en civil.",
+          "effects": {},
+          "log": "Couverture discrète, en civil.",
+          "skill": "stealth",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 2,
+              "log": "Rendez-vous de la CIA — source rencontrée, renseignement majeur.",
+              "effects": {
+                "reveal": "nearest",
+                "revealRadiusKm": 10,
+                "success": 0.08
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Rendez-vous de la CIA — la source ne vient pas, guetteurs aperçus.",
+              "effects": {
+                "duration": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "cash",
+          "text": "Autorisez une enveloppe pour la source.",
+          "effects": {
+            "reveal": "nearest",
+            "cost": {
+              "funds": 1500
+            },
+            "success": 0.1
+          },
+          "log": "Rendez-vous de la CIA — source rémunérée, très coopérative."
+        },
+        {
+          "id": "cancel",
+          "text": "Trop exposé, annulez le rendez-vous.",
+          "effects": {
+            "success": -0.05
+          },
+          "log": "Rendez-vous de la CIA annulé."
+        }
+      ],
+      "when": {
+        "hasType": [
+          "cia"
+        ]
+      }
+    },
+    {
+      "id": "fatigue",
+      "phases": [
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 3,
+      "text": "TOC, {callsign}. Les hommes sont épuisés, trente heures sans dormir. {member} s'est endormi pendant la halte, à vous.",
+      "choices": [
+        {
+          "id": "rest",
+          "text": "Halte de deux heures, tours de garde.",
+          "effects": {
+            "duration": 2
+          },
+          "log": "Fatigue — halte réparatrice."
+        },
+        {
+          "id": "push",
+          "text": "On rentre d'une traite, courage.",
+          "effects": {},
+          "log": "On rentre d'une traite, courage.",
+          "skill": "leadership",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Fatigue — retour d'une traite, les hommes tiennent.",
+              "effects": {}
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Fatigue — un accident de manipulation d'arme, un blessé.",
+              "effects": {
+                "wound": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "pickup",
+          "text": "Un véhicule vient vous chercher.",
+          "effects": {
+            "cost": {
+              "fuel": 20
+            }
+          },
+          "log": "Fatigue — récupération en véhicule.",
+          "requires": {
+            "vehicles": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "misconduct",
+      "phases": [
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "village_security",
+        "meet_leader",
+        "intel",
+        "patrol",
+        "raid"
+      ],
+      "weight": 2,
+      "text": "TOC, {callsign}. Incident : {member} a bousculé un vieil homme pendant une fouille, le village est furieux. À vous.",
+      "choices": [
+        {
+          "id": "apologize",
+          "text": "Excuses publiques et dédommagement.",
+          "effects": {
+            "villageAttitude": 2,
+            "cost": {
+              "funds": 300
+            }
+          },
+          "log": "Incident — excuses publiques, la colère retombe."
+        },
+        {
+          "id": "punish",
+          "text": "Sanction disciplinaire devant les anciens.",
+          "effects": {
+            "villageAttitude": 4,
+            "morale": -1
+          },
+          "log": "Incident — sanction exemplaire, respect gagné."
+        },
+        {
+          "id": "deny",
+          "text": "Niez, ce n'est qu'une rumeur.",
+          "effects": {
+            "villageAttitude": -6
+          },
+          "log": "Incident nié — rancune durable au village."
+        }
+      ]
+    },
+    {
+      "id": "sitrep",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 6,
+      "text": "TOC, {callsign}. Point de situation : RAS sur l'itinéraire, progression conforme, moral bon. Des instructions particulières ? À vous.",
+      "choices": [
+        {
+          "id": "continue",
+          "text": "Continuez comme prévu.",
+          "effects": {},
+          "log": "Point de situation — RAS."
+        },
+        {
+          "id": "careful",
+          "text": "Redoublez de vigilance.",
+          "effects": {
+            "casualty": -0.1,
+            "duration": 1
+          },
+          "log": "Point de situation — vigilance accrue."
+        },
+        {
+          "id": "hurry",
+          "text": "Accélérez la cadence.",
+          "effects": {
+            "casualty": 0.1,
+            "success": 0.03
+          },
+          "log": "Point de situation — cadence accélérée."
+        },
+        {
+          "id": "extra",
+          "text": "Profitez-en pour sonder les villages alentour.",
+          "effects": {},
+          "log": "Profitez-en pour sonder les villages alentour.",
+          "skill": "radio",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Point de situation — les habitants signalent une activité suspecte.",
+              "effects": {
+                "revealRadiusKm": 6,
+                "duration": 1
+              }
+            },
+            {
+              "weight": 2,
+              "log": "Point de situation — rien à signaler dans les hameaux.",
+              "effects": {
+                "duration": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ambush_followup",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "text": "TOC, {callsign}. Les tireurs qui nous ont accrochés se regroupent {dir}, on voit {vehicle} qui charge des blessés, à vous.",
+      "choices": [
+        {
+          "id": "chase",
+          "text": "Poursuivez, ils sont affaiblis.",
+          "effects": {},
+          "log": "Poursuivez, ils sont affaiblis.",
+          "skill": "shooting",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Poursuite — groupe ennemi rattrapé et neutralisé.",
+              "effects": {
+                "success": 0.12,
+                "xp": 3
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Poursuite — piège, nouveaux tirs.",
+              "effects": {
+                "casualty": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "id": "let",
+          "text": "Laissez-les filer, mission d'abord.",
+          "effects": {},
+          "log": "Poursuite abandonnée, mission d'abord."
+        },
+        {
+          "id": "mark",
+          "text": "Notez la direction pour le renseignement.",
+          "effects": {
+            "revealRadiusKm": 8
+          },
+          "log": "Direction de repli ennemie transmise."
+        }
+      ],
+      "followUpOnly": true
+    },
+    {
+      "id": "eod_secondary",
+      "phases": [
+        "outbound",
+        "objective",
+        "inbound"
+      ],
+      "types": [
+        "patrol",
+        "recon",
+        "intel",
+        "village_security",
+        "raid",
+        "convoy_escort",
+        "meet_leader",
+        "special_op"
+      ],
+      "weight": 1,
+      "text": "TOC, {callsign}. Deuxième engin trouvé à trente mètres du premier, sur la zone où on s'était regroupés. C'était un piège, à vous.",
+      "choices": [
+        {
+          "id": "clear",
+          "text": "Neutralisez-le avec la plus grande prudence.",
+          "effects": {},
+          "log": "Neutralisez-le avec la plus grande prudence.",
+          "skill": "mechanics",
+          "outcomes": [
+            {
+              "kind": "good",
+              "weight": 1,
+              "log": "Second engin neutralisé.",
+              "effects": {
+                "xp": 2
+              }
+            },
+            {
+              "kind": "bad",
+              "weight": 1,
+              "log": "Second engin — explosion, un blessé.",
+              "effects": {
+                "wound": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "leave",
+          "text": "Évacuez la zone, on laisse tout.",
+          "effects": {
+            "duration": 1
+          },
+          "log": "Zone piégée évacuée."
+        }
+      ],
+      "followUpOnly": true
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[
+  { "id": "defense",        "name": "Défense",          "short": "DEF", "order": 1 },
+  { "id": "housing",        "name": "Logement",         "short": "LOG", "order": 2 },
+  { "id": "command",        "name": "Commandement",     "short": "CMD", "order": 3 },
+  { "id": "logistics",      "name": "Logistique",       "short": "LGT", "order": 4 },
+  { "id": "life",           "name": "Vie",              "short": "VIE", "order": 5 },
+  { "id": "training",       "name": "Entraînement",     "short": "ENT", "order": 6 },
+  { "id": "infrastructure", "name": "Infrastructures",  "short": "INF", "order": 7 }
+]

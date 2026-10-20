@@ -1,0 +1,442 @@
+[
+  {
+    "id": "sleep",
+    "name": "Dort",
+    "service": "sleep",
+    "fallback": "sleep_rough",
+    "inside": true,
+    "mode": "schedule",
+    "durationMin": 600,
+    "effectsPerHour": {
+      "sleep": 14
+    },
+    "endWhenFull": "sleep"
+  },
+  {
+    "id": "sleep_rough",
+    "name": "Dort à même le sol",
+    "inside": false,
+    "wander": true,
+    "mode": "schedule",
+    "durationMin": 600,
+    "effectsPerHour": {
+      "sleep": 9,
+      "morale": -1.5
+    },
+    "endWhenFull": "sleep"
+  },
+  {
+    "id": "eat",
+    "name": "Mange au réfectoire",
+    "service": "meal",
+    "fallback": "eat_mre",
+    "inside": true,
+    "mode": "need",
+    "durationMin": 40,
+    "effectsPerHour": {
+      "food": 90,
+      "morale": 3
+    },
+    "consumes": {
+      "food": 1
+    },
+    "usesMeals": true
+  },
+  {
+    "id": "eat_mre",
+    "name": "Mange une ration froide",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 20,
+    "effectsPerHour": {
+      "food": 150,
+      "morale": -6
+    },
+    "consumes": {
+      "food": 1
+    }
+  },
+  {
+    "id": "hygiene",
+    "name": "Se lave",
+    "service": "hygiene",
+    "fallback": "idle",
+    "inside": true,
+    "mode": "need",
+    "durationMin": 25,
+    "effectsPerHour": {
+      "hygiene": 200,
+      "morale": 4
+    },
+    "consumes": {
+      "water": 3
+    }
+  },
+  {
+    "id": "guard",
+    "name": "Monte la garde",
+    "service": "guard",
+    "fallback": "train",
+    "inside": false,
+    "mode": "schedule",
+    "durationMin": 480,
+    "effectsPerHour": {
+      "morale": -0.5
+    },
+    "xpPerHour": 0.5
+  },
+  {
+    "id": "build",
+    "name": "Corvées de soutien et chantiers",
+    "work": "build",
+    "fallback": "idle",
+    "inside": false,
+    "mode": "schedule",
+    "durationMin": 300,
+    "effectsPerHour": {
+      "morale": -0.3,
+      "hygiene": -1
+    },
+    "xpPerHour": 0.5,
+    "helpUnload": true,
+    "chores": true
+  },
+  {
+    "id": "haul",
+    "name": "Décharge un véhicule",
+    "work": "haul",
+    "fallback": "build",
+    "inside": false,
+    "mode": "schedule",
+    "durationMin": 300,
+    "effectsPerHour": {
+      "morale": -0.5,
+      "hygiene": -1.5,
+      "sleep": -0.5
+    },
+    "xpPerHour": 0.5
+  },
+  {
+    "id": "command",
+    "name": "Travaille au TOC",
+    "service": "command",
+    "fallback": "idle",
+    "inside": true,
+    "mode": "schedule",
+    "durationMin": 300,
+    "effectsPerHour": {},
+    "xpPerHour": 0.5
+  },
+  {
+    "id": "medical",
+    "name": "Travaille à l'infirmerie",
+    "service": "medical",
+    "fallback": "idle",
+    "inside": true,
+    "mode": "schedule",
+    "durationMin": 300,
+    "effectsPerHour": {},
+    "xpPerHour": 0.5
+  },
+  {
+    "id": "exercise",
+    "name": "Fait du sport",
+    "service": "fitness",
+    "fallback": "workout",
+    "inside": true,
+    "mode": "schedule",
+    "durationMin": 120,
+    "effectsPerHour": {
+      "morale": 8,
+      "sleep": -2,
+      "hygiene": -3
+    }
+  },
+  {
+    "id": "train",
+    "name": "S'entraîne",
+    "inside": false,
+    "wander": true,
+    "mode": "schedule",
+    "durationMin": 180,
+    "effectsPerHour": {
+      "morale": -1,
+      "sleep": -1
+    },
+    "xpPerHour": 1,
+    "helpUnload": true,
+    "options": [
+      "shoot",
+      "drill",
+      "cqb"
+    ],
+    "chores": true
+  },
+  {
+    "id": "relax",
+    "name": "Se détend",
+    "inside": false,
+    "wander": true,
+    "mode": "schedule",
+    "durationMin": 180,
+    "effectsPerHour": {
+      "morale": 3
+    },
+    "helpUnload": true
+  },
+  {
+    "id": "idle",
+    "name": "Attend des ordres",
+    "inside": false,
+    "wander": true,
+    "mode": "need",
+    "durationMin": 30,
+    "effectsPerHour": {},
+    "helpUnload": true
+  },
+  {
+    "id": "take_cover",
+    "name": "S'abrite dans un bunker",
+    "service": "shelter",
+    "fallback": "shelter_home",
+    "inside": true,
+    "mode": "need",
+    "durationMin": 600,
+    "effectsPerHour": {
+      "morale": -2
+    },
+    "combat": true
+  },
+  {
+    "id": "shelter_home",
+    "name": "S'abrite dans sa tente",
+    "service": "sleep",
+    "fallback": "prone",
+    "inside": true,
+    "mode": "need",
+    "durationMin": 600,
+    "effectsPerHour": {
+      "morale": -3
+    },
+    "combat": true
+  },
+  {
+    "id": "prone",
+    "name": "À plat ventre, à couvert",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 600,
+    "effectsPerHour": {
+      "morale": -4
+    },
+    "combat": true
+  },
+  {
+    "id": "defend",
+    "name": "Défend le périmètre",
+    "work": "defend",
+    "fallback": "prone",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 600,
+    "effectsPerHour": {
+      "morale": -1,
+      "sleep": -2
+    },
+    "xpPerHour": 3,
+    "combat": true
+  },
+  {
+    "id": "deploy",
+    "name": "Rejoint le point de départ",
+    "work": "deploy",
+    "fallback": "idle",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 600,
+    "effectsPerHour": {}
+  },
+  {
+    "id": "shoot",
+    "name": "S'entraîne au tir",
+    "service": "shooting",
+    "fallback": "train",
+    "inside": false,
+    "mode": "schedule",
+    "durationMin": 120,
+    "hours": [
+      6,
+      21
+    ],
+    "effectsPerHour": {
+      "morale": 1,
+      "sleep": -1
+    },
+    "consumesPerHour": {
+      "ammo": 3
+    },
+    "skillsPerHour": {
+      "shooting": 0.8
+    },
+    "xpPerHour": 1.5
+  },
+  {
+    "id": "drill",
+    "name": "Fait le parcours du combattant",
+    "service": "drill",
+    "fallback": "train",
+    "inside": false,
+    "mode": "schedule",
+    "durationMin": 120,
+    "effectsPerHour": {
+      "morale": 2,
+      "sleep": -3,
+      "hygiene": -4
+    },
+    "skillsPerHour": {
+      "stealth": 0.4,
+      "leadership": 0.2
+    },
+    "xpPerHour": 1.2
+  },
+  {
+    "id": "cqb",
+    "name": "S'entraîne au combat rapproché",
+    "service": "cqb",
+    "fallback": "train",
+    "inside": true,
+    "mode": "schedule",
+    "durationMin": 120,
+    "hours": [
+      6,
+      22
+    ],
+    "effectsPerHour": {
+      "morale": 1,
+      "sleep": -2
+    },
+    "consumesPerHour": {
+      "ammo": 1
+    },
+    "skillsPerHour": {
+      "shooting": 0.3,
+      "stealth": 0.3,
+      "leadership": 0.4
+    },
+    "xpPerHour": 2
+  },
+  {
+    "id": "workout",
+    "name": "Fait de la musculation dehors",
+    "service": "outdoor_fitness",
+    "fallback": "relax",
+    "inside": false,
+    "mode": "schedule",
+    "durationMin": 90,
+    "effectsPerHour": {
+      "morale": 6,
+      "sleep": -2,
+      "hygiene": -3
+    }
+  },
+  {
+    "id": "supply",
+    "name": "Ravitaille un bâtiment",
+    "work": "supply",
+    "fallback": "idle",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 60,
+    "effectsPerHour": {
+      "morale": -0.3,
+      "hygiene": -1
+    },
+    "xpPerHour": 0.4
+  },
+  {
+    "id": "fetch_materials",
+    "name": "Porte des matériaux au chantier",
+    "work": "materials",
+    "fallback": "build",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 60,
+    "effectsPerHour": {
+      "morale": -0.4,
+      "hygiene": -1.5,
+      "sleep": -0.3
+    },
+    "xpPerHour": 0.4
+  },
+  {
+    "id": "cook",
+    "name": "Prépare les repas",
+    "service": "kitchen",
+    "fallback": "idle",
+    "inside": true,
+    "mode": "schedule",
+    "durationMin": 240,
+    "effectsPerHour": {
+      "morale": -0.2,
+      "hygiene": -1
+    },
+    "xpPerHour": 0.4,
+    "chores": true
+  },
+  {
+    "id": "clean",
+    "name": "Nettoie les sanitaires",
+    "work": "clean",
+    "fallback": "idle",
+    "inside": true,
+    "mode": "need",
+    "durationMin": 60,
+    "effectsPerHour": {
+      "morale": -1,
+      "hygiene": -2
+    },
+    "xpPerHour": 0.3
+  },
+  {
+    "id": "rearm",
+    "name": "Se rééquipe en munitions",
+    "work": "rearm",
+    "fallback": "idle",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 30,
+    "effectsPerHour": {}
+  },
+  {
+    "id": "collect_gear",
+    "name": "Perçoit son équipement au dépôt",
+    "work": "gear",
+    "fallback": "idle",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 30,
+    "effectsPerHour": {}
+  },
+  {
+    "id": "march_out",
+    "name": "Part en mission à pied",
+    "work": "march",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 600,
+    "effectsPerHour": {
+      "sleep": -1
+    }
+  },
+  {
+    "id": "march_in",
+    "name": "Rentre de mission",
+    "work": "march",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 600,
+    "effectsPerHour": {
+      "sleep": -1
+    }
+  }
+]

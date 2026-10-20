@@ -1,0 +1,179 @@
+[
+  {
+    "id": "sarband",
+    "name": "Vallée de Sarband",
+    "desc": "Fond de vallée irrigué, bordé de vergers. Terrain meuble et plat, accès facile à l'eau du canal.",
+    "pros": [
+      "Réserves d'eau de départ élevées",
+      "Terrain largement constructible"
+    ],
+    "cons": [
+      "Dominée par les crêtes alentour",
+      "Budget du commandement standard"
+    ],
+    "startResources": {
+      "funds": 45000,
+      "water": 900,
+      "food": 1500,
+      "ammo": 1200,
+      "fuel": 800,
+      "parts": 200,
+      "medical": 150
+    },
+    "budgetMult": 1.0,
+    "zone": {
+      "width": 40,
+      "height": 40
+    },
+    "terrain": {
+      "noiseScale": 18,
+      "edgeRock": 0.3,
+      "clearRadius": 12,
+      "bands": [
+        {
+          "terrain": "dirt",
+          "max": 0.45
+        },
+        {
+          "terrain": "sand",
+          "max": 0.72
+        },
+        {
+          "terrain": "gravel",
+          "max": 0.88
+        },
+        {
+          "terrain": "rock",
+          "max": 1.0
+        }
+      ]
+    },
+    "entry": {
+      "side": "south"
+    },
+    "roadRisk": 1.0,
+    "threat": 1.1,
+    "regionPos": {
+      "x": 23,
+      "y": 22
+    }
+  },
+  {
+    "id": "kharaw",
+    "name": "Col de Kharaw",
+    "desc": "Éperon rocheux contrôlant le col principal. Position stratégique très surveillée par l'état-major.",
+    "pros": [
+      "Position défensive naturelle",
+      "Budget du commandement +20 %"
+    ],
+    "cons": [
+      "Peu d'espace constructible",
+      "Eau rare, route du col dangereuse (risque d'embuscade ×1,6)"
+    ],
+    "startResources": {
+      "funds": 54000,
+      "water": 500,
+      "food": 1200,
+      "ammo": 1500,
+      "fuel": 600,
+      "parts": 250,
+      "medical": 150
+    },
+    "budgetMult": 1.2,
+    "zone": {
+      "width": 32,
+      "height": 32
+    },
+    "terrain": {
+      "noiseScale": 10,
+      "edgeRock": 0.6,
+      "clearRadius": 9,
+      "bands": [
+        {
+          "terrain": "dirt",
+          "max": 0.25
+        },
+        {
+          "terrain": "gravel",
+          "max": 0.5
+        },
+        {
+          "terrain": "sand",
+          "max": 0.6
+        },
+        {
+          "terrain": "rock",
+          "max": 1.0
+        }
+      ]
+    },
+    "entry": {
+      "side": "east"
+    },
+    "roadRisk": 1.6,
+    "threat": 0.7,
+    "regionPos": {
+      "x": 48.5,
+      "y": 20
+    }
+  },
+  {
+    "id": "dasht",
+    "name": "Plaine de Dasht-e Gol",
+    "desc": "Vaste plaine désertique au carrefour de deux pistes. Beaucoup d'espace, mais à découvert.",
+    "pros": [
+      "Espace constructible quasi illimité",
+      "Proche des axes routiers (risque d'embuscade ×0,8)"
+    ],
+    "cons": [
+      "Très exposée, aucun relief",
+      "Budget du commandement -10 %"
+    ],
+    "startResources": {
+      "funds": 39000,
+      "water": 700,
+      "food": 1500,
+      "ammo": 1000,
+      "fuel": 1200,
+      "parts": 200,
+      "medical": 150
+    },
+    "budgetMult": 0.9,
+    "zone": {
+      "width": 48,
+      "height": 48
+    },
+    "terrain": {
+      "noiseScale": 22,
+      "edgeRock": 0.15,
+      "clearRadius": 14,
+      "bands": [
+        {
+          "terrain": "dirt",
+          "max": 0.3
+        },
+        {
+          "terrain": "sand",
+          "max": 0.8
+        },
+        {
+          "terrain": "gravel",
+          "max": 0.95
+        },
+        {
+          "terrain": "rock",
+          "max": 1.0
+        }
+      ]
+    },
+    "entry": {
+      "side": "west"
+    },
+    "roadRisk": 0.8,
+    "threat": 1.25,
+    "regionPos": {
+      "x": 35,
+      "y": 38.5
+    }
+  }
+]

@@ -1,0 +1,194 @@
+{
+  "time": {
+    "ticksPerSecondAtX1": 4,
+    "minutesPerTick": 1,
+    "startHour": 6,
+    "speeds": [
+      0,
+      1,
+      2,
+      4,
+      8
+    ],
+    "maxTicksPerFrame": 240
+  },
+  "map": {
+    "width": 160,
+    "height": 160,
+    "tileWidth": 64,
+    "tileHeight": 32
+  },
+  "zone": {
+    "step": 8,
+    "baseCost": 4000,
+    "costGrowth": 1.6
+  },
+  "build": {
+    "refundRatio": 0.5,
+    "refundRatioUnderConstruction": 1.0,
+    "baseCrewRate": 0.5,
+    "workerRate": 0.5,
+    "maxWorkersPerSite": 4
+  },
+  "logistics": {
+    "carryCapacity": 20,
+    "pickupMinutes": 4,
+    "dropMinutes": 4,
+    "mealsPerCookHour": 16,
+    "foodPerMeal": 1,
+    "cookBelow": 0.85,
+    "cleanPerHour": 1.2,
+    "cleanBelow": 0.6,
+    "dirtyBelow": 0.3,
+    "dirtyMoralePerHour": -4,
+    "materials": {
+      "fundsPerUnit": 150,
+      "maxUnits": 60,
+      "perTrip": 4,
+      "maxFetchersPerSite": 3
+    },
+    "rearmBelow": 0.5,
+    "rearmMinutes": 3,
+    "gearMinutes": 5,
+    "amateurMealQuality": 0.6
+  },
+  "economy": {
+    "dailyBudget": 2400,
+    "lowStockDays": 3,
+    "baseCapacity": {
+      "water": 1000,
+      "food": 2000,
+      "ammo": 2000,
+      "fuel": 2000,
+      "parts": 500,
+      "medical": 300,
+      "power": 0
+    }
+  },
+  "agents": {
+    "pathRequestsPerTick": 6,
+    "maxPathNodes": 30000,
+    "wanderRadius": 5,
+    "spawnSpread": 3,
+    "minWalkSpeedFactor": 0.6,
+    "mealsPerDayEstimate": 3,
+    "hygienePerDayEstimate": 1
+  },
+  "supply": {
+    "pickupMinutes": 4,
+    "dropMinutes": 3,
+    "carryCapacity": 25,
+    "maxHaulersPerVehicle": 4,
+    "blockedRetryTicks": 60,
+    "maxWaitHours": 12,
+    "maxUnloadHours": 24,
+    "ambushLoss": [
+      0.3,
+      0.7
+    ],
+    "ambushDelayHours": 3
+  },
+  "power": {
+    "unpoweredServiceFactor": 0.5
+  },
+  "wear": {
+    "damagedAt": 0.7,
+    "disabledAt": 1.0,
+    "repairStartAt": 0.4,
+    "repairDoneAt": 0.02,
+    "repairPerHourPerWorker": 0.25,
+    "partsPerWear": 20,
+    "workshopRepairMult": 2
+  },
+  "command": {
+    "weights": {
+      "morale": 0.35,
+      "housing": 0.25,
+      "guard": 0.15,
+      "supply": 0.25
+    },
+    "guardPostsWanted": 2,
+    "reputationPerPoint": 3,
+    "budgetMin": 0.7,
+    "budgetMax": 1.3
+  },
+  "startingForce": [
+    {
+      "group": "Commandement",
+      "kind": "hq",
+      "members": [
+        {
+          "type": "commander",
+          "count": 1
+        },
+        {
+          "type": "officer",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "group": "1re escouade",
+      "kind": "squad",
+      "members": [
+        {
+          "type": "infantry",
+          "count": 6
+        }
+      ]
+    },
+    {
+      "group": "2e escouade",
+      "kind": "squad",
+      "members": [
+        {
+          "type": "infantry",
+          "count": 6
+        }
+      ]
+    },
+    {
+      "group": "Section soutien",
+      "kind": "support",
+      "members": [
+        {
+          "type": "logistics",
+          "count": 4
+        },
+        {
+          "type": "cook",
+          "count": 1
+        },
+        {
+          "type": "medic",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "progression": {
+    "startReputation": 0,
+    "startPoints": 10,
+    "pointsPerDay": 4,
+    "pointsMissionSuccess": 2,
+    "pointsMissionPartial": 1,
+    "pointsProject": 2
+  },
+  "save": {
+    "slots": 3,
+    "autosaveEveryDays": 1,
+    "storagePrefix": "fobcmd.save."
+  },
+  "camera": {
+    "minZoom": 0.3,
+    "maxZoom": 3,
+    "zoomStep": 0.12,
+    "startZoom": 1,
+    "panSpeed": 700,
+    "edgeScroll": false,
+    "edgeSize": 14
+  },
+  "log": {
+    "maxEntries": 100
+  }
+}

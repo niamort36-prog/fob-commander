@@ -1,0 +1,118 @@
+{
+  "_doc": "Options du joueur (Phase 8), enregistrées dans le navigateur (indépendantes des sauvegardes). Types : slider { min, max, step } ou toggle.",
+  "storageKey": "fob-commander.settings",
+  "groups": [
+    {
+      "id": "sound",
+      "label": "SON"
+    },
+    {
+      "id": "display",
+      "label": "AFFICHAGE"
+    },
+    {
+      "id": "game",
+      "label": "PARTIE"
+    }
+  ],
+  "options": [
+    {
+      "id": "master",
+      "group": "sound",
+      "type": "slider",
+      "label": "Volume général",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.7
+    },
+    {
+      "id": "sfx",
+      "group": "sound",
+      "type": "slider",
+      "label": "Effets (combat, chantiers, véhicules)",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8
+    },
+    {
+      "id": "radio",
+      "group": "sound",
+      "type": "slider",
+      "label": "Radio et alertes",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.8
+    },
+    {
+      "id": "ui",
+      "group": "sound",
+      "type": "slider",
+      "label": "Interface",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.5
+    },
+    {
+      "id": "ambient",
+      "group": "sound",
+      "type": "slider",
+      "label": "Ambiance (vent, grillons, groupes électrogènes)",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.5
+    },
+    {
+      "id": "mute",
+      "group": "sound",
+      "type": "toggle",
+      "label": "Couper le son",
+      "default": false
+    },
+    {
+      "id": "nightEffects",
+      "group": "display",
+      "type": "slider",
+      "label": "Intensité du cycle jour/nuit",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "id": "textSpeed",
+      "group": "display",
+      "type": "slider",
+      "label": "Vitesse de défilement des textes",
+      "min": 0.5,
+      "max": 4,
+      "step": 0.5,
+      "default": 1
+    },
+    {
+      "id": "edgeScroll",
+      "group": "display",
+      "type": "toggle",
+      "label": "Défilement de la vue par les bords de l'écran",
+      "default": false
+    },
+    {
+      "id": "tutorial",
+      "group": "game",
+      "type": "toggle",
+      "label": "Proposer le tutoriel en début de partie",
+      "default": true
+    },
+    {
+      "id": "autosave",
+      "group": "game",
+      "type": "toggle",
+      "label": "Sauvegarde automatique chaque jour",
+      "default": true
+    }
+  ]
+}

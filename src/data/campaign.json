@@ -1,0 +1,174 @@
+{
+  "_doc": "Campagne (Phase 7) : phases successives d'objectifs, avec délai, récompenses et sanctions. Types d'objectifs : stability {min}, villagesAttitude {min, count}, villagesInfluence {max, count}, missionsSuccess {count}, projects {count}, promisesKept {count}, auxiliaries {count}, contactsNeutralized {count}, neutralize {contact}, reputation {min}.",
+  "phases": [
+    {
+      "id": "implant",
+      "name": "Phase I — S'implanter",
+      "brief": "Le commandement attend de vous que la FOB devienne un point d'appui crédible : montrer la présence de la coalition, nouer les premiers contacts et faire baisser la tension dans le district.",
+      "days": 25,
+      "objectives": [
+        {
+          "id": "stab45",
+          "type": "stability",
+          "min": 60,
+          "text": "Stabilité régionale d'au moins 60"
+        },
+        {
+          "id": "fav2",
+          "type": "villagesAttitude",
+          "min": 20,
+          "count": 2,
+          "text": "Deux villages favorables (attitude ≥ 20)"
+        },
+        {
+          "id": "miss3",
+          "type": "missionsSuccess",
+          "count": 3,
+          "text": "Réussir trois missions"
+        }
+      ],
+      "rewards": {
+        "funds": 10000,
+        "reputation": 5,
+        "points": 10
+      },
+      "penalty": {
+        "reputation": -8,
+        "graceDays": 10
+      }
+    },
+    {
+      "id": "population",
+      "name": "Phase II — Gagner la population",
+      "brief": "La population est le terrain décisif. Tenez vos promesses, répondez aux besoins des villages et recrutez des auxiliaires locaux pour réduire l'emprise des insurgés.",
+      "days": 30,
+      "objectives": [
+        {
+          "id": "proj3",
+          "type": "projects",
+          "count": 3,
+          "text": "Achever trois projets civils"
+        },
+        {
+          "id": "prom1",
+          "type": "promisesKept",
+          "count": 1,
+          "text": "Tenir au moins une promesse faite à un chef"
+        },
+        {
+          "id": "inf4",
+          "type": "villagesInfluence",
+          "max": 35,
+          "count": 4,
+          "text": "Emprise insurgée ≤ 35 dans quatre villages"
+        },
+        {
+          "id": "aux4",
+          "type": "auxiliaries",
+          "count": 4,
+          "text": "Recruter quatre auxiliaires locaux"
+        }
+      ],
+      "rewards": {
+        "funds": 15000,
+        "reputation": 8,
+        "points": 15
+      },
+      "penalty": {
+        "reputation": -10,
+        "graceDays": 10
+      }
+    },
+    {
+      "id": "pressure",
+      "name": "Phase III — Briser l'insurrection",
+      "brief": "Le renseignement accumulé permet désormais de frapper l'appareil insurgé. Neutralisez le commandement du mollah Rasoul et démantelez ses réseaux, sans perdre la population.",
+      "days": 30,
+      "objectives": [
+        {
+          "id": "hq",
+          "type": "neutralize",
+          "contact": "rasoul_hq",
+          "text": "Neutraliser le QG du mollah Rasoul"
+        },
+        {
+          "id": "net4",
+          "type": "contactsNeutralized",
+          "count": 4,
+          "text": "Neutraliser quatre groupes ou caches insurgés"
+        },
+        {
+          "id": "stab60",
+          "type": "stability",
+          "min": 68,
+          "text": "Stabilité régionale d'au moins 68"
+        }
+      ],
+      "rewards": {
+        "funds": 20000,
+        "reputation": 10,
+        "points": 20
+      },
+      "penalty": {
+        "reputation": -10,
+        "graceDays": 10
+      }
+    },
+    {
+      "id": "transition",
+      "name": "Phase IV — Transition",
+      "brief": "Il est temps de préparer le transfert de la sécurité aux autorités afghanes. Le district doit tenir sans vous : villages ralliés, insurrection marginalisée.",
+      "days": 30,
+      "objectives": [
+        {
+          "id": "stab70",
+          "type": "stability",
+          "min": 75,
+          "text": "Stabilité régionale d'au moins 75"
+        },
+        {
+          "id": "fav5",
+          "type": "villagesAttitude",
+          "min": 30,
+          "count": 5,
+          "text": "Cinq villages favorables (attitude ≥ 30)"
+        },
+        {
+          "id": "ally2",
+          "type": "villagesAttitude",
+          "min": 50,
+          "count": 2,
+          "text": "Deux villages alliés (attitude ≥ 50)"
+        },
+        {
+          "id": "rep60",
+          "type": "reputation",
+          "min": 60,
+          "text": "Réputation auprès du commandement d'au moins 60"
+        }
+      ],
+      "rewards": {
+        "funds": 30000,
+        "reputation": 15,
+        "points": 25
+      },
+      "penalty": {
+        "reputation": -10,
+        "graceDays": 15
+      }
+    }
+  ],
+  "defeat": {
+    "stabilityBelow": 20,
+    "days": 7,
+    "warnBelow": 30
+  },
+  "texts": {
+    "phaseDone": "Le commandement régional prend acte : les objectifs de « {name} » sont atteints.",
+    "phaseNext": "Nouvelle phase de campagne : {name}.",
+    "phaseMissed": "Le délai fixé pour « {name} » est dépassé. Le commandement s'impatiente : vous disposez d'un sursis de {days} jours.",
+    "victory": "Le district de Sarband est stabilisé. La responsabilité de la sécurité est transférée aux forces afghanes : la FOB a rempli sa mission. Votre commandement sera cité en exemple.",
+    "defeat": "La situation dans le district s'est effondrée. Le commandement régional vous relève de votre commandement : un autre officier prendra la tête de la FOB.",
+    "lowStability": "La stabilité régionale est critique ({value}). Si elle ne remonte pas, le commandement vous relèvera."
+  }
+}

@@ -1,0 +1,304 @@
+{
+  "_doc": "Géopolitique (Phase 7) : dynamique des villages, actions civilo-militaires, projets, promesses, auxiliaires locaux, stabilité régionale et réaction de l'insurrection. Tous les lieux et groupes sont fictifs.",
+  "config": {
+    "stances": [
+      {
+        "id": "hostile",
+        "max": -40,
+        "label": "Hostile",
+        "color": "#d0644a"
+      },
+      {
+        "id": "wary",
+        "max": -10,
+        "label": "Méfiant",
+        "color": "#d09a4a"
+      },
+      {
+        "id": "neutral",
+        "max": 15,
+        "label": "Neutre",
+        "color": "#c8c0a0"
+      },
+      {
+        "id": "favorable",
+        "max": 50,
+        "label": "Favorable",
+        "color": "#9fc46a"
+      },
+      {
+        "id": "allied",
+        "max": 101,
+        "label": "Allié",
+        "color": "#5fae5a"
+      }
+    ],
+    "attitudeMemoryPerDay": 0.03,
+    "needBonus": 10,
+    "influencePressure": 0.5,
+    "influenceAttitudePerDay": 0.04,
+    "influenceAttitudeAbove": 40,
+    "contactInfluenceKm": 8,
+    "contactInfluencePerDay": {
+      "hq": 1.6,
+      "cell": 1.0,
+      "mortar": 0.5,
+      "ied": 0.6,
+      "camp": 1.2,
+      "cache": 0.3
+    },
+    "influenceMemoryPerDay": 0.03,
+    "contactPressureMult": 1.0,
+    "favorableReliefPerDay": 0.02,
+    "patrolMemoryDays": 3,
+    "patrolInfluencePerDay": -1.5,
+    "checkpointInfluencePerDay": -1.0,
+    "shura": {
+      "base": 0.45,
+      "attitudeWeight": 0.005,
+      "reputationWeight": 0.004,
+      "influenceWeight": -0.004,
+      "metBonus": 0.1,
+      "successAttitude": 5,
+      "failureAttitude": -3,
+      "revealKm": 5,
+      "revealChance": 0.5,
+      "cooldownDays": 5
+    },
+    "promise": {
+      "days": 12,
+      "attitude": 6,
+      "keptAttitude": 15,
+      "keptReputation": 3,
+      "brokenAttitude": -25,
+      "brokenReputation": -5,
+      "brokenInfluence": 8,
+      "refuseAttitude": -2,
+      "demandHours": 48
+    },
+    "sabotage": {
+      "influenceAbove": 50,
+      "chancePerDay": 0.08,
+      "attitude": -3
+    },
+    "roadRisk": {
+      "min": 0.5,
+      "max": 1.7,
+      "roadKm": 3,
+      "projectMult": 0.85
+    },
+    "threat": {
+      "min": 0.5,
+      "max": 1.8,
+      "nearKm": 14
+    },
+    "budget": {
+      "min": 0.6,
+      "max": 1.4
+    },
+    "stability": {
+      "weights": {
+        "attitude": 0.3,
+        "influence": 0.3,
+        "enemy": 0.25,
+        "incidents": 0.15
+      },
+      "enemyStrengthScale": 45,
+      "smoothing": 0.3,
+      "historyDays": 30
+    },
+    "incidents": {
+      "initial": 20,
+      "decayPerDay": 0.2,
+      "attack": 12,
+      "kia": 6,
+      "collateral": 15,
+      "missionFailure": 6,
+      "missionSuccess": -5,
+      "brokenPromise": 8,
+      "sabotage": 5,
+      "hqNeutralized": -20,
+      "contactNeutralized": -6
+    },
+    "auxiliary": {
+      "type": "auxiliary",
+      "minAttitude": 30,
+      "per1000": 4,
+      "maxPerVillage": 8,
+      "price": 350,
+      "attitudeCost": 2,
+      "infiltrationBase": 0.02,
+      "infiltrationPerInfluence": 0.005,
+      "insiderEvent": "insider_threat",
+      "insiderDelayHours": [
+        36,
+        120
+      ]
+    },
+    "insurgency": {
+      "spawnChancePerDay": 0.1,
+      "minAverageInfluence": 20,
+      "maxContacts": 12,
+      "spawnKm": [
+        2,
+        5
+      ],
+      "templates": [
+        {
+          "kind": "cell",
+          "label": "Groupe de combattants",
+          "drift": 1.5,
+          "weight": 5
+        },
+        {
+          "kind": "ied",
+          "label": "Cellule IED",
+          "drift": 2,
+          "weight": 3
+        },
+        {
+          "kind": "mortar",
+          "label": "Équipe mortier",
+          "drift": 1,
+          "weight": 2
+        },
+        {
+          "kind": "cache",
+          "label": "Cache d'armes",
+          "drift": 0,
+          "weight": 2
+        }
+      ]
+    }
+  },
+  "actions": [
+    {
+      "id": "aid",
+      "name": "Distribution humanitaire",
+      "desc": "Vivres et eau remis aux familles, sous la protection d'une escouade.",
+      "cost": {
+        "food": 150,
+        "water": 250
+      },
+      "attitude": 6,
+      "influence": -1,
+      "cooldownDays": 3
+    },
+    {
+      "id": "medcap",
+      "name": "Consultation médicale (MEDCAP)",
+      "desc": "Une journée de soins gratuits au village. Nécessite un personnel médical à la base.",
+      "cost": {
+        "medical": 25
+      },
+      "requiresPersonnel": "medic",
+      "attitude": 8,
+      "influence": -2,
+      "needBonus": "health",
+      "cooldownDays": 4
+    },
+    {
+      "id": "compensation",
+      "name": "Indemnisation des familles",
+      "desc": "Réparer les torts : récoltes détruites, bétail tué, maisons endommagées.",
+      "cost": {
+        "funds": 1500
+      },
+      "attitude": 10,
+      "influence": -1,
+      "cooldownDays": 7
+    },
+    {
+      "id": "pay_elders",
+      "name": "Rétribuer le chef",
+      "desc": "Une enveloppe pour s'assurer la bienveillance du chef. Efficace, mais le commandement n'aime pas ces pratiques.",
+      "cost": {
+        "funds": 2500
+      },
+      "requiresLeader": true,
+      "attitude": 12,
+      "influence": -4,
+      "reputation": -1,
+      "cooldownDays": 10
+    },
+    {
+      "id": "shura",
+      "name": "Shura avec les anciens",
+      "desc": "Réunion avec le chef et les anciens. Issue incertaine : peut ouvrir une négociation et faire émerger une demande.",
+      "cost": {},
+      "requiresLeader": true,
+      "shura": true,
+      "cooldownDays": 5
+    }
+  ],
+  "projects": [
+    {
+      "id": "well",
+      "name": "Forage d'un puits",
+      "need": "water",
+      "desc": "Forage profond et pompe manuelle, entretenus par le village.",
+      "cost": {
+        "funds": 4000,
+        "parts": 40
+      },
+      "days": 4,
+      "attitude": 15,
+      "influence": -6
+    },
+    {
+      "id": "school",
+      "name": "Construction d'une école",
+      "need": "school",
+      "desc": "Deux salles de classe, du matériel et le salaire d'un maître pour un an.",
+      "cost": {
+        "funds": 6000,
+        "parts": 30
+      },
+      "days": 7,
+      "attitude": 14,
+      "influence": -8
+    },
+    {
+      "id": "clinic",
+      "name": "Dispensaire",
+      "need": "health",
+      "desc": "Un dispensaire équipé, tenu par un infirmier formé par l'équipe médicale.",
+      "cost": {
+        "funds": 7000,
+        "medical": 40
+      },
+      "days": 6,
+      "attitude": 18,
+      "influence": -6
+    },
+    {
+      "id": "road",
+      "name": "Réfection de la piste",
+      "need": "road",
+      "desc": "Piste nivelée et ponceaux refaits : les marchés redeviennent accessibles, les IED plus difficiles à cacher.",
+      "cost": {
+        "funds": 5000,
+        "fuel": 150,
+        "parts": 30
+      },
+      "days": 5,
+      "attitude": 12,
+      "influence": -5,
+      "roadSafety": true
+    },
+    {
+      "id": "checkpoint",
+      "name": "Poste de police locale",
+      "need": "security",
+      "desc": "Un poste fortifié tenu par des policiers recrutés au village et encadrés par la base.",
+      "cost": {
+        "funds": 5000,
+        "ammo": 200
+      },
+      "days": 4,
+      "attitude": 10,
+      "influence": -12,
+      "checkpoint": true
+    }
+  ]
+}

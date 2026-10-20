@@ -1,0 +1,92 @@
+{
+  "_doc": "Ambiance visuelle (Phase 8) : teinte multipliée sur la vue FOB selon l'heure (blanc = aucune teinte), part de nuit (allume les éclairages), lumières des véhicules et des explosions.",
+  "keyframes": [
+    {
+      "hour": 0,
+      "color": "#3f4d7e",
+      "night": 1
+    },
+    {
+      "hour": 4.5,
+      "color": "#3f4d7e",
+      "night": 1
+    },
+    {
+      "hour": 5.5,
+      "color": "#8a7fa8",
+      "night": 0.65
+    },
+    {
+      "hour": 6.5,
+      "color": "#ffc79a",
+      "night": 0.15
+    },
+    {
+      "hour": 8,
+      "color": "#fff3dc",
+      "night": 0
+    },
+    {
+      "hour": 13,
+      "color": "#fff0d2",
+      "night": 0
+    },
+    {
+      "hour": 17.5,
+      "color": "#ffefd6",
+      "night": 0
+    },
+    {
+      "hour": 19,
+      "color": "#ffb27a",
+      "night": 0.2
+    },
+    {
+      "hour": 20,
+      "color": "#9a76a0",
+      "night": 0.65
+    },
+    {
+      "hour": 21,
+      "color": "#3f4d7e",
+      "night": 1
+    },
+    {
+      "hour": 24,
+      "color": "#3f4d7e",
+      "night": 1
+    }
+  ],
+  "glowAlpha": 0.26,
+  "flicker": 0.05,
+  "headlights": {
+    "radius": 1.4,
+    "ahead": 1.1,
+    "color": "#ffe9b8"
+  },
+  "explosion": {
+    "radius": 4.5,
+    "color": "#ffb060",
+    "durationMs": 700
+  },
+  "muzzle": {
+    "radius": 1.2,
+    "color": "#ffd890",
+    "durationMs": 90
+  },
+  "cannon": {
+    "radius": 3.2,
+    "color": "#ffcf80",
+    "durationMs": 260
+  },
+  "searchlight": {
+    "length": 6.5,
+    "color": "#eef4ff",
+    "sweep": 0.9
+  },
+  "doorLamp": {
+    "radius": 1.3,
+    "color": "#ffd9a0"
+  },
+  "vignette": 0.55
+}

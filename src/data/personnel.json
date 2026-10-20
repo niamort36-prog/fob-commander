@@ -1,0 +1,572 @@
+[
+  {
+    "id": "commander",
+    "name": "Commandant de la FOB",
+    "routine": "command",
+    "ranks": [
+      "Capitaine"
+    ],
+    "walkSpeed": 0.6,
+    "salaryPerDay": 40,
+    "traitCount": [
+      1,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        40,
+        60
+      ],
+      "medical": [
+        10,
+        30
+      ],
+      "radio": [
+        50,
+        70
+      ],
+      "stealth": [
+        20,
+        40
+      ],
+      "mechanics": [
+        10,
+        30
+      ],
+      "leadership": [
+        65,
+        85
+      ]
+    },
+    "visual": {
+      "kit": "commander",
+      "color": "#6b6a4a",
+      "accent": "#e0c860",
+      "badge": "#e0c860",
+      "helmet": false
+    },
+    "ammoCapacity": 3
+  },
+  {
+    "id": "officer",
+    "name": "Officier",
+    "routine": "command",
+    "ranks": [
+      "Sous-lieutenant",
+      "Lieutenant"
+    ],
+    "walkSpeed": 0.6,
+    "salaryPerDay": 25,
+    "traitCount": [
+      0,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        40,
+        60
+      ],
+      "medical": [
+        10,
+        30
+      ],
+      "radio": [
+        45,
+        70
+      ],
+      "stealth": [
+        20,
+        40
+      ],
+      "mechanics": [
+        10,
+        30
+      ],
+      "leadership": [
+        50,
+        75
+      ]
+    },
+    "visual": {
+      "kit": "officer",
+      "color": "#6f7048",
+      "accent": "#c8c8b8",
+      "badge": "#c8d870",
+      "helmet": false
+    },
+    "ammoCapacity": 3
+  },
+  {
+    "id": "infantry",
+    "name": "Fantassin",
+    "routine": "infantry",
+    "ranks": [
+      "Soldat",
+      "Soldat de 1re classe",
+      "Soldat de 1re classe",
+      "Caporal",
+      "Sergent"
+    ],
+    "walkSpeed": 0.65,
+    "salaryPerDay": 10,
+    "traitCount": [
+      0,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        45,
+        70
+      ],
+      "medical": [
+        5,
+        25
+      ],
+      "radio": [
+        15,
+        35
+      ],
+      "stealth": [
+        25,
+        50
+      ],
+      "mechanics": [
+        10,
+        30
+      ],
+      "leadership": [
+        10,
+        35
+      ]
+    },
+    "visual": {
+      "kit": "infantry",
+      "color": "#6b7046",
+      "vest": "#555a3a",
+      "badge": "#78a850",
+      "helmet": true
+    },
+    "ammoCapacity": 8,
+    "duties": [
+      "cook"
+    ]
+  },
+  {
+    "id": "sf",
+    "name": "Opérateur forces spéciales",
+    "routine": "infantry",
+    "ranks": [
+      "Sergent-chef",
+      "Adjudant"
+    ],
+    "walkSpeed": 0.7,
+    "salaryPerDay": 60,
+    "traitCount": [
+      1,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        75,
+        95
+      ],
+      "medical": [
+        30,
+        50
+      ],
+      "radio": [
+        40,
+        60
+      ],
+      "stealth": [
+        70,
+        90
+      ],
+      "mechanics": [
+        25,
+        45
+      ],
+      "leadership": [
+        45,
+        65
+      ]
+    },
+    "visual": {
+      "kit": "sf",
+      "color": "#4f523d",
+      "vest": "#3a3d2c",
+      "badge": "#4a80b8",
+      "helmet": true
+    },
+    "ammoCapacity": 10,
+    "duties": [
+      "cook"
+    ]
+  },
+  {
+    "id": "sf_commander",
+    "name": "Commandant des forces spéciales",
+    "routine": "command",
+    "ranks": [
+      "Commandant"
+    ],
+    "walkSpeed": 0.65,
+    "salaryPerDay": 90,
+    "traitCount": [
+      1,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        70,
+        90
+      ],
+      "medical": [
+        30,
+        50
+      ],
+      "radio": [
+        60,
+        80
+      ],
+      "stealth": [
+        65,
+        85
+      ],
+      "mechanics": [
+        20,
+        40
+      ],
+      "leadership": [
+        75,
+        95
+      ]
+    },
+    "visual": {
+      "kit": "sf",
+      "color": "#4f523d",
+      "vest": "#3a3d2c",
+      "helmet": false,
+      "accent": "#6a6a52",
+      "badge": "#7ab0e8"
+    },
+    "ammoCapacity": 6
+  },
+  {
+    "id": "contractor",
+    "name": "Contractor privé",
+    "routine": "infantry",
+    "ranks": [
+      "Contractor",
+      "Chef d'équipe"
+    ],
+    "walkSpeed": 0.65,
+    "salaryPerDay": 120,
+    "traitCount": [
+      1,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        60,
+        85
+      ],
+      "medical": [
+        15,
+        35
+      ],
+      "radio": [
+        25,
+        45
+      ],
+      "stealth": [
+        35,
+        60
+      ],
+      "mechanics": [
+        20,
+        45
+      ],
+      "leadership": [
+        20,
+        45
+      ]
+    },
+    "visual": {
+      "kit": "contractor",
+      "color": "#a08e68",
+      "vest": "#3d3a33",
+      "badge": "#c8b088",
+      "helmet": false
+    },
+    "ammoCapacity": 8,
+    "duties": [
+      "cook"
+    ]
+  },
+  {
+    "id": "cia",
+    "name": "Agent de liaison CIA",
+    "routine": "command",
+    "ranks": [
+      "Officier de liaison"
+    ],
+    "walkSpeed": 0.6,
+    "salaryPerDay": 80,
+    "traitCount": [
+      1,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        35,
+        60
+      ],
+      "medical": [
+        10,
+        25
+      ],
+      "radio": [
+        60,
+        85
+      ],
+      "stealth": [
+        55,
+        80
+      ],
+      "mechanics": [
+        10,
+        25
+      ],
+      "leadership": [
+        40,
+        60
+      ]
+    },
+    "visual": {
+      "kit": "cia",
+      "color": "#7d8a96",
+      "accent": "#5a6470",
+      "badge": "#b0b0b8",
+      "helmet": false
+    },
+    "ammoCapacity": 3
+  },
+  {
+    "id": "logistics",
+    "name": "Logisticien / mécanicien",
+    "routine": "logistics",
+    "ranks": [
+      "Soldat",
+      "Soldat de 1re classe",
+      "Caporal"
+    ],
+    "walkSpeed": 0.6,
+    "salaryPerDay": 10,
+    "traitCount": [
+      0,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        25,
+        45
+      ],
+      "medical": [
+        5,
+        20
+      ],
+      "radio": [
+        20,
+        40
+      ],
+      "stealth": [
+        10,
+        25
+      ],
+      "mechanics": [
+        55,
+        80
+      ],
+      "leadership": [
+        10,
+        30
+      ]
+    },
+    "visual": {
+      "kit": "logistics",
+      "color": "#7a6f4a",
+      "accent": "#8a7a58",
+      "badge": "#e8962f",
+      "helmet": false
+    },
+    "duties": [
+      "supply",
+      "cook",
+      "clean"
+    ],
+    "ammoCapacity": 4
+  },
+  {
+    "id": "cook",
+    "name": "Cuisinier",
+    "routine": "kitchen",
+    "ranks": [
+      "Soldat",
+      "Soldat de 1re classe",
+      "Caporal",
+      "Sergent"
+    ],
+    "walkSpeed": 0.55,
+    "salaryPerDay": 10,
+    "traitCount": [
+      0,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        20,
+        40
+      ],
+      "medical": [
+        10,
+        25
+      ],
+      "radio": [
+        10,
+        25
+      ],
+      "stealth": [
+        5,
+        20
+      ],
+      "mechanics": [
+        20,
+        40
+      ],
+      "leadership": [
+        10,
+        30
+      ]
+    },
+    "visual": {
+      "kit": "cook",
+      "color": "#6f6a4c",
+      "accent": "#e8e4d8",
+      "badge": "#f0f0f0",
+      "helmet": false
+    },
+    "duties": [
+      "cook",
+      "supply",
+      "clean"
+    ],
+    "ammoCapacity": 3
+  },
+  {
+    "id": "medic",
+    "name": "Personnel médical",
+    "routine": "medical",
+    "ranks": [
+      "Infirmier",
+      "Médecin"
+    ],
+    "walkSpeed": 0.6,
+    "salaryPerDay": 20,
+    "traitCount": [
+      0,
+      2
+    ],
+    "skills": {
+      "shooting": [
+        20,
+        40
+      ],
+      "medical": [
+        65,
+        90
+      ],
+      "radio": [
+        20,
+        40
+      ],
+      "stealth": [
+        10,
+        25
+      ],
+      "mechanics": [
+        10,
+        25
+      ],
+      "leadership": [
+        20,
+        40
+      ]
+    },
+    "visual": {
+      "kit": "medic",
+      "color": "#6b7046",
+      "vest": "#555a3a",
+      "badge": "#e85050",
+      "helmet": false
+    },
+    "ammoCapacity": 3
+  },
+  {
+    "id": "auxiliary",
+    "name": "Auxiliaire afghan",
+    "routine": "infantry",
+    "ranks": [
+      "Auxiliaire",
+      "Auxiliaire",
+      "Chef de groupe"
+    ],
+    "names": "afghan",
+    "walkSpeed": 0.75,
+    "salaryPerDay": 6,
+    "traitCount": [
+      0,
+      1
+    ],
+    "skills": {
+      "shooting": [
+        25,
+        50
+      ],
+      "medical": [
+        5,
+        20
+      ],
+      "radio": [
+        5,
+        20
+      ],
+      "stealth": [
+        45,
+        75
+      ],
+      "mechanics": [
+        10,
+        30
+      ],
+      "leadership": [
+        10,
+        35
+      ]
+    },
+    "visual": {
+      "kit": "auxiliary",
+      "color": "#a39a82",
+      "vest": "#5a5446",
+      "accent": "#8a7a5a",
+      "badge": "#a8804e",
+      "helmet": false
+    },
+    "duties": [
+      "clean",
+      "supply",
+      "cook"
+    ],
+    "ammoCapacity": 6
+  }
+]

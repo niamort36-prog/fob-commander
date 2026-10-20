@@ -1,0 +1,645 @@
+{
+  "_doc": "Sons synthétisés par le navigateur (Phase 8, Web Audio, aucun fichier audio). Chaque son est une liste de couches : tone (oscillateur : sine | square | sawtooth | triangle) ou noise (bruit blanc filtré). Champs : freq / freqEnd (Hz), dur (s), attack (s), gain, delay (s), filter { type, freq, freqEnd, q }. repeat / interval répètent le son ; minGapMs limite la fréquence de déclenchement. Catégories : sfx, radio, ui (volumes réglables dans les options). Les événements du jeu sont associés aux sons dans « events ».",
+  "maxVoices": 28,
+  "hearingTiles": 34,
+  "mapMuffle": 0.35,
+  "sounds": {
+    "click": {
+      "cat": "ui",
+      "minGapMs": 40,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "square",
+          "freq": 1250,
+          "freqEnd": 900,
+          "dur": 0.035,
+          "gain": 0.07
+        }
+      ]
+    },
+    "place": {
+      "cat": "sfx",
+      "minGapMs": 60,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "lowpass",
+            "freq": 700
+          },
+          "dur": 0.12,
+          "gain": 0.35
+        },
+        {
+          "type": "tone",
+          "wave": "sine",
+          "freq": 160,
+          "freqEnd": 90,
+          "dur": 0.12,
+          "gain": 0.25
+        }
+      ]
+    },
+    "build": {
+      "cat": "sfx",
+      "minGapMs": 200,
+      "repeat": 3,
+      "interval": 0.16,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "bandpass",
+            "freq": 2400,
+            "q": 4
+          },
+          "dur": 0.05,
+          "gain": 0.3
+        },
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 900,
+          "freqEnd": 700,
+          "dur": 0.05,
+          "gain": 0.12
+        }
+      ]
+    },
+    "complete": {
+      "cat": "ui",
+      "minGapMs": 300,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 660,
+          "dur": 0.1,
+          "gain": 0.16
+        },
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 880,
+          "dur": 0.16,
+          "gain": 0.16,
+          "delay": 0.1
+        }
+      ]
+    },
+    "demolish": {
+      "cat": "sfx",
+      "minGapMs": 150,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "lowpass",
+            "freq": 500,
+            "freqEnd": 150
+          },
+          "dur": 0.6,
+          "gain": 0.45
+        }
+      ]
+    },
+    "reject": {
+      "cat": "ui",
+      "minGapMs": 150,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "square",
+          "freq": 220,
+          "freqEnd": 180,
+          "dur": 0.12,
+          "gain": 0.08
+        }
+      ]
+    },
+    "notify": {
+      "cat": "radio",
+      "minGapMs": 500,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "sine",
+          "freq": 988,
+          "dur": 0.12,
+          "gain": 0.16
+        },
+        {
+          "type": "tone",
+          "wave": "sine",
+          "freq": 1319,
+          "dur": 0.22,
+          "gain": 0.14,
+          "delay": 0.12
+        }
+      ]
+    },
+    "alert": {
+      "cat": "radio",
+      "minGapMs": 2000,
+      "repeat": 2,
+      "interval": 0.28,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "square",
+          "freq": 740,
+          "dur": 0.14,
+          "gain": 0.09
+        }
+      ]
+    },
+    "radioIn": {
+      "cat": "radio",
+      "minGapMs": 800,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "bandpass",
+            "freq": 1800,
+            "q": 1.2
+          },
+          "dur": 0.45,
+          "gain": 0.22
+        },
+        {
+          "type": "tone",
+          "wave": "sine",
+          "freq": 1450,
+          "dur": 0.09,
+          "gain": 0.15,
+          "delay": 0.45
+        },
+        {
+          "type": "tone",
+          "wave": "sine",
+          "freq": 1450,
+          "dur": 0.09,
+          "gain": 0.15,
+          "delay": 0.62
+        }
+      ]
+    },
+    "radioOut": {
+      "cat": "radio",
+      "minGapMs": 400,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "sine",
+          "freq": 1200,
+          "dur": 0.07,
+          "gain": 0.13
+        },
+        {
+          "type": "noise",
+          "filter": {
+            "type": "bandpass",
+            "freq": 2000,
+            "q": 1.5
+          },
+          "dur": 0.2,
+          "gain": 0.15,
+          "delay": 0.07
+        }
+      ]
+    },
+    "shotFriendly": {
+      "cat": "sfx",
+      "minGapMs": 35,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "lowpass",
+            "freq": 4200,
+            "freqEnd": 900
+          },
+          "dur": 0.09,
+          "gain": 0.42
+        },
+        {
+          "type": "tone",
+          "wave": "square",
+          "freq": 140,
+          "freqEnd": 60,
+          "dur": 0.05,
+          "gain": 0.12
+        }
+      ]
+    },
+    "shotEnemy": {
+      "cat": "sfx",
+      "minGapMs": 35,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "lowpass",
+            "freq": 2600,
+            "freqEnd": 600
+          },
+          "dur": 0.11,
+          "gain": 0.38
+        },
+        {
+          "type": "tone",
+          "wave": "square",
+          "freq": 110,
+          "freqEnd": 50,
+          "dur": 0.06,
+          "gain": 0.1
+        }
+      ]
+    },
+    "explosion": {
+      "cat": "sfx",
+      "minGapMs": 80,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "lowpass",
+            "freq": 1400,
+            "freqEnd": 90
+          },
+          "dur": 1.3,
+          "attack": 0.005,
+          "gain": 0.9
+        },
+        {
+          "type": "tone",
+          "wave": "sine",
+          "freq": 70,
+          "freqEnd": 30,
+          "dur": 0.9,
+          "gain": 0.6
+        }
+      ]
+    },
+    "incoming": {
+      "cat": "sfx",
+      "minGapMs": 400,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "sine",
+          "freq": 1800,
+          "freqEnd": 700,
+          "dur": 0.9,
+          "attack": 0.2,
+          "gain": 0.06
+        }
+      ]
+    },
+    "siren": {
+      "cat": "radio",
+      "minGapMs": 8000,
+      "repeat": 3,
+      "interval": 1.3,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "sawtooth",
+          "freq": 420,
+          "freqEnd": 820,
+          "dur": 0.65,
+          "attack": 0.05,
+          "gain": 0.07,
+          "filter": {
+            "type": "lowpass",
+            "freq": 2200
+          }
+        },
+        {
+          "type": "tone",
+          "wave": "sawtooth",
+          "freq": 820,
+          "freqEnd": 420,
+          "dur": 0.65,
+          "gain": 0.07,
+          "delay": 0.65,
+          "filter": {
+            "type": "lowpass",
+            "freq": 2200
+          }
+        }
+      ]
+    },
+    "allClear": {
+      "cat": "radio",
+      "minGapMs": 3000,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 523,
+          "dur": 0.18,
+          "gain": 0.14
+        },
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 659,
+          "dur": 0.18,
+          "gain": 0.14,
+          "delay": 0.18
+        },
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 784,
+          "dur": 0.35,
+          "gain": 0.14,
+          "delay": 0.36
+        }
+      ]
+    },
+    "engine": {
+      "cat": "sfx",
+      "minGapMs": 1500,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "sawtooth",
+          "freq": 55,
+          "freqEnd": 75,
+          "dur": 1.2,
+          "attack": 0.3,
+          "gain": 0.07,
+          "filter": {
+            "type": "lowpass",
+            "freq": 320
+          }
+        },
+        {
+          "type": "noise",
+          "filter": {
+            "type": "lowpass",
+            "freq": 400
+          },
+          "dur": 1.2,
+          "attack": 0.3,
+          "gain": 0.08
+        }
+      ]
+    },
+    "rotor": {
+      "cat": "sfx",
+      "minGapMs": 3000,
+      "repeat": 10,
+      "interval": 0.11,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "lowpass",
+            "freq": 380
+          },
+          "dur": 0.09,
+          "gain": 0.22
+        }
+      ]
+    },
+    "success": {
+      "cat": "ui",
+      "minGapMs": 500,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 523,
+          "dur": 0.12,
+          "gain": 0.15
+        },
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 784,
+          "dur": 0.12,
+          "gain": 0.15,
+          "delay": 0.12
+        },
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 1047,
+          "dur": 0.3,
+          "gain": 0.15,
+          "delay": 0.24
+        }
+      ]
+    },
+    "failure": {
+      "cat": "ui",
+      "minGapMs": 500,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 392,
+          "dur": 0.2,
+          "gain": 0.15
+        },
+        {
+          "type": "tone",
+          "wave": "triangle",
+          "freq": 311,
+          "dur": 0.4,
+          "gain": 0.15,
+          "delay": 0.2
+        }
+      ]
+    },
+    "fanfare": {
+      "cat": "ui",
+      "minGapMs": 2000,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "square",
+          "freq": 392,
+          "dur": 0.16,
+          "gain": 0.08
+        },
+        {
+          "type": "tone",
+          "wave": "square",
+          "freq": 523,
+          "dur": 0.16,
+          "gain": 0.08,
+          "delay": 0.18
+        },
+        {
+          "type": "tone",
+          "wave": "square",
+          "freq": 659,
+          "dur": 0.16,
+          "gain": 0.08,
+          "delay": 0.36
+        },
+        {
+          "type": "tone",
+          "wave": "square",
+          "freq": 784,
+          "dur": 0.6,
+          "gain": 0.08,
+          "delay": 0.54
+        }
+      ]
+    },
+    "type": {
+      "cat": "ui",
+      "minGapMs": 45,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "highpass",
+            "freq": 3000
+          },
+          "dur": 0.015,
+          "gain": 0.05
+        }
+      ]
+    },
+    "howitzer": {
+      "cat": "sfx",
+      "minGapMs": 120,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "lowpass",
+            "freq": 900,
+            "freqEnd": 70
+          },
+          "dur": 1.6,
+          "attack": 0.003,
+          "gain": 1.0
+        },
+        {
+          "type": "tone",
+          "wave": "sine",
+          "freq": 55,
+          "freqEnd": 28,
+          "dur": 1.1,
+          "gain": 0.8
+        }
+      ]
+    },
+    "jet": {
+      "cat": "sfx",
+      "minGapMs": 4000,
+      "layers": [
+        {
+          "type": "noise",
+          "filter": {
+            "type": "bandpass",
+            "freq": 600,
+            "freqEnd": 2400,
+            "q": 0.8
+          },
+          "dur": 3.2,
+          "attack": 1.2,
+          "gain": 0.35
+        },
+        {
+          "type": "tone",
+          "wave": "sawtooth",
+          "freq": 180,
+          "freqEnd": 120,
+          "dur": 3.0,
+          "attack": 1.0,
+          "gain": 0.04,
+          "filter": {
+            "type": "lowpass",
+            "freq": 900
+          }
+        }
+      ]
+    },
+    "turboprop": {
+      "cat": "sfx",
+      "minGapMs": 6000,
+      "layers": [
+        {
+          "type": "tone",
+          "wave": "sawtooth",
+          "freq": 92,
+          "freqEnd": 84,
+          "dur": 5.0,
+          "attack": 1.5,
+          "gain": 0.06,
+          "filter": {
+            "type": "lowpass",
+            "freq": 500
+          }
+        },
+        {
+          "type": "noise",
+          "filter": {
+            "type": "lowpass",
+            "freq": 700
+          },
+          "dur": 5.0,
+          "attack": 1.5,
+          "gain": 0.16
+        }
+      ]
+    }
+  },
+  "events": {
+    "building:placed": "place",
+    "building:completed": "complete",
+    "building:upgraded": "complete",
+    "building:removed": "demolish",
+    "build:rejected": "reject",
+    "upgrade:rejected": "reject",
+    "supply:ordered": "radioOut",
+    "supply:arrived": "engine",
+    "supply:ambushed": "alert",
+    "supply:rejected": "reject",
+    "vehicle:bought": "engine",
+    "event:started": "notify",
+    "combat:started": "siren",
+    "combat:ended": "allClear",
+    "combat:impact": "explosion",
+    "mission:launched": "radioOut",
+    "mission:rejected": "reject",
+    "radio:message": "radioIn",
+    "radio:answered": "radioOut",
+    "resource:shortage": "alert",
+    "progression:unlocked": "success",
+    "diplomacy:project": "success",
+    "zone:expanded": "complete",
+    "artillery:fire": "howitzer",
+    "aircraft:flyover": "jet",
+    "aircraft:landing": "turboprop",
+    "progression:purchased": "success"
+  },
+  "ambient": {
+    "wind": {
+      "gain": 0.05,
+      "filterFreq": 420,
+      "gustEverySec": 9
+    },
+    "crickets": {
+      "gain": 0.025,
+      "freq": 4300,
+      "everySec": 0.9
+    },
+    "generator": {
+      "gain": 0.035,
+      "freq": 50
+    },
+    "nightFrom": 20.5,
+    "nightTo": 5.5
+  }
+}

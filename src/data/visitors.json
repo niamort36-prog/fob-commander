@@ -1,0 +1,61 @@
+{
+  "_doc": "Visites physiques (événements de la base) : apparence des visiteurs et réglages. Chaque événement de visite (events.json → visit) décrit le mode d'arrivée (à pied, charrette, véhicule, hélicoptère), le chef de la délégation, son escorte et la durée du séjour.",
+  "config": {
+    "walkSpeed": 0.5,
+    "meetBuilding": "toc",
+    "wanderEveryMin": 25,
+    "wanderRadius": 2,
+    "heliVehicle": "helicopter",
+    "maxWaitHours": 6
+  },
+  "visuals": {
+    "elder": {
+      "color": "#8a8170",
+      "accent": "#e8e2d0",
+      "headwear": "turban",
+      "beard": "#e2ded4"
+    },
+    "escort": {
+      "color": "#6b604e",
+      "accent": "#8a7a5a",
+      "headwear": "pakol",
+      "rifle": true
+    },
+    "villager": {
+      "color": "#5a4a6a",
+      "accent": "#3f5f7a",
+      "headwear": "headscarf"
+    },
+    "general": {
+      "color": "#6b6a4a",
+      "accent": "#6b6a4a",
+      "headwear": "cap"
+    },
+    "aide": {
+      "color": "#6b7046",
+      "helmet": true,
+      "rifle": true
+    },
+    "journalist": {
+      "color": "#3f5f7a",
+      "accent": "#e8e2d0",
+      "headwear": "none"
+    },
+    "pmc": {
+      "color": "#3d3a33",
+      "accent": "#8a7a5a",
+      "headwear": "cap",
+      "rifle": true
+    },
+    "informant": {
+      "color": "#5a5446",
+      "accent": "#8a7a5a",
+      "headwear": "pakol"
+    },
+    "police": {
+      "color": "#4a5a6a",
+      "accent": "#4a5a6a",
+      "headwear": "cap"
+    }
+  }
+}

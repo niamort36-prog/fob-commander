@@ -1,0 +1,546 @@
+{
+  "_doc": "Missions hors de la FOB (Phase 6). Effets possibles : funds, reputation, villageAttitude, villageInfluence (village visé ou le plus proche de l'objectif), intelTarget (fiabilité du contact visé), revealRadiusKm, neutralize, escort, clearIed, meet, enemyKilled [min, max].",
+  "config": {
+    "footSpeedKmh": 4,
+    "vehicleSpeedKmh": 25,
+    "vehicleCapacity": 5,
+    "minHealth": 40,
+    "assemblyTimeoutMin": 90,
+    "fuelPerKmPerVehicle": 0.8,
+    "vehicleProtection": 0.6,
+    "vehicleSuccessBonus": 0.05,
+    "estimateSpread": 0.25,
+    "maxActive": 3,
+    "kiaShare": 0.3,
+    "successMorale": 3,
+    "kiaMorale": -8,
+    "escortHours": 72,
+    "escortRiskMult": 0.3,
+    "xpSuccess": 10,
+    "xpPartial": 5,
+    "abortSuccessMult": 0.4,
+    "collateralReputation": -3,
+    "collateralAttitude": -8,
+    "toc": {
+      "officersPerMission": 1,
+      "understaffedPenalty": 0.15,
+      "staffedBonus": 0.03,
+      "officerTypes": [
+        "officer",
+        "commander",
+        "sf_commander",
+        "cia"
+      ]
+    },
+    "comms": {
+      "baseRangeKm": 12,
+      "noTocRangeKm": 6,
+      "penaltyPer10Km": 0.06,
+      "maxPenalty": 0.2
+    },
+    "heli": {
+      "speedKmh": 140,
+      "fuelPerKm": 1.5
+    }
+  },
+  "callsigns": [
+    "Alpha 1-1",
+    "Alpha 1-2",
+    "Bravo 2-1",
+    "Bravo 2-3",
+    "Charlie 3-1",
+    "Delta 4-2",
+    "Écho 5-1",
+    "Fox 6-1",
+    "Golf 7-2",
+    "Hôtel 8-1",
+    "Kilo 1-4",
+    "Lima 2-2"
+  ],
+  "loadouts": [
+    {
+      "id": "light",
+      "name": "Légère",
+      "desc": "Rapide, peu de munitions.",
+      "consumes": {
+        "ammo": 20
+      },
+      "success": -0.05,
+      "casualty": 0.15,
+      "speed": 1.15
+    },
+    {
+      "id": "standard",
+      "name": "Standard",
+      "desc": "Dotation réglementaire.",
+      "consumes": {
+        "ammo": 50,
+        "medical": 5
+      },
+      "success": 0,
+      "casualty": 0,
+      "speed": 1
+    },
+    {
+      "id": "heavy",
+      "name": "Renforcée",
+      "desc": "Munitions et trousses de secours en plus, mais plus lent.",
+      "consumes": {
+        "ammo": 100,
+        "medical": 15
+      },
+      "success": 0.08,
+      "casualty": -0.2,
+      "speed": 0.85
+    }
+  ],
+  "types": [
+    {
+      "id": "patrol",
+      "name": "Patrouille",
+      "desc": "Présence dans le secteur : rassure la population, dissuade l'ennemi et recueille des indices.",
+      "targets": [
+        "village",
+        "fob"
+      ],
+      "minMembers": 4,
+      "maxMembers": 10,
+      "objectiveHours": 3,
+      "difficulty": 0.3,
+      "risk": 0.07,
+      "skills": {
+        "shooting": 0.35,
+        "leadership": 0.2,
+        "stealth": 0.15,
+        "medical": 0.1,
+        "radio": 0.2
+      },
+      "rewards": {
+        "success": {
+          "funds": 600,
+          "reputation": 1,
+          "villageInfluence": -4,
+          "villageAttitude": 2,
+          "revealRadiusKm": 3,
+          "enemyKilled": [
+            0,
+            2
+          ]
+        },
+        "partial": {
+          "funds": 200,
+          "revealRadiusKm": 2
+        },
+        "failure": {
+          "reputation": -1
+        }
+      },
+      "texts": {
+        "success": "La patrouille a parcouru le secteur sans incident majeur et a rassuré la population.",
+        "partial": "La patrouille a dû écourter son parcours mais a ramené quelques informations.",
+        "failure": "La patrouille n'a pas pu remplir sa mission."
+      },
+      "specialistBonus": {
+        "auxiliary": 0.04
+      }
+    },
+    {
+      "id": "recon",
+      "name": "Reconnaissance",
+      "desc": "Observer discrètement un objectif pour confirmer sa position et sa nature.",
+      "targets": [
+        "contact"
+      ],
+      "minMembers": 2,
+      "maxMembers": 6,
+      "objectiveHours": 2,
+      "difficulty": 0.15,
+      "risk": 0.05,
+      "skills": {
+        "stealth": 0.45,
+        "radio": 0.2,
+        "shooting": 0.15,
+        "leadership": 0.2
+      },
+      "rewards": {
+        "success": {
+          "funds": 500,
+          "intelTarget": 0.92,
+          "revealRadiusKm": 4
+        },
+        "partial": {
+          "intelTarget": 0.65
+        },
+        "failure": {}
+      },
+      "texts": {
+        "success": "L'objectif a été observé de près : position et effectifs confirmés.",
+        "partial": "L'observation a été brève ; les informations restent partielles.",
+        "failure": "L'équipe a été repérée avant d'atteindre son point d'observation."
+      },
+      "specialistBonus": {
+        "auxiliary": 0.03
+      }
+    },
+    {
+      "id": "intel",
+      "name": "Recueil de renseignement",
+      "desc": "Discussions avec les habitants, observation du marché et des allées et venues.",
+      "targets": [
+        "village"
+      ],
+      "minMembers": 2,
+      "maxMembers": 5,
+      "objectiveHours": 4,
+      "difficulty": 0.2,
+      "risk": 0.04,
+      "skills": {
+        "radio": 0.3,
+        "leadership": 0.4,
+        "stealth": 0.2,
+        "medical": 0.1
+      },
+      "specialistBonus": {
+        "cia": 0.15,
+        "auxiliary": 0.06
+      },
+      "rewards": {
+        "success": {
+          "funds": 400,
+          "revealRadiusKm": 7,
+          "villageAttitude": 3
+        },
+        "partial": {
+          "revealRadiusKm": 4
+        },
+        "failure": {
+          "villageAttitude": -2
+        }
+      },
+      "texts": {
+        "success": "Les langues se sont déliées : plusieurs activités suspectes ont été signalées.",
+        "partial": "Quelques bribes d'informations, à recouper.",
+        "failure": "Les habitants sont restés muets, méfiants envers les soldats."
+      }
+    },
+    {
+      "id": "village_security",
+      "name": "Sécurisation de village",
+      "desc": "Bouclage, fouilles et présence prolongée pour chasser les insurgés du village.",
+      "targets": [
+        "village"
+      ],
+      "minMembers": 6,
+      "maxMembers": 12,
+      "objectiveHours": 6,
+      "difficulty": 0.25,
+      "influenceDifficulty": true,
+      "risk": 0.1,
+      "skills": {
+        "shooting": 0.35,
+        "leadership": 0.35,
+        "medical": 0.15,
+        "radio": 0.15
+      },
+      "rewards": {
+        "success": {
+          "funds": 1500,
+          "reputation": 3,
+          "villageAttitude": 12,
+          "villageInfluence": -15,
+          "enemyKilled": [
+            1,
+            4
+          ]
+        },
+        "partial": {
+          "villageAttitude": 4,
+          "villageInfluence": -5,
+          "enemyKilled": [
+            0,
+            2
+          ]
+        },
+        "failure": {
+          "villageAttitude": -5,
+          "reputation": -1
+        }
+      },
+      "texts": {
+        "success": "Le village est sécurisé ; les insurgés ont fui et les habitants respirent.",
+        "partial": "La présence insurgée a reculé, sans disparaître.",
+        "failure": "L'opération a tourné court et la population en garde un mauvais souvenir."
+      },
+      "specialistBonus": {
+        "auxiliary": 0.05
+      }
+    },
+    {
+      "id": "raid",
+      "name": "Raid",
+      "desc": "Frapper un objectif ennemi identifié : groupe armé, cache, équipe de tir.",
+      "targets": [
+        "contact"
+      ],
+      "contactKinds": [
+        "cell",
+        "mortar",
+        "ied",
+        "cache",
+        "camp",
+        "hq"
+      ],
+      "minMembers": 6,
+      "maxMembers": 12,
+      "objectiveHours": 2,
+      "difficulty": 0.3,
+      "risk": 0.16,
+      "skills": {
+        "shooting": 0.5,
+        "leadership": 0.25,
+        "stealth": 0.15,
+        "medical": 0.1
+      },
+      "rewards": {
+        "success": {
+          "funds": 3000,
+          "reputation": 4,
+          "neutralize": true,
+          "villageInfluence": -10,
+          "enemyKilled": [
+            3,
+            8
+          ]
+        },
+        "partial": {
+          "reputation": 1,
+          "villageInfluence": -3,
+          "intelTarget": 0.8,
+          "enemyKilled": [
+            1,
+            3
+          ]
+        },
+        "failure": {
+          "reputation": -2,
+          "enemyKilled": [
+            0,
+            1
+          ]
+        }
+      },
+      "texts": {
+        "success": "L'objectif a été détruit.",
+        "partial": "L'ennemi a subi des pertes mais l'objectif n'a pas été détruit.",
+        "failure": "Le raid a échoué face à une résistance trop forte."
+      }
+    },
+    {
+      "id": "convoy_escort",
+      "name": "Escorte de convoi",
+      "desc": "Ouvrir et sécuriser la route pour les prochains convois (embuscades et engins explosifs).",
+      "targets": [
+        "fob"
+      ],
+      "minMembers": 4,
+      "maxMembers": 8,
+      "objectiveHours": 4,
+      "difficulty": 0.25,
+      "risk": 0.08,
+      "skills": {
+        "shooting": 0.35,
+        "radio": 0.25,
+        "leadership": 0.2,
+        "medical": 0.2
+      },
+      "rewards": {
+        "success": {
+          "funds": 500,
+          "escort": true,
+          "clearIed": true
+        },
+        "partial": {
+          "escort": true
+        },
+        "failure": {}
+      },
+      "texts": {
+        "success": "La route a été ouverte et surveillée : les prochains convois rouleront en sécurité.",
+        "partial": "La route n'a été que partiellement contrôlée.",
+        "failure": "L'escorte n'a pas pu assurer sa mission."
+      }
+    },
+    {
+      "id": "meet_leader",
+      "name": "Rencontre avec un chef",
+      "desc": "Shura avec le chef du village : écouter, promettre, négocier.",
+      "targets": [
+        "village"
+      ],
+      "requires": {
+        "leader": true,
+        "routine": "command"
+      },
+      "minMembers": 3,
+      "maxMembers": 6,
+      "objectiveHours": 3,
+      "difficulty": 0.2,
+      "influenceDifficulty": true,
+      "risk": 0.06,
+      "skills": {
+        "leadership": 0.6,
+        "radio": 0.2,
+        "medical": 0.2
+      },
+      "rewards": {
+        "success": {
+          "reputation": 2,
+          "villageAttitude": 15,
+          "meet": true,
+          "revealRadiusKm": 4
+        },
+        "partial": {
+          "villageAttitude": 5,
+          "meet": true
+        },
+        "failure": {
+          "villageAttitude": -6
+        }
+      },
+      "texts": {
+        "success": "La shura s'est bien déroulée ; le chef s'engage à coopérer.",
+        "partial": "Le chef a écouté poliment, sans rien promettre.",
+        "failure": "La rencontre a mal tourné : le chef se sent insulté."
+      },
+      "specialistBonus": {
+        "auxiliary": 0.05
+      }
+    },
+    {
+      "id": "special_op",
+      "name": "Opération spéciale",
+      "desc": "Action ciblée de nuit contre un objectif de haute valeur. Nécessite des forces spéciales.",
+      "targets": [
+        "contact"
+      ],
+      "contactKinds": [
+        "hq",
+        "camp",
+        "cell"
+      ],
+      "requires": {
+        "sf": 2
+      },
+      "minMembers": 4,
+      "maxMembers": 8,
+      "objectiveHours": 3,
+      "difficulty": 0.45,
+      "risk": 0.15,
+      "skills": {
+        "shooting": 0.4,
+        "stealth": 0.35,
+        "leadership": 0.15,
+        "medical": 0.1
+      },
+      "rewards": {
+        "success": {
+          "funds": 8000,
+          "reputation": 8,
+          "neutralize": true,
+          "villageInfluence": -20,
+          "enemyKilled": [
+            4,
+            10
+          ]
+        },
+        "partial": {
+          "reputation": 2,
+          "intelTarget": 0.9,
+          "enemyKilled": [
+            1,
+            4
+          ]
+        },
+        "failure": {
+          "reputation": -4
+        }
+      },
+      "texts": {
+        "success": "Objectif de haute valeur neutralisé. Le réseau ennemi est désorganisé.",
+        "partial": "L'objectif a échappé au coup de filet, mais le réseau est affaibli.",
+        "failure": "L'opération a été compromise."
+      }
+    }
+  ],
+  "support": [
+    {
+      "id": "none",
+      "name": "Aucun appui",
+      "desc": "L'unité se débrouille avec ses propres moyens.",
+      "cost": {}
+    },
+    {
+      "id": "artillery",
+      "name": "Artillerie (obusiers de la base)",
+      "desc": "Tirs de 155 mm sur demande. Nécessite une batterie d'obusiers en service et un objectif à moins de 25 km de la FOB.",
+      "requires": "artillery",
+      "rangeKm": 25,
+      "cost": {
+        "ammo": 120
+      },
+      "success": 0.07,
+      "casualty": -0.2,
+      "collateral": 0.1,
+      "salvos": 6
+    },
+    {
+      "id": "a10",
+      "name": "Appui aérien rapproché (A-10)",
+      "desc": "Une patrouille de deux A-10 Thunderbolt décolle de la piste et reste en alerte au-dessus de l'unité. De jour uniquement (6 h - 19 h), une sortie par 24 h.",
+      "requires": "airstrip",
+      "cost": {
+        "funds": 4000,
+        "ammo": 40
+      },
+      "success": 0.12,
+      "casualty": -0.35,
+      "collateral": 0.12,
+      "cooldownHours": 24,
+      "hours": [
+        6,
+        19
+      ],
+      "flyover": "a10"
+    },
+    {
+      "id": "ac130",
+      "name": "Canonnière AC-130 (nuit)",
+      "desc": "La canonnière tourne au-dessus de l'objectif et voit tout à l'infrarouge. Ne vole que de nuit (19 h - 5 h), une sortie par 48 h. Moins de risque de bavure que les A-10.",
+      "requires": "airstrip",
+      "cost": {
+        "funds": 7000
+      },
+      "success": 0.15,
+      "casualty": -0.4,
+      "collateral": 0.05,
+      "cooldownHours": 48,
+      "hours": [
+        19,
+        5
+      ]
+    },
+    {
+      "id": "attack_helo",
+      "name": "Hélicoptère de combat (base)",
+      "desc": "L'hélicoptère de combat de la base accompagne l'unité et frappe à la demande. De jour comme de nuit, tant qu'il est disponible sur son hélisurface.",
+      "vehicle": "attack_helo",
+      "cost": {
+        "fuel": 120,
+        "ammo": 60
+      },
+      "success": 0.12,
+      "casualty": -0.35,
+      "collateral": 0.08
+    }
+  ]
+}

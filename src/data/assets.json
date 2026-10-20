@@ -1,0 +1,4 @@
+{
+  "_doc": "Atlas de sprites à charger au démarrage. Chaque frame doit porter la clé du placeholder qu'elle remplace (ex. « bld.tent_group.r0 », « ter.sand.1 »). Voir public/assets/README.md.",
+  "atlases": []
+}

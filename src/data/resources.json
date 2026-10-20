@@ -1,0 +1,66 @@
+[
+  {
+    "id": "funds",
+    "name": "Fonds",
+    "short": "$",
+    "color": "#d8c47a",
+    "hud": true,
+    "capped": false
+  },
+  {
+    "id": "water",
+    "name": "Eau",
+    "short": "EAU",
+    "color": "#7fb3c9",
+    "hud": true,
+    "capped": true
+  },
+  {
+    "id": "food",
+    "name": "Rations",
+    "short": "RAT",
+    "color": "#c2ab6e",
+    "hud": true,
+    "capped": true
+  },
+  {
+    "id": "ammo",
+    "name": "Munitions",
+    "short": "MUN",
+    "color": "#c98d5a",
+    "hud": true,
+    "capped": true
+  },
+  {
+    "id": "fuel",
+    "name": "Carburant",
+    "short": "CARB",
+    "color": "#b39466",
+    "hud": true,
+    "capped": true
+  },
+  {
+    "id": "parts",
+    "name": "Pièces",
+    "short": "PCE",
+    "color": "#9aa08a",
+    "hud": true,
+    "capped": true
+  },
+  {
+    "id": "medical",
+    "name": "Médical",
+    "short": "MED",
+    "color": "#c97a7a",
+    "hud": true,
+    "capped": true
+  },
+  {
+    "id": "power",
+    "name": "Énergie",
+    "short": "KW",
+    "color": "#e0d36a",
+    "hud": true,
+    "capped": true
+  }
+]

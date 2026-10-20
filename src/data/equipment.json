@@ -1,0 +1,74 @@
+{
+  "_doc": "Équipement individuel (optiques, vision nocturne…) : acheté, stocké au dépôt de munitions puis distribué aux combattants. Bonus en mission (selon la part de l'équipe équipée ; « night » quand l'objectif est atteint de nuit) et en défense de la base.",
+  "storageBuilding": "ammo_depot",
+  "eligible": [
+    "infantry",
+    "sf",
+    "sf_commander",
+    "contractor",
+    "officer",
+    "commander",
+    "auxiliary"
+  ],
+  "nightHours": [
+    20,
+    5
+  ],
+  "items": [
+    {
+      "id": "binoculars",
+      "name": "Jumelles d'observation",
+      "short": "JUM",
+      "desc": "Jumelles 10 × 50 : on repère l'ennemi plus tôt. Les guetteurs des tours localisent plus vite les tirs de mortier.",
+      "price": 150,
+      "mission": {
+        "success": 0.02
+      },
+      "combat": {
+        "spot": 0.04
+      }
+    },
+    {
+      "id": "optics",
+      "name": "Lunettes de visée (ACOG)",
+      "short": "OPT",
+      "desc": "Optique de visée grossissante : tirs plus précis à distance, de jour comme de nuit.",
+      "price": 350,
+      "mission": {
+        "success": 0.06
+      },
+      "combat": {
+        "hitMult": 1.25
+      }
+    },
+    {
+      "id": "nvg",
+      "name": "Jumelles de vision nocturne (NVG)",
+      "short": "NVG",
+      "desc": "Monoculaire à intensification de lumière : la nuit appartient à ceux qui la voient. Supprime la pénalité de tir de nuit.",
+      "price": 900,
+      "mission": {
+        "night": 0.12,
+        "nightCasualty": -0.25
+      },
+      "combat": {
+        "night": 1.0
+      }
+    },
+    {
+      "id": "thermal",
+      "name": "Optiques thermiques",
+      "short": "THM",
+      "desc": "Caméra thermique : voit à travers la poussière, la fumée et l'obscurité les silhouettes chaudes.",
+      "price": 1800,
+      "mission": {
+        "success": 0.03,
+        "night": 0.08
+      },
+      "combat": {
+        "hitMult": 1.1,
+        "night": 0.7
+      }
+    }
+  ]
+}

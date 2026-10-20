@@ -1,0 +1,738 @@
+{
+  "_doc": "Carte tactique régionale (Phase 5). Coordonnées en kilomètres : x vers l'est, y vers le sud. Tous les lieux, tribus, personnes et groupes sont fictifs.",
+  "name": "District de Sarband",
+  "province": "Province de Kandara",
+  "size": {
+    "width": 60,
+    "height": 45
+  },
+  "gridKm": 5,
+  "seed": 1207,
+  "relief": {
+    "baseSouth": 950,
+    "baseNorth": 1450,
+    "noiseAmp": 140,
+    "noiseScaleKm": 5,
+    "riverCarve": 160,
+    "riverCarveKm": 2.2,
+    "contourStep": 100,
+    "indexContour": 500,
+    "fieldsKm": 1.3
+  },
+  "mountains": [
+    {
+      "name": "Koh-e Siah",
+      "x": 30,
+      "y": 3,
+      "rx": 30,
+      "ry": 7,
+      "h": 1500
+    },
+    {
+      "name": "Kotal-e Kharaw (nord)",
+      "x": 54.5,
+      "y": 13,
+      "rx": 7,
+      "ry": 7,
+      "h": 1400
+    },
+    {
+      "name": "Kotal-e Kharaw (sud)",
+      "x": 55,
+      "y": 32,
+      "rx": 7,
+      "ry": 8,
+      "h": 1250
+    },
+    {
+      "name": "Collines de Zarghun",
+      "x": 8,
+      "y": 14,
+      "rx": 7,
+      "ry": 6,
+      "h": 700
+    },
+    {
+      "name": "Tepe Surkh",
+      "x": 46,
+      "y": 42,
+      "rx": 6,
+      "ry": 4,
+      "h": 450
+    },
+    {
+      "name": "Ghundai Sangar",
+      "x": 26,
+      "y": 15.5,
+      "rx": 4,
+      "ry": 3,
+      "h": 520
+    }
+  ],
+  "rivers": [
+    {
+      "name": "Rud-e Sarband",
+      "width": 3,
+      "points": [
+        [
+          50,
+          3
+        ],
+        [
+          46,
+          9
+        ],
+        [
+          40,
+          15
+        ],
+        [
+          33,
+          19
+        ],
+        [
+          26,
+          23
+        ],
+        [
+          20,
+          26.5
+        ],
+        [
+          14,
+          31
+        ],
+        [
+          8,
+          37
+        ],
+        [
+          1,
+          44
+        ]
+      ]
+    },
+    {
+      "name": "Khwar-e Kharaw",
+      "width": 2,
+      "points": [
+        [
+          59.5,
+          24
+        ],
+        [
+          53,
+          22.5
+        ],
+        [
+          47,
+          20
+        ],
+        [
+          40.5,
+          15.5
+        ]
+      ]
+    }
+  ],
+  "roads": [
+    {
+      "name": "Route nationale A-1",
+      "type": "highway",
+      "points": [
+        [
+          0,
+          40
+        ],
+        [
+          10,
+          38.5
+        ],
+        [
+          20,
+          37
+        ],
+        [
+          31,
+          35
+        ],
+        [
+          40,
+          33.5
+        ],
+        [
+          47,
+          31
+        ],
+        [
+          51.5,
+          26.5
+        ],
+        [
+          55,
+          22.5
+        ],
+        [
+          60,
+          21
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          31,
+          35
+        ],
+        [
+          27,
+          28.5
+        ],
+        [
+          21,
+          24.5
+        ],
+        [
+          22.5,
+          19
+        ],
+        [
+          30,
+          13
+        ],
+        [
+          42.5,
+          11
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          20.5,
+          24.5
+        ],
+        [
+          15,
+          30
+        ],
+        [
+          8,
+          36
+        ],
+        [
+          4,
+          41
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          31,
+          35
+        ],
+        [
+          36,
+          39
+        ],
+        [
+          37.5,
+          40.5
+        ],
+        [
+          39,
+          45
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          51.5,
+          26.5
+        ],
+        [
+          50,
+          22.5
+        ],
+        [
+          48.5,
+          20
+        ]
+      ]
+    },
+    {
+      "type": "track",
+      "points": [
+        [
+          23,
+          22
+        ],
+        [
+          21,
+          24.5
+        ]
+      ]
+    }
+  ],
+  "contactKinds": {
+    "hq": {
+      "label": "Commandement insurgé",
+      "icon": "hq",
+      "echelon": "I",
+      "strength": 0.25
+    },
+    "cell": {
+      "label": "Groupe de combattants",
+      "icon": "infantry",
+      "echelon": "•••",
+      "strength": 0.15
+    },
+    "mortar": {
+      "label": "Équipe mortier",
+      "icon": "mortar",
+      "echelon": "••",
+      "strength": 0.1
+    },
+    "ied": {
+      "label": "Cellule IED",
+      "icon": "ied",
+      "echelon": "••",
+      "strength": 0.1
+    },
+    "camp": {
+      "label": "Camp d'entraînement",
+      "icon": "camp",
+      "echelon": "",
+      "strength": 0.2
+    },
+    "cache": {
+      "label": "Cache d'armes",
+      "icon": "cache",
+      "echelon": "",
+      "strength": 0.05
+    }
+  },
+  "villages": [
+    {
+      "id": "sangar",
+      "name": "Sangar",
+      "type": "village",
+      "pos": {
+        "x": 20.5,
+        "y": 24.5
+      },
+      "population": 1800,
+      "tribe": "Khel Zamani",
+      "leader": "gul_zaman",
+      "attitude": 0,
+      "influence": 35,
+      "needs": [
+        "water",
+        "security"
+      ],
+      "desc": "Village agricole au bord du Rud-e Sarband. Le puits principal s'assèche."
+    },
+    {
+      "id": "deh_mirza",
+      "name": "Deh Mirza",
+      "type": "village",
+      "pos": {
+        "x": 27,
+        "y": 28.5
+      },
+      "population": 1200,
+      "tribe": "Khel Zamani",
+      "leader": null,
+      "attitude": 5,
+      "influence": 25,
+      "needs": [
+        "health",
+        "school"
+      ],
+      "desc": "Vergers et vignes en terrasses. Le dispensaire le plus proche est à une journée de marche."
+    },
+    {
+      "id": "karez_sabz",
+      "name": "Karez-e Sabz",
+      "type": "village",
+      "pos": {
+        "x": 15,
+        "y": 30
+      },
+      "population": 900,
+      "tribe": "Daudzai",
+      "leader": null,
+      "attitude": -5,
+      "influence": 45,
+      "needs": [
+        "water"
+      ],
+      "desc": "Village alimenté par un karez (canal souterrain) en mauvais état."
+    },
+    {
+      "id": "kandara",
+      "name": "Shahr-e Kandara",
+      "type": "town",
+      "pos": {
+        "x": 31,
+        "y": 35
+      },
+      "population": 14000,
+      "tribe": "plusieurs",
+      "leader": "wakil",
+      "attitude": 15,
+      "influence": 20,
+      "needs": [
+        "security",
+        "school",
+        "health"
+      ],
+      "desc": "Chef-lieu du district : bazar, gouvernorat, poste de police. Carrefour de la route A-1."
+    },
+    {
+      "id": "toor",
+      "name": "Qarya-ye Toor",
+      "type": "village",
+      "pos": {
+        "x": 42.5,
+        "y": 11
+      },
+      "population": 700,
+      "tribe": "Ghilzi-Toor",
+      "leader": "rasoul",
+      "attitude": -60,
+      "influence": 85,
+      "needs": [],
+      "desc": "Village de montagne isolé, fief du mollah Rasoul. Aucune présence gouvernementale."
+    },
+    {
+      "id": "kharaw_v",
+      "name": "Kharaw",
+      "type": "village",
+      "pos": {
+        "x": 50,
+        "y": 22.5
+      },
+      "population": 1100,
+      "tribe": "Khel Dostan",
+      "leader": "dost_mohammad",
+      "attitude": -10,
+      "influence": 50,
+      "needs": [
+        "security",
+        "road"
+      ],
+      "desc": "Village du col. Vit du passage des camions… et de la contrebande."
+    },
+    {
+      "id": "gulistan",
+      "name": "Gulistan",
+      "type": "village",
+      "pos": {
+        "x": 8,
+        "y": 36
+      },
+      "population": 600,
+      "tribe": "Daudzai",
+      "leader": null,
+      "attitude": 10,
+      "influence": 15,
+      "needs": [
+        "school"
+      ],
+      "desc": "Hameau tranquille près de la FOB Halvan."
+    },
+    {
+      "id": "dasht_gol",
+      "name": "Dasht-e Gol",
+      "type": "hamlet",
+      "pos": {
+        "x": 37.5,
+        "y": 40.5
+      },
+      "population": 450,
+      "tribe": "nomades kuchis",
+      "leader": null,
+      "attitude": 0,
+      "influence": 30,
+      "needs": [
+        "water"
+      ],
+      "desc": "Campement semi-permanent de nomades au croisement des pistes."
+    }
+  ],
+  "personalities": [
+    {
+      "id": "gul_zaman",
+      "name": "Hadji Gul Zaman",
+      "role": "Ancien du village de Sangar",
+      "village": "sangar",
+      "stance": "neutral",
+      "known": true,
+      "desc": "Respecté dans toute la vallée. Pragmatique : il ira vers celui qui protège son village.",
+      "portrait": {
+        "skin": "#b98a5e",
+        "hair": "#d8d4cc",
+        "beard": "long",
+        "beardColor": "#e2ded4",
+        "headwear": "turban",
+        "headwearColor": "#e8e2d0",
+        "clothes": "#8a8170"
+      }
+    },
+    {
+      "id": "shirin",
+      "name": "Bibi Shirin",
+      "role": "Sage-femme de Deh Mirza",
+      "village": "deh_mirza",
+      "stance": "neutral",
+      "known": false,
+      "desc": "Soigne les femmes et les enfants du secteur. Sait tout ce qui se passe dans les foyers.",
+      "portrait": {
+        "skin": "#c49a6c",
+        "hair": "#2a2018",
+        "beard": "none",
+        "headwear": "headscarf",
+        "headwearColor": "#3f5f7a",
+        "clothes": "#5a4a6a"
+      }
+    },
+    {
+      "id": "rasoul",
+      "name": "Mollah Rasoul",
+      "role": "Chef insurgé de la vallée",
+      "village": "toor",
+      "stance": "hostile",
+      "known": true,
+      "desc": "Prédicateur charismatique. Commande plusieurs groupes armés et un réseau de poseurs d'engins explosifs.",
+      "portrait": {
+        "skin": "#a8784e",
+        "hair": "#1a1612",
+        "beard": "long",
+        "beardColor": "#1a1612",
+        "headwear": "turban",
+        "headwearColor": "#2a2a28",
+        "clothes": "#3a3a34"
+      }
+    },
+    {
+      "id": "wakil",
+      "name": "Abdul Wakil",
+      "role": "Gouverneur du district",
+      "village": "kandara",
+      "stance": "friendly",
+      "known": true,
+      "desc": "Allié officiel de la coalition. Sa loyauté dépend beaucoup des contrats qu'on lui confie.",
+      "portrait": {
+        "skin": "#c08c62",
+        "hair": "#4a3a2a",
+        "beard": "short",
+        "beardColor": "#5a4a3a",
+        "headwear": "pakol",
+        "headwearColor": "#8a8a84",
+        "clothes": "#4a4a4a",
+        "accessory": "glasses"
+      }
+    },
+    {
+      "id": "sakhi",
+      "name": "Ghulam Sakhi",
+      "role": "Chef de la police de district",
+      "village": "kandara",
+      "stance": "neutral",
+      "known": true,
+      "desc": "Commande des policiers mal payés. Rumeurs de trafic de munitions.",
+      "portrait": {
+        "skin": "#b98a5e",
+        "hair": "#1e1a16",
+        "beard": "mustache",
+        "beardColor": "#1e1a16",
+        "headwear": "cap",
+        "headwearColor": "#4a5a6a",
+        "clothes": "#4a5a6a"
+      }
+    },
+    {
+      "id": "dost_mohammad",
+      "name": "Malik Dost Mohammad",
+      "role": "Malik de Kharaw",
+      "village": "kharaw_v",
+      "stance": "neutral",
+      "known": false,
+      "desc": "Contrôle le passage du col. Commerce avec tout le monde, y compris les insurgés.",
+      "portrait": {
+        "skin": "#b0825a",
+        "hair": "#3a2a1a",
+        "beard": "short",
+        "beardColor": "#3a2a1a",
+        "headwear": "turban",
+        "headwearColor": "#8a6a3a",
+        "clothes": "#6a5a3a"
+      }
+    }
+  ],
+  "friendlyUnits": [
+    {
+      "id": "halvan",
+      "name": "FOB Halvan (coalition)",
+      "faction": "friendly",
+      "icon": "installation",
+      "echelon": "II",
+      "pos": {
+        "x": 4,
+        "y": 41
+      }
+    },
+    {
+      "id": "ana_coy",
+      "name": "Compagnie de l'armée afghane",
+      "faction": "allied",
+      "icon": "infantry",
+      "echelon": "II",
+      "pos": {
+        "x": 39.5,
+        "y": 33.5
+      }
+    },
+    {
+      "id": "anp_kandara",
+      "name": "Poste de police de Kandara",
+      "faction": "allied",
+      "icon": "police",
+      "echelon": "I",
+      "pos": {
+        "x": 31.8,
+        "y": 36.3
+      }
+    },
+    {
+      "id": "anp_pass",
+      "name": "Check-point de police du col",
+      "faction": "allied",
+      "icon": "police",
+      "echelon": "•••",
+      "pos": {
+        "x": 53,
+        "y": 24.5
+      }
+    }
+  ],
+  "contacts": [
+    {
+      "id": "rasoul_hq",
+      "kind": "hq",
+      "label": "QG du mollah Rasoul",
+      "pos": {
+        "x": 42.8,
+        "y": 10.4
+      },
+      "drift": 0,
+      "known": true,
+      "reliability": 0.55
+    },
+    {
+      "id": "cell_north",
+      "kind": "cell",
+      "label": "Groupe de combattants (nord)",
+      "pos": {
+        "x": 36,
+        "y": 9
+      },
+      "drift": 1.5
+    },
+    {
+      "id": "mortar_hills",
+      "kind": "mortar",
+      "label": "Équipe mortier",
+      "pos": {
+        "x": 25.5,
+        "y": 16
+      },
+      "drift": 1
+    },
+    {
+      "id": "ied_highway",
+      "kind": "ied",
+      "label": "Cellule IED de la A-1",
+      "pos": {
+        "x": 34,
+        "y": 33.8
+      },
+      "drift": 2
+    },
+    {
+      "id": "cell_kharaw",
+      "kind": "cell",
+      "label": "Groupe de combattants (col)",
+      "pos": {
+        "x": 52.5,
+        "y": 27
+      },
+      "drift": 1.5
+    },
+    {
+      "id": "camp_mountains",
+      "kind": "camp",
+      "label": "Camp d'entraînement",
+      "pos": {
+        "x": 30,
+        "y": 4.5
+      },
+      "drift": 0
+    },
+    {
+      "id": "cache_karez",
+      "kind": "cache",
+      "label": "Cache d'armes",
+      "pos": {
+        "x": 16.5,
+        "y": 31.5
+      },
+      "drift": 0
+    },
+    {
+      "id": "cell_dasht",
+      "kind": "cell",
+      "label": "Groupe de combattants (sud)",
+      "pos": {
+        "x": 41,
+        "y": 41
+      },
+      "drift": 1.5
+    },
+    {
+      "id": "foreign_fighters",
+      "kind": "cell",
+      "label": "Combattants étrangers",
+      "pos": {
+        "x": 48,
+        "y": 7
+      },
+      "drift": 1
+    }
+  ],
+  "intel": {
+    "observationKm": 3.5,
+    "perTowerKm": 0.6,
+    "maxObservationKm": 8,
+    "informantAttitude": 25,
+    "villageCoverKm": 3,
+    "villageReportKm": 6,
+    "villageReportChance": 0.5,
+    "decayPerDay": 0.06,
+    "errorGrowthPerDay": 0.25,
+    "lostBelow": 0.08,
+    "tocRefine": 0.12,
+    "tocMinHours": 4,
+    "ciaBonus": 0.1,
+    "ciaRevealKm": 12,
+    "attackRevealReliability": 0.45,
+    "eventRevealReliability": 0.6
+  }
+}

@@ -1,0 +1,8 @@
+[
+  { "id": "shooting",   "name": "Tir" },
+  { "id": "medical",    "name": "Médical" },
+  { "id": "radio",      "name": "Radio" },
+  { "id": "stealth",    "name": "Discrétion" },
+  { "id": "mechanics",  "name": "Mécanique" },
+  { "id": "leadership", "name": "Commandement" }
+]

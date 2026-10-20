@@ -1,0 +1,3873 @@
+{
+  "_doc": "Événements roguelike. Tous les personnages, villages et organisations sont fictifs. Variables de texte : {speaker}, {commander}, {base}.",
+  "config": {
+    "chancePerHour": 0.05,
+    "minGapHours": 8,
+    "attackGapHours": 30
+  },
+  "pools": {
+    "goods": [
+      "du riz et de la farine",
+      "des sacs de lentilles et du thé",
+      "des bidons d'eau minérale",
+      "des melons et du raisin sec",
+      "des pains de sucre et de l'huile"
+    ],
+    "cargo": [
+      "des caisses de munitions et des pièces détachées",
+      "des palettes de pièces de rechange et de cartouches",
+      "du matériel de maintenance et des munitions de mortier"
+    ]
+  },
+  "speakers": {
+    "elder": {
+      "name": "Hadji Gul Zaman",
+      "role": "Ancien du village de Sangar",
+      "portrait": {
+        "skin": "#b98a5e",
+        "hair": "#d8d4cc",
+        "beard": "long",
+        "beardColor": "#e2ded4",
+        "headwear": "turban",
+        "headwearColor": "#e8e2d0",
+        "clothes": "#8a8170"
+      },
+      "personality": "gul_zaman"
+    },
+    "villager": {
+      "name": "Bibi Shirin",
+      "role": "Habitante de Deh Mirza",
+      "portrait": {
+        "skin": "#c49a6c",
+        "hair": "#2a2018",
+        "beard": "none",
+        "headwear": "headscarf",
+        "headwearColor": "#3f5f7a",
+        "clothes": "#5a4a6a"
+      },
+      "personality": "shirin"
+    },
+    "general": {
+      "name": "Général R. Halvorsen",
+      "role": "Commandement régional Sud",
+      "portrait": {
+        "skin": "#e0b896",
+        "hair": "#9a9a92",
+        "beard": "none",
+        "headwear": "patrol_cap",
+        "headwearColor": "#6b6a4a",
+        "clothes": "#6b6a4a",
+        "accessory": "glasses"
+      }
+    },
+    "journalist": {
+      "name": "Élise Marchand",
+      "role": "Correspondante de presse",
+      "portrait": {
+        "skin": "#ecc6a4",
+        "hair": "#7a4a2a",
+        "beard": "none",
+        "headwear": "none",
+        "clothes": "#3f5f7a",
+        "accessory": "press"
+      }
+    },
+    "informant": {
+      "name": "« Faisal »",
+      "role": "Informateur",
+      "portrait": {
+        "skin": "#b0825a",
+        "hair": "#1e1a16",
+        "beard": "short",
+        "beardColor": "#1e1a16",
+        "headwear": "pakol",
+        "headwearColor": "#8a7a5a",
+        "clothes": "#5a5446"
+      }
+    },
+    "deserter": {
+      "name": "Agent Nasrullah",
+      "role": "Policier afghan (déserteur)",
+      "portrait": {
+        "skin": "#b98a5e",
+        "hair": "#1e1a16",
+        "beard": "mustache",
+        "beardColor": "#1e1a16",
+        "headwear": "cap",
+        "headwearColor": "#4a5a6a",
+        "clothes": "#4a5a6a"
+      }
+    },
+    "pmc": {
+      "name": "Dale Hartigan",
+      "role": "Ironclad Security (société privée)",
+      "portrait": {
+        "skin": "#e0b08a",
+        "hair": "#6a5030",
+        "beard": "short",
+        "beardColor": "#6a5030",
+        "headwear": "cap",
+        "headwearColor": "#2e2e2a",
+        "clothes": "#8a7a5a",
+        "accessory": "glasses"
+      }
+    },
+    "guard": {
+      "fromAgent": [
+        "infantry",
+        "sf",
+        "contractor"
+      ],
+      "role": "Sentinelle",
+      "portrait": {
+        "skin": "#d8a882",
+        "hair": "#4a3420",
+        "beard": "stubble",
+        "beardColor": "#4a3420",
+        "headwear": "helmet",
+        "headwearColor": "#6b7046",
+        "clothes": "#6b7046"
+      }
+    },
+    "sergeant": {
+      "fromAgent": [
+        "infantry"
+      ],
+      "role": "Chef de groupe",
+      "portrait": {
+        "skin": "#a8784e",
+        "hair": "#1e1a16",
+        "beard": "stubble",
+        "beardColor": "#1e1a16",
+        "headwear": "patrol_cap",
+        "headwearColor": "#6b7046",
+        "clothes": "#6b7046"
+      }
+    },
+    "medic": {
+      "fromAgent": [
+        "medic"
+      ],
+      "role": "Personnel médical",
+      "portrait": {
+        "skin": "#e8c09a",
+        "hair": "#2a2018",
+        "beard": "none",
+        "headwear": "none",
+        "clothes": "#6b7046",
+        "accessory": "medic"
+      }
+    },
+    "logistician": {
+      "fromAgent": [
+        "logistics"
+      ],
+      "role": "Section soutien",
+      "portrait": {
+        "skin": "#c89a70",
+        "hair": "#2a2018",
+        "beard": "stubble",
+        "beardColor": "#2a2018",
+        "headwear": "cap",
+        "headwearColor": "#7a6f4a",
+        "clothes": "#7a6f4a"
+      }
+    },
+    "officer": {
+      "fromAgent": [
+        "officer",
+        "commander"
+      ],
+      "role": "Officier",
+      "portrait": {
+        "skin": "#e0b896",
+        "hair": "#3a2a1a",
+        "beard": "none",
+        "headwear": "patrol_cap",
+        "headwearColor": "#5d6644",
+        "clothes": "#5d6644"
+      }
+    },
+    "mullah": {
+      "name": "Mollah Abdul Wahid",
+      "role": "Imam de la mosquée",
+      "portrait": {
+        "skin": "#b07e56",
+        "hair": "#1e1a16",
+        "beard": "long",
+        "beardColor": "#2a2420",
+        "headwear": "turban",
+        "headwearColor": "#2a2a2a",
+        "clothes": "#6a6458"
+      }
+    },
+    "trader": {
+      "name": "Haji Baz Mohammad",
+      "role": "Marchand du bazar",
+      "portrait": {
+        "skin": "#bd8c60",
+        "hair": "#3a2e24",
+        "beard": "short",
+        "beardColor": "#6a6a64",
+        "headwear": "pakol",
+        "headwearColor": "#7a6a52",
+        "clothes": "#7a7060"
+      }
+    },
+    "ana_officer": {
+      "name": "Capitaine Rahimullah",
+      "role": "Armée nationale afghane",
+      "portrait": {
+        "skin": "#b98a5e",
+        "hair": "#1e1a16",
+        "beard": "mustache",
+        "beardColor": "#1e1a16",
+        "headwear": "patrol_cap",
+        "headwearColor": "#5a6a4a",
+        "clothes": "#5a6a4a"
+      }
+    },
+    "ngo": {
+      "name": "Dr Clara Weiss",
+      "role": "Médecin d’une ONG",
+      "portrait": {
+        "skin": "#efc9a8",
+        "hair": "#c8a060",
+        "beard": "none",
+        "headwear": "headscarf",
+        "headwearColor": "#8a9aa8",
+        "clothes": "#e0dccc",
+        "accessory": "medic"
+      }
+    },
+    "engineer": {
+      "name": "Mike Doyle",
+      "role": "Ingénieur civil (reconstruction)",
+      "portrait": {
+        "skin": "#e8b894",
+        "hair": "#8a5a3a",
+        "beard": "stubble",
+        "beardColor": "#8a5a3a",
+        "headwear": "cap",
+        "headwearColor": "#d8c040",
+        "clothes": "#5a6a7a",
+        "accessory": "glasses"
+      }
+    },
+    "farmer": {
+      "name": "Mirwais",
+      "role": "Paysan",
+      "portrait": {
+        "skin": "#a87850",
+        "hair": "#2a2018",
+        "beard": "short",
+        "beardColor": "#2a2018",
+        "headwear": "turban",
+        "headwearColor": "#c8bca0",
+        "clothes": "#8a7a5a"
+      }
+    },
+    "teacher": {
+      "name": "Malalai Noori",
+      "role": "Institutrice",
+      "portrait": {
+        "skin": "#c49a6c",
+        "hair": "#1e1a16",
+        "beard": "none",
+        "headwear": "headscarf",
+        "headwearColor": "#2a3a5a",
+        "clothes": "#3a3a4a"
+      }
+    },
+    "interpreter": {
+      "name": "Farid",
+      "role": "Interprète de la base",
+      "portrait": {
+        "skin": "#bd8c60",
+        "hair": "#1e1a16",
+        "beard": "stubble",
+        "beardColor": "#1e1a16",
+        "headwear": "none",
+        "clothes": "#6b6a4a"
+      }
+    },
+    "chaplain": {
+      "fromAgent": [
+        "officer",
+        "commander"
+      ],
+      "role": "Officier de permanence",
+      "portrait": {
+        "skin": "#e0b896",
+        "hair": "#5a4a3a",
+        "beard": "none",
+        "headwear": "patrol_cap",
+        "headwearColor": "#6b6a4a",
+        "clothes": "#6b6a4a"
+      }
+    },
+    "mechanic": {
+      "fromAgent": [
+        "logistics"
+      ],
+      "role": "Mécanicien",
+      "portrait": {
+        "skin": "#d8a882",
+        "hair": "#3a2a1a",
+        "beard": "stubble",
+        "beardColor": "#3a2a1a",
+        "headwear": "cap",
+        "headwearColor": "#7a6a4a",
+        "clothes": "#7a6f4a"
+      }
+    }
+  },
+  "events": [
+    {
+      "id": "elder_visit",
+      "title": "Visite d'un ancien",
+      "category": "visit",
+      "weight": 10,
+      "cooldownDays": 4,
+      "conditions": {
+        "minDay": 1,
+        "notFlag": "elder_hostile"
+      },
+      "speaker": "elder",
+      "text": "Un vieil homme s'avance jusqu'à l'entrée, encadré de deux jeunes gens. « Que la paix soit sur vous. Le puits de Sangar est presque à sec, et les hommes du mollah Rasoul menacent ceux qui vous parlent. Que peut faire la coalition pour nous ? »",
+      "choices": [
+        {
+          "id": "aid",
+          "text": "Lui faire remettre de l'eau et des vivres",
+          "effects": {
+            "resources": {
+              "water": -300,
+              "food": -200
+            }
+          },
+          "outcomes": [
+            {
+              "text": "Les sacs de riz et les jerricans sont chargés sur une charrette. L'ancien pose la main sur son cœur. « Sangar s'en souviendra. »",
+              "effects": {
+                "reputation": 3,
+                "setFlags": {
+                  "village_friendly": true
+                },
+                "village": {
+                  "id": "sangar",
+                  "attitude": 10,
+                  "influence": -5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "promise",
+          "text": "Promettre de financer la réfection du puits",
+          "outcomes": [
+            {
+              "text": "« Une promesse est une dette », répond-il en souriant. « Je reviendrai voir si la coalition paie ses dettes. »",
+              "effects": {
+                "reputation": 1,
+                "setFlags": {
+                  "well_promise": true
+                },
+                "chain": {
+                  "event": "elder_followup",
+                  "delayHours": 96
+                },
+                "village": {
+                  "id": "sangar",
+                  "attitude": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "question",
+          "text": "L'interroger sur les insurgés",
+          "outcomes": [
+            {
+              "weight": 6,
+              "text": "Il baisse la voix : « Ils se réunissent la nuit, près du vieux karez. Ils parlent de vous frapper bientôt. » Le renseignement est transmis aux postes de garde.",
+              "effects": {
+                "setFlags": {
+                  "intel_warning": true
+                },
+                "intel": "nearest"
+              }
+            },
+            {
+              "weight": 4,
+              "text": "Son visage se ferme. « Je suis venu demander de l'aide, pas désigner mes voisins. » Il repart sans un mot de plus.",
+              "effects": {
+                "reputation": -2,
+                "village": {
+                  "id": "sangar",
+                  "attitude": -5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "dismiss",
+          "text": "Le renvoyer poliment",
+          "outcomes": [
+            {
+              "text": "L'ancien hoche la tête, déçu, et reprend la piste du village.",
+              "effects": {
+                "reputation": -1,
+                "village": {
+                  "id": "sangar",
+                  "attitude": -3
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "cart",
+        "vehicle": "cart",
+        "leader": "elder",
+        "escort": [
+          {
+            "visual": "escort",
+            "count": 3
+          }
+        ],
+        "stayMinutes": 120
+      }
+    },
+    {
+      "id": "elder_followup",
+      "title": "Une dette à honorer",
+      "category": "visit",
+      "trigger": "chain",
+      "weight": 1,
+      "conditions": {
+        "flag": "well_promise"
+      },
+      "speaker": "elder",
+      "text": "Hadji Gul Zaman est de retour, accompagné cette fois d'une dizaine d'hommes du village. « Les maçons sont prêts. Les pierres sont taillées. Il ne manque que l'argent que vous avez promis. »",
+      "choices": [
+        {
+          "id": "pay",
+          "text": "Tenir parole et payer les travaux",
+          "effects": {
+            "resources": {
+              "funds": -2000
+            },
+            "clearFlags": [
+              "well_promise"
+            ]
+          },
+          "outcomes": [
+            {
+              "text": "Les hommes de Sangar repartent en chantant. Dans la vallée, on dit désormais que la parole de {base} vaut quelque chose.",
+              "effects": {
+                "reputation": 6,
+                "setFlags": {
+                  "village_friendly": true
+                },
+                "village": {
+                  "id": "sangar",
+                  "attitude": 20,
+                  "influence": -10
+                },
+                "satisfyNeed": {
+                  "village": "sangar",
+                  "need": "water"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "renege",
+          "text": "Expliquer que les fonds n'ont pas été débloqués",
+          "effects": {
+            "clearFlags": [
+              "well_promise"
+            ]
+          },
+          "outcomes": [
+            {
+              "text": "Le vieil homme se redresse. « Alors le mollah avait raison à votre sujet. » Les villageois ne reviendront pas de sitôt.",
+              "effects": {
+                "reputation": -8,
+                "setFlags": {
+                  "elder_hostile": true
+                },
+                "clearFlags": [
+                  "village_friendly"
+                ],
+                "village": {
+                  "id": "sangar",
+                  "attitude": -30,
+                  "influence": 10
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "cart",
+        "vehicle": "cart",
+        "leader": "elder",
+        "escort": [
+          {
+            "visual": "escort",
+            "count": 2
+          },
+          {
+            "visual": "informant",
+            "count": 4
+          }
+        ],
+        "stayMinutes": 150
+      }
+    },
+    {
+      "id": "general_inspection",
+      "title": "Inspection du commandement",
+      "category": "visit",
+      "weight": 6,
+      "cooldownDays": 7,
+      "conditions": {
+        "minDay": 4
+      },
+      "speaker": "general",
+      "text": "Un hélicoptère se pose en bout de piste. Le général Halvorsen en descend, casquette vissée sur la tête. « {commander}, j'ai une heure. Montrez-moi ce que vous avez fait de cette base. »",
+      "choices": [
+        {
+          "id": "tour",
+          "text": "Faire visiter toute la base",
+          "outcomes": [
+            {
+              "if": {
+                "ratingAbove": 0.65
+              },
+              "text": "Le général hoche la tête devant les installations. « Du bon travail. Je ferai débloquer une rallonge budgétaire. »",
+              "effects": {
+                "reputation": 6,
+                "resources": {
+                  "funds": 4000
+                }
+              }
+            },
+            {
+              "if": {
+                "ratingBelow": 0.4
+              },
+              "text": "Le général note quelque chose dans son carnet, la mâchoire serrée. « Vos hommes dorment par terre et vos stocks sont vides. Je reviendrai. »",
+              "effects": {
+                "reputation": -5
+              }
+            },
+            {
+              "text": "« Correct, sans plus. Continuez. » Le général remonte dans l'hélicoptère sans s'attarder.",
+              "effects": {
+                "reputation": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "briefing",
+          "text": "Le recevoir pour un briefing au TOC",
+          "requires": {
+            "building": "toc"
+          },
+          "outcomes": [
+            {
+              "text": "Cartes, rapports de patrouille, synthèse du renseignement : le général apprécie. « Enfin quelqu'un qui sait où il met les pieds. »",
+              "effects": {
+                "reputation": 4,
+                "resources": {
+                  "funds": 2000
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "helicopter",
+        "leader": "general",
+        "escort": [
+          {
+            "visual": "aide",
+            "count": 2
+          }
+        ],
+        "stayMinutes": 180
+      }
+    },
+    {
+      "id": "journalist",
+      "title": "Une journaliste à la porte",
+      "category": "visit",
+      "weight": 5,
+      "cooldownDays": 6,
+      "conditions": {
+        "minDay": 3
+      },
+      "speaker": "journalist",
+      "text": "« Élise Marchand, presse indépendante. J'aimerais montrer à nos lecteurs le quotidien d'une base avancée. Vous m'accorderiez une interview et un tour du camp ? »",
+      "choices": [
+        {
+          "id": "interview",
+          "text": "Accorder l'interview",
+          "outcomes": [
+            {
+              "weight": 65,
+              "text": "L'article, publié trois jours plus tard, salue « des soldats qui tiennent la ligne avec peu de moyens ». Le commandement apprécie.",
+              "effects": {
+                "reputation": 3,
+                "morale": 3
+              }
+            },
+            {
+              "weight": 35,
+              "text": "L'article insiste sur les conditions de vie précaires et cite un soldat amer. Le commandement grince des dents.",
+              "effects": {
+                "reputation": -4
+              }
+            }
+          ]
+        },
+        {
+          "id": "tour",
+          "text": "Visite encadrée, sans interview",
+          "outcomes": [
+            {
+              "text": "La journaliste prend quelques photos convenues et repart avec un sujet sans relief.",
+              "effects": {
+                "reputation": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "Refuser l'accès",
+          "outcomes": [
+            {
+              "text": "« Vous avez quelque chose à cacher ? » demande-t-elle avant de remonter dans son véhicule.",
+              "effects": {
+                "reputation": -2
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "helicopter",
+        "leader": "journalist",
+        "escort": [
+          {
+            "visual": "aide",
+            "count": 1
+          }
+        ],
+        "stayMinutes": 200
+      }
+    },
+    {
+      "id": "informant",
+      "title": "Un informateur",
+      "category": "threat",
+      "weight": 5,
+      "cooldownDays": 5,
+      "conditions": {
+        "minDay": 2,
+        "notFlag": "intel_warning"
+      },
+      "speaker": "informant",
+      "text": "Un homme demande à parler à un officier, loin des regards. « Une attaque se prépare contre votre base. Je sais où et quand. Mais ce que je risque mérite d'être payé. »",
+      "choices": [
+        {
+          "id": "pay",
+          "text": "Payer pour le renseignement",
+          "effects": {
+            "resources": {
+              "funds": -600
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 8,
+              "text": "Les informations sont précises : itinéraires, horaires, nombre d'hommes. Les gardes sont prévenus.",
+              "effects": {
+                "setFlags": {
+                  "intel_warning": true
+                },
+                "intel": "nearest"
+              }
+            },
+            {
+              "weight": 2,
+              "text": "L'homme empoche l'argent et ne livre que des banalités. Il ne reviendra pas."
+            }
+          ]
+        },
+        {
+          "id": "detain",
+          "text": "Le retenir pour interrogatoire",
+          "outcomes": [
+            {
+              "weight": 5,
+              "text": "Après quelques heures, il finit par parler. Le village, lui, n'apprécie pas.",
+              "effects": {
+                "setFlags": {
+                  "intel_warning": true
+                },
+                "reputation": -2,
+                "intel": "nearest"
+              }
+            },
+            {
+              "weight": 5,
+              "text": "Il ne dit rien et sa famille vient le réclamer à la porte. Mauvaise publicité.",
+              "effects": {
+                "reputation": -3
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "Le congédier",
+          "outcomes": [
+            {
+              "text": "L'homme disparaît dans la poussière. Peut-être bluffait-il. Peut-être pas."
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "foot",
+        "leader": "informant",
+        "escort": [],
+        "stayMinutes": 40
+      }
+    },
+    {
+      "id": "soldier_fight",
+      "title": "Bagarre au camp",
+      "category": "personnel",
+      "weight": 5,
+      "cooldownDays": 4,
+      "conditions": {
+        "minDay": 2,
+        "minAgents": 8
+      },
+      "speaker": "sergeant",
+      "text": "« {commander}, deux gars de la section se sont battus derrière les tentes. Une histoire de tour de garde et de colis volé. Qu'est-ce qu'on fait ? »",
+      "choices": [
+        {
+          "id": "punish",
+          "text": "Sanction exemplaire",
+          "outcomes": [
+            {
+              "text": "Corvées et consigne. La discipline est rétablie, mais l'ambiance s'en ressent.",
+              "effects": {
+                "morale": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "mediate",
+          "text": "Les réunir et régler l'affaire",
+          "outcomes": [
+            {
+              "weight": 7,
+              "text": "Une heure de discussion, une poignée de main. L'affaire est close.",
+              "effects": {
+                "morale": 2
+              }
+            },
+            {
+              "weight": 3,
+              "text": "La discussion tourne mal et l'un des deux finit à l'infirmerie.",
+              "effects": {
+                "injure": {
+                  "count": 1,
+                  "amount": 25
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Laisser couler",
+          "outcomes": [
+            {
+              "text": "Le groupe prend note : ici, on règle ses comptes soi-même.",
+              "effects": {
+                "morale": -1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mail_call",
+      "title": "Courrier !",
+      "category": "personnel",
+      "weight": 5,
+      "cooldownDays": 5,
+      "conditions": {
+        "minDay": 3
+      },
+      "speaker": "logistician",
+      "text": "« Le sac postal est arrivé avec le dernier convoi ! Lettres, colis, photos des gamins… Les gars sont comme des enfants à Noël. »",
+      "choices": [
+        {
+          "id": "ok",
+          "text": "Distribuer le courrier",
+          "outcomes": [
+            {
+              "text": "Pendant une heure, la base vit au rythme des nouvelles du pays.",
+              "effects": {
+                "morale": 6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sandstorm",
+      "title": "Tempête de sable",
+      "category": "environment",
+      "weight": 5,
+      "cooldownDays": 5,
+      "conditions": {
+        "minDay": 2
+      },
+      "speaker": "officer",
+      "text": "« Un mur de poussière arrive du sud-ouest, {commander}. D'ici une heure, on n'y verra plus à dix mètres. Les convois vont devoir s'arrêter. »",
+      "choices": [
+        {
+          "id": "secure",
+          "text": "Arrimer et calfeutrer toute la base",
+          "effects": {
+            "resources": {
+              "funds": -400
+            }
+          },
+          "outcomes": [
+            {
+              "text": "Bâches doublées, matériel arrimé : la tempête passe sans trop de dégâts.",
+              "effects": {
+                "wear": 0.02,
+                "delayOrders": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": "carry_on",
+          "text": "Continuer le service normalement",
+          "outcomes": [
+            {
+              "text": "Le sable s'infiltre partout : générateurs, filtres, tentes. Il faudra réparer.",
+              "effects": {
+                "wear": 0.08,
+                "delayOrders": 6,
+                "morale": -2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "food_shortage",
+      "title": "Rations au plus bas",
+      "category": "logistics",
+      "weight": 20,
+      "cooldownDays": 2,
+      "conditions": {
+        "minDay": 1,
+        "resourceBelow": {
+          "food": 250
+        }
+      },
+      "speaker": "logistician",
+      "text": "« On arrive au fond des caisses de rations. Si rien n'arrive, dans deux jours les gars mangeront du sable. »",
+      "choices": [
+        {
+          "id": "airdrop",
+          "text": "Largage d'urgence par hélicoptère",
+          "effects": {
+            "resources": {
+              "funds": -5000
+            }
+          },
+          "outcomes": [
+            {
+              "text": "Un hélicoptère largue des palettes de rations au crépuscule.",
+              "effects": {
+                "resources": {
+                  "food": 600
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "village",
+          "text": "Acheter des vivres au village",
+          "requires": {
+            "flag": "village_friendly"
+          },
+          "effects": {
+            "resources": {
+              "funds": -900
+            }
+          },
+          "outcomes": [
+            {
+              "text": "Riz, pain, fruits secs : le marché de Sangar dépanne la base.",
+              "effects": {
+                "resources": {
+                  "food": 350
+                },
+                "reputation": 1,
+                "village": {
+                  "id": "sangar",
+                  "attitude": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ration",
+          "text": "Rationner sévèrement",
+          "outcomes": [
+            {
+              "text": "Demi-rations pour tout le monde. Les estomacs grondent et les esprits s'échauffent.",
+              "effects": {
+                "morale": -8
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "water_shortage",
+      "title": "Citernes presque vides",
+      "category": "logistics",
+      "weight": 20,
+      "cooldownDays": 2,
+      "conditions": {
+        "minDay": 1,
+        "resourceBelow": {
+          "water": 200
+        }
+      },
+      "speaker": "logistician",
+      "text": "« Les citernes sonnent creux. Sans eau, les hommes ne tiendront pas plus d'une journée dans cette chaleur. »",
+      "choices": [
+        {
+          "id": "express",
+          "text": "Livraison d'urgence à prix fort",
+          "effects": {
+            "resources": {
+              "funds": -2500
+            }
+          },
+          "outcomes": [
+            {
+              "text": "Un camion-citerne réquisitionné arrive dans la soirée.",
+              "effects": {
+                "resources": {
+                  "water": 1500
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "village",
+          "text": "Puiser au réservoir du village",
+          "requires": {
+            "flag": "village_friendly"
+          },
+          "effects": {
+            "resources": {
+              "funds": -600
+            }
+          },
+          "outcomes": [
+            {
+              "text": "Les villageois acceptent de partager leur eau, contre dédommagement.",
+              "effects": {
+                "resources": {
+                  "water": 400
+                },
+                "village": {
+                  "id": "sangar",
+                  "attitude": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "endure",
+          "text": "Serrer les dents en attendant le convoi",
+          "outcomes": [
+            {
+              "text": "Chaque gorgée est comptée. La fatigue s'installe.",
+              "effects": {
+                "morale": -5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ied_found",
+      "title": "Objet suspect sur la piste",
+      "category": "threat",
+      "weight": 5,
+      "cooldownDays": 5,
+      "conditions": {
+        "minDay": 3,
+        "notFlag": "ied_on_road"
+      },
+      "speaker": "guard",
+      "text": "« Poste sud, ici {speaker}. Un sac abandonné et un fil qui dépasse de la terre, sur la piste des convois, à trois cents mètres de l'entrée. Ça pue l'engin explosif. »",
+      "choices": [
+        {
+          "id": "eod",
+          "text": "Faire venir une équipe de déminage",
+          "effects": {
+            "resources": {
+              "funds": -1500
+            }
+          },
+          "outcomes": [
+            {
+              "text": "L'équipe de déminage neutralise l'engin : un obus d'artillerie relié à une plaque de pression.",
+              "effects": {
+                "reputation": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "clear",
+          "text": "Le faire neutraliser par nos hommes",
+          "outcomes": [
+            {
+              "weight": 7,
+              "text": "Gestes lents, sueur froide : le détonateur est désactivé sans casse.",
+              "effects": {
+                "reputation": 1,
+                "morale": 2
+              }
+            },
+            {
+              "weight": 3,
+              "text": "Une charge secondaire explose. Un soldat est grièvement blessé.",
+              "effects": {
+                "injure": {
+                  "count": 1,
+                  "amount": 65
+                },
+                "morale": -4
+              }
+            }
+          ]
+        },
+        {
+          "id": "mark",
+          "text": "Baliser la zone et attendre",
+          "outcomes": [
+            {
+              "text": "La zone est balisée… mais l'engin reste en place sur la piste des convois.",
+              "effects": {
+                "setFlags": {
+                  "ied_on_road": true
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contractor_offer",
+      "title": "Offre de services",
+      "category": "visit",
+      "weight": 4,
+      "cooldownDays": 8,
+      "conditions": {
+        "minDay": 5,
+        "minReputation": 5
+      },
+      "speaker": "pmc",
+      "text": "« Dale Hartigan, Ironclad Security. Deux de mes gars sont disponibles tout de suite : anciens du corps des Marines, bien équipés. Prix d'ami, payé d'avance. »",
+      "choices": [
+        {
+          "id": "hire",
+          "text": "Engager les deux contractors",
+          "effects": {
+            "resources": {
+              "funds": -3500
+            }
+          },
+          "outcomes": [
+            {
+              "text": "Deux hommes barbus en tenue de combat sans insigne descendent d'un pick-up. « On commence quand ? »",
+              "effects": {
+                "recruits": [
+                  {
+                    "type": "contractor",
+                    "count": 2
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "decline",
+          "text": "Décliner l'offre",
+          "outcomes": [
+            {
+              "text": "« Comme vous voudrez. Vous avez ma carte. »"
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "vehicle",
+        "vehicle": "pmc_suv",
+        "leader": "pmc",
+        "escort": [
+          {
+            "visual": "pmc",
+            "count": 2
+          }
+        ],
+        "stayMinutes": 90
+      }
+    },
+    {
+      "id": "sick_child",
+      "title": "Un enfant malade",
+      "category": "visit",
+      "weight": 5,
+      "cooldownDays": 5,
+      "conditions": {
+        "minDay": 2
+      },
+      "speaker": "villager",
+      "text": "Une femme voilée se présente à la porte, un enfant fiévreux dans les bras. Par l'interprète : « Il ne mange plus depuis trois jours. Le dispensaire de district est fermé. Aidez-nous. »",
+      "choices": [
+        {
+          "id": "treat",
+          "text": "Faire soigner l'enfant par notre médecin",
+          "effects": {
+            "resources": {
+              "medical": -20
+            }
+          },
+          "outcomes": [
+            {
+              "text": "Antibiotiques, réhydratation : deux jours plus tard, l'enfant court de nouveau. Tout Deh Mirza le sait.",
+              "effects": {
+                "reputation": 4,
+                "setFlags": {
+                  "village_friendly": true
+                },
+                "village": {
+                  "id": "deh_mirza",
+                  "attitude": 12
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "hospital",
+          "text": "Payer un transport vers l'hôpital de province",
+          "effects": {
+            "resources": {
+              "funds": -300
+            }
+          },
+          "outcomes": [
+            {
+              "text": "Un taxi collectif emmène la mère et l'enfant vers la ville.",
+              "effects": {
+                "reputation": 1,
+                "village": {
+                  "id": "deh_mirza",
+                  "attitude": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "Refuser : le règlement l'interdit",
+          "outcomes": [
+            {
+              "text": "La femme repart en silence. Les gardes évitent de croiser son regard.",
+              "effects": {
+                "reputation": -3,
+                "morale": -2,
+                "village": {
+                  "id": "deh_mirza",
+                  "attitude": -8
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "foot",
+        "leader": "villager",
+        "escort": [],
+        "stayMinutes": 60
+      }
+    },
+    {
+      "id": "deserter",
+      "title": "Un déserteur",
+      "category": "personnel",
+      "weight": 3,
+      "cooldownDays": 10,
+      "conditions": {
+        "minDay": 6
+      },
+      "speaker": "deserter",
+      "text": "Un policier en uniforme dépareillé demande asile. « Mon chef revend nos munitions aux insurgés. J'ai refusé de me taire. S'ils me retrouvent, ils me tuent. »",
+      "choices": [
+        {
+          "id": "shelter",
+          "text": "Le prendre sous protection et l'écouter",
+          "outcomes": [
+            {
+              "text": "Son témoignage détaille les filières d'approvisionnement des insurgés. Le district, lui, réclame son retour.",
+              "effects": {
+                "setFlags": {
+                  "intel_warning": true
+                },
+                "reputation": -1,
+                "intel": "nearest"
+              }
+            }
+          ]
+        },
+        {
+          "id": "hand_over",
+          "text": "Le remettre aux autorités du district",
+          "outcomes": [
+            {
+              "text": "Le gouverneur de district vous remercie de votre « coopération ». On ne reverra pas le policier.",
+              "effects": {
+                "reputation": 2,
+                "morale": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "turn_away",
+          "text": "Lui dire de partir",
+          "outcomes": [
+            {
+              "text": "L'homme s'éloigne vers les montagnes, seul."
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "foot",
+        "leader": "police",
+        "escort": [],
+        "stayMinutes": 60
+      }
+    },
+    {
+      "id": "mortar_attack",
+      "title": "Tirs indirects !",
+      "category": "attack",
+      "weight": 7,
+      "cooldownDays": 2,
+      "conditions": {
+        "minDay": 2
+      },
+      "speaker": "guard",
+      "text": "« DÉPARTS ! DÉPARTS ! Tirs indirects en approche ! Ici {speaker}, je vois les lueurs derrière la crête ! »",
+      "choices": [
+        {
+          "id": "cover",
+          "text": "Tous aux abris !",
+          "outcomes": [
+            {
+              "text": "Les sirènes hurlent. Chacun court vers l'abri le plus proche.",
+              "effects": {
+                "attack": "mortar",
+                "attackMode": "shelter"
+              }
+            }
+          ]
+        },
+        {
+          "id": "spot",
+          "text": "Aux abris — et que les gardes repèrent la position de tir !",
+          "outcomes": [
+            {
+              "text": "Les sentinelles restent à leur poste, jumelles braquées sur la crête.",
+              "effects": {
+                "attack": "mortar",
+                "attackMode": "engage"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "harassment",
+      "title": "Contact !",
+      "category": "attack",
+      "weight": 6,
+      "cooldownDays": 3,
+      "conditions": {
+        "minDay": 3
+      },
+      "speaker": "guard",
+      "text": "« CONTACT ! Tirs d'armes légères depuis la ligne des arbres ! Je compte trois, peut-être cinq tireurs ! »",
+      "choices": [
+        {
+          "id": "engage",
+          "text": "Riposte : tout le monde en position !",
+          "outcomes": [
+            {
+              "text": "Les fantassins courent vers les murs HESCO, arme à la main.",
+              "effects": {
+                "attack": "harassment",
+                "attackMode": "engage"
+              }
+            }
+          ]
+        },
+        {
+          "id": "shelter",
+          "text": "Seuls les postes de garde ripostent, les autres à l'abri",
+          "outcomes": [
+            {
+              "text": "Les gardes ouvrent le feu depuis les tours ; le reste de la base se met à couvert.",
+              "effects": {
+                "attack": "harassment",
+                "attackMode": "shelter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "night_assault",
+      "title": "Assaut nocturne",
+      "category": "attack",
+      "weight": 4,
+      "cooldownDays": 6,
+      "conditions": {
+        "minDay": 6,
+        "hours": [
+          21,
+          4
+        ]
+      },
+      "speaker": "guard",
+      "text": "« Mouvements au périmètre ! Plusieurs groupes armés approchent à la faveur de la nuit ! Ils sont nombreux, {commander} ! »",
+      "choices": [
+        {
+          "id": "engage",
+          "text": "Branle-bas de combat : défendez le périmètre !",
+          "outcomes": [
+            {
+              "text": "Fusées éclairantes, cris d'ordre : la base entière se met en position.",
+              "effects": {
+                "attack": "assault",
+                "attackMode": "engage"
+              }
+            }
+          ]
+        },
+        {
+          "id": "shelter",
+          "text": "Tenir les tours, les autres aux abris",
+          "outcomes": [
+            {
+              "text": "Les gardes tiennent seuls le périmètre pendant que la base se terre.",
+              "effects": {
+                "attack": "assault",
+                "attackMode": "shelter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "insider_threat",
+      "title": "Un loup dans la bergerie",
+      "category": "threat",
+      "trigger": "chain",
+      "weight": 1,
+      "conditions": {
+        "infiltrator": true
+      },
+      "speaker": "sergeant",
+      "text": "Le sergent ferme la porte derrière lui. « Mon capitaine, un des auxiliaires recrutés récemment pose trop de questions sur les relèves de garde. Hier soir, on l'a vu téléphoner près des HESCO, côté nord. Les autres Afghans l'évitent. Je n'aime pas ça. »",
+      "choices": [
+        {
+          "id": "arrest",
+          "text": "Le faire arrêter et interroger",
+          "outcomes": [
+            {
+              "weight": 7,
+              "text": "Dans son sac : un téléphone, des croquis de la base et le numéro d'un contact du mollah Rasoul. L'homme est remis aux autorités ; ses aveux localisent un groupe insurgé.",
+              "effects": {
+                "insider": {
+                  "action": "expose"
+                },
+                "intel": "nearest",
+                "reputation": 2
+              }
+            },
+            {
+              "weight": 3,
+              "text": "C'était bien un infiltré, mais l'arrestation brutale devant ses camarades fait scandale dans son village. Les anciens parlent d'humiliation.",
+              "effects": {
+                "insider": {
+                  "action": "expose",
+                  "attitude": -10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "watch",
+          "text": "Le placer discrètement sous surveillance",
+          "outcomes": [
+            {
+              "weight": 5,
+              "text": "Trois jours de filature. L'homme mène les équipes droit à son officier traitant : deux contacts insurgés sont identifiés avant son arrestation.",
+              "effects": {
+                "insider": {
+                  "action": "expose"
+                },
+                "intel": "nearest",
+                "reputation": 3
+              }
+            },
+            {
+              "weight": 5,
+              "text": "Il a senti le piège. Pendant la relève de nuit, il ouvre le feu sur un poste de garde avant d'être abattu.",
+              "effects": {
+                "insider": {
+                  "action": "strike",
+                  "attitude": -5
+                },
+                "injure": {
+                  "count": 2,
+                  "amount": 45
+                },
+                "morale": -6
+              }
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Ignorer : on ne peut pas soupçonner tout le monde",
+          "outcomes": [
+            {
+              "weight": 8,
+              "text": "Deux nuits plus tard, l'auxiliaire retourne son arme contre les soldats qui partageaient sa tente. Il est abattu, mais la confiance est brisée.",
+              "effects": {
+                "insider": {
+                  "action": "strike",
+                  "attitude": -5
+                },
+                "injure": {
+                  "count": 3,
+                  "amount": 50
+                },
+                "morale": -10,
+                "reputation": -4
+              }
+            },
+            {
+              "weight": 2,
+              "text": "L'homme déserte une nuit, emportant son arme et un poste radio.",
+              "effects": {
+                "insider": {
+                  "action": "desert"
+                },
+                "resources": {
+                  "ammo": -30
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mullah_sermon",
+      "title": "Le prêche du vendredi",
+      "category": "visit",
+      "weight": 5,
+      "cooldownDays": 10,
+      "village": "any",
+      "conditions": {
+        "minDay": 3
+      },
+      "speaker": "mullah",
+      "text": "Le mollah de {village} est venu jusqu'à l'entrée de la base. « Certains, dans ma mosquée, disent que vos soldats méprisent nos coutumes. D'autres disent le contraire. Que dois-je leur répondre vendredi, {commander} ? »",
+      "choices": [
+        {
+          "id": "respect",
+          "text": "Lui assurer notre respect et l'inviter à visiter la base",
+          "outcomes": [
+            {
+              "weight": 3,
+              "text": "Il visite l'infirmerie et la cantine, impressionné par le calme des hommes. Son prêche sera conciliant.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 8
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Il reste méfiant, mais promet de parler avec mesure.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "gift",
+          "text": "Offrir de quoi réparer le toit de la mosquée",
+          "effects": {
+            "resources": {
+              "funds": -1500
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "« Dieu voit ce que vous faites. » Le toit sera refait avant l'hiver.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 10,
+                  "influence": -4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "warn",
+          "text": "Le prévenir que les prêches hostiles auront des conséquences",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Il se raidit. « Je dirai la vérité, c'est tout. » Le prêche du vendredi sera glacial.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -8,
+                  "influence": 4
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "foot",
+        "leader": "elder",
+        "escort": [
+          {
+            "visual": "villager",
+            "count": 1
+          }
+        ],
+        "stayMinutes": 120
+      }
+    },
+    {
+      "id": "bazaar_prices",
+      "title": "Le bazar s’affole",
+      "category": "logistics",
+      "weight": 5,
+      "cooldownDays": 8,
+      "village": "any",
+      "speaker": "trader",
+      "text": "Haji Baz Mohammad, le grand marchand de {village}, s'arrête au poste d'entrée. « Les prix flambent, {commander}. La route est coupée par les hommes armés. Je peux vous vendre {goods}, mais pas donné. »",
+      "choices": [
+        {
+          "id": "buy",
+          "text": "Acheter un lot de vivres et d'eau",
+          "effects": {
+            "resources": {
+              "funds": -1200
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 3,
+              "text": "Marchandise livrée le soir même, bonne qualité.",
+              "effects": {
+                "resources": {
+                  "food": 300,
+                  "water": 300
+                },
+                "village": {
+                  "id": "$village",
+                  "attitude": 3
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "La moitié des sacs sont avariés. Le marchand jure n'y être pour rien.",
+              "effects": {
+                "resources": {
+                  "food": 120,
+                  "water": 150
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "escort",
+          "text": "Proposer d'escorter ses camions jusqu'au bazar",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Le convoi passe sans encombre ; le bazar reprend vie et le marchand vous en est reconnaissant.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 7,
+                  "influence": -5
+                },
+                "reputation": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Les camions passent, mais des tirs sporadiques blessent un de nos hommes.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 5
+                },
+                "injure": {
+                  "count": 1,
+                  "amount": 30
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "decline",
+          "text": "Décliner poliment",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Il hausse les épaules. « Les affaires sont les affaires. »"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "school_reopen",
+      "title": "Rouvrir l’école",
+      "category": "visit",
+      "weight": 4,
+      "cooldownDays": 15,
+      "village": "neutral",
+      "conditions": {
+        "minDay": 5
+      },
+      "speaker": "teacher",
+      "text": "Une institutrice de {village}, Malalai Noori, demande à vous voir. « L'école est fermée depuis les menaces. Si vous assuriez une présence le matin, les familles renverraient leurs filles. »",
+      "choices": [
+        {
+          "id": "protect",
+          "text": "Organiser une présence discrète aux heures d'école",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Deux semaines plus tard, quarante élèves ont repris le chemin de l'école. Le village en parle avec fierté.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 10,
+                  "influence": -6
+                },
+                "reputation": 3,
+                "setFlags": {
+                  "school_protected": true
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Une lettre de menace est clouée sur la porte de l'école. L'institutrice tient bon, mais les familles hésitent.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 4,
+                  "influence": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "supplies",
+          "text": "Financer cahiers, tableaux et un poêle",
+          "effects": {
+            "resources": {
+              "funds": -1000
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les fournitures arrivent ; la classe rouvre avec un poêle neuf.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 7
+                },
+                "reputation": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "Expliquer que ce n'est pas le rôle de la base",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Elle repart sans un mot. L'école restera fermée.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -4
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "foot",
+        "leader": "villager",
+        "escort": [],
+        "stayMinutes": 90
+      }
+    },
+    {
+      "id": "night_letters",
+      "title": "Lettres de nuit",
+      "category": "threat",
+      "weight": 5,
+      "cooldownDays": 8,
+      "village": "influenced",
+      "conditions": {
+        "minDay": 4
+      },
+      "speaker": "interpreter",
+      "text": "Farid, l'interprète, est blême. « Des « lettres de nuit » ont été clouées sur les portes de {village} : quiconque parle aux étrangers sera puni. Les gens ont peur, {commander}. »",
+      "choices": [
+        {
+          "id": "patrol",
+          "text": "Patrouilles de nuit renforcées au village",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Les patrouilles rassurent ; quelques habitants osent saluer les soldats.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 5,
+                  "influence": -6
+                },
+                "morale": -2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Une patrouille est accrochée à la sortie du village. Un blessé.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 3,
+                  "influence": -4
+                },
+                "injure": {
+                  "count": 1,
+                  "amount": 35
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "investigate",
+          "text": "Enquêter discrètement sur les auteurs",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Un commerçant finit par donner un nom. Le renseignement remonte jusqu'à un chef local.",
+              "effects": {
+                "intel": "nearest",
+                "village": {
+                  "id": "$village",
+                  "influence": -3
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Personne ne parle. La peur l'emporte.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "influence": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Ne rien changer pour l'instant",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les volets restent fermés à notre passage.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -3,
+                  "influence": 6
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drought",
+      "title": "Sécheresse",
+      "category": "environment",
+      "weight": 4,
+      "cooldownDays": 12,
+      "village": "any",
+      "conditions": {
+        "minDay": 6
+      },
+      "speaker": "farmer",
+      "text": "Mirwais, un paysan de {village}, montre ses mains craquelées. « Le karez est à sec, le blé meurt sur pied. Sans eau, les jeunes partiront rejoindre ceux qui paient. »",
+      "choices": [
+        {
+          "id": "water",
+          "text": "Livrer de l'eau par camion-citerne",
+          "effects": {
+            "resources": {
+              "water": -600
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les citernes sauvent une partie de la récolte. Les anciens viennent remercier la base.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 9,
+                  "influence": -5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "dig",
+          "text": "Financer le curage du karez",
+          "effects": {
+            "resources": {
+              "funds": -2200
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Les travaux mobilisent les jeunes du village, payés à la journée. L'eau revient en deux semaines.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 10,
+                  "influence": -8
+                },
+                "reputation": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Les travaux sont sabotés une nuit. Il faudra recommencer.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "nothing",
+          "text": "Lui dire que la base ne peut rien",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "« Alors d'autres le feront. » Il s'en va.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -5,
+                  "influence": 5
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elder_funeral",
+      "title": "Les funérailles d’un ancien",
+      "category": "visit",
+      "weight": 3,
+      "cooldownDays": 12,
+      "village": "friendly",
+      "speaker": "elder",
+      "text": "Un ancien respecté de {village} est mort. Sa famille fait savoir qu'une délégation de la base serait « honorée »… ou malvenue, selon le chef qui parle.",
+      "choices": [
+        {
+          "id": "attend",
+          "text": "Envoyer une petite délégation sans armes lourdes",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "La délégation est accueillie avec dignité. Le geste est très remarqué dans la vallée.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 9
+                },
+                "reputation": 1
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Un cousin de la famille s'emporte contre les étrangers ; la délégation repart vite, sans incident.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "condolence",
+          "text": "Faire porter des condoléances et un don",
+          "effects": {
+            "resources": {
+              "funds": -400
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La famille accepte le don avec gratitude.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "stay",
+          "text": "Rester à l'écart par prudence",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Personne ne remarque l'absence… sauf les anciens.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -2
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "land_mine_field",
+      "title": "Un champ miné",
+      "category": "threat",
+      "weight": 4,
+      "cooldownDays": 12,
+      "village": "any",
+      "speaker": "farmer",
+      "text": "Un paysan de {village} a trouvé une mine antipersonnel en labourant. « Il y en a d'autres, de l'ancienne guerre. Mon fils garde les chèvres là-bas. »",
+      "choices": [
+        {
+          "id": "demine",
+          "text": "Envoyer une équipe déminer le champ",
+          "outcomes": [
+            {
+              "weight": 3,
+              "text": "Douze mines anciennes neutralisées. Le village voit enfin l'utilité de la base.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 10
+                },
+                "reputation": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Une mine explose pendant l'opération ; un démineur est gravement blessé.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 8
+                },
+                "injure": {
+                  "count": 1,
+                  "amount": 60
+                },
+                "morale": -3
+              }
+            }
+          ]
+        },
+        {
+          "id": "mark",
+          "text": "Baliser le champ et prévenir les familles",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Des pierres peintes en rouge délimitent la zone. C'est mieux que rien.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "contractor",
+          "text": "Payer une société de déminage civile",
+          "effects": {
+            "resources": {
+              "funds": -2500
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les démineurs civils font un travail impeccable.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 8
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "refugees",
+      "title": "Familles déplacées",
+      "category": "visit",
+      "weight": 4,
+      "cooldownDays": 14,
+      "village": "any",
+      "conditions": {
+        "minDay": 5
+      },
+      "speaker": "villager",
+      "text": "Une dizaine de familles fuyant les combats du nord campent près de {village}. Elles manquent de tout, et le village commence à s'inquiéter de ces bouches à nourrir.",
+      "choices": [
+        {
+          "id": "help",
+          "text": "Leur distribuer vivres, eau et couvertures",
+          "effects": {
+            "resources": {
+              "food": -250,
+              "water": -250
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "La distribution se passe dans le calme. Les anciens de {village} saluent le geste.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 6
+                },
+                "reputation": 3
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Bousculade pendant la distribution ; il faut rétablir l'ordre.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 3
+                },
+                "reputation": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "ngo",
+          "text": "Contacter une ONG pour prendre le relais",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "L'ONG promet de venir… dans un mois.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "screen",
+          "text": "Les filtrer : des combattants peuvent s'y cacher",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Deux hommes armés sont démasqués parmi les familles.",
+              "effects": {
+                "intel": "nearest",
+                "village": {
+                  "id": "$village",
+                  "attitude": -2
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Rien de suspect ; les familles se sentent humiliées.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -5
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wedding_invitation",
+      "title": "Invitation à un mariage",
+      "category": "visit",
+      "weight": 3,
+      "cooldownDays": 20,
+      "village": "friendly",
+      "conditions": {
+        "minDay": 6
+      },
+      "speaker": "elder",
+      "text": "Le chef de {village} marie son fils et invite officiellement le commandant de la base. Refuser serait une offense ; accepter, un risque.",
+      "choices": [
+        {
+          "id": "go",
+          "text": "Y aller avec une escorte réduite",
+          "outcomes": [
+            {
+              "weight": 3,
+              "text": "Une fête mémorable. Le chef vous présente à toute la vallée comme un ami.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 12
+                },
+                "reputation": 2,
+                "morale": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Au retour, la petite escorte est prise à partie par des tireurs isolés. Personne n'est touché.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 10
+                },
+                "morale": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "gift",
+          "text": "Décliner mais envoyer un beau présent",
+          "effects": {
+            "resources": {
+              "funds": -600
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Le chef comprend. Le présent fait son effet.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "Refuser simplement",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Le chef se sent offensé.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -6
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "poppy_harvest",
+      "title": "La récolte du pavot",
+      "category": "environment",
+      "weight": 3,
+      "cooldownDays": 25,
+      "village": "any",
+      "conditions": {
+        "minDay": 8
+      },
+      "speaker": "farmer",
+      "text": "C'est la saison du pavot autour de {village}. Les champs sont pleins de saisonniers venus d'ailleurs, et l'argent de l'opium finance ceux qui posent des bombes.",
+      "choices": [
+        {
+          "id": "eradicate",
+          "text": "Détruire les champs",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les champs brûlent. Les paysans ruinés regardent la fumée avec haine.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -12,
+                  "influence": -6
+                },
+                "reputation": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "alternative",
+          "text": "Financer des semences de safran et de blé",
+          "effects": {
+            "resources": {
+              "funds": -2000
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Une partie des paysans accepte de changer de culture l'an prochain.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 6,
+                  "influence": -6
+                },
+                "reputation": 1
+              }
+            },
+            {
+              "weight": 1,
+              "text": "L'argent disparaît dans les poches d'un intermédiaire.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Fermer les yeux pour l'instant",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les champs sont récoltés. Les insurgés auront de quoi payer leurs hommes.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "influence": 6
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "blood_feud",
+      "title": "Vendetta",
+      "category": "threat",
+      "weight": 3,
+      "cooldownDays": 15,
+      "village": "any",
+      "speaker": "elder",
+      "text": "Deux familles de {village} sont en guerre depuis qu'un jeune homme a été tué dans une dispute de terres. On craint de nouveaux morts.",
+      "choices": [
+        {
+          "id": "jirga",
+          "text": "Organiser une jirga sous la protection de la base",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Après deux jours de discussions, le prix du sang est fixé. La paix revient.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 9,
+                  "influence": -4
+                },
+                "reputation": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Une des familles refuse de venir. La jirga échoue.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "pay",
+          "text": "Payer le prix du sang pour solder l'affaire",
+          "effects": {
+            "resources": {
+              "funds": -1800
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La dette est payée ; les familles se réconcilient publiquement.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "stay_out",
+          "text": "Ne pas s'en mêler",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Un second meurtre a lieu la semaine suivante.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -3,
+                  "influence": 3
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hostile_demo",
+      "title": "Manifestation devant la base",
+      "category": "threat",
+      "weight": 4,
+      "cooldownDays": 10,
+      "village": "hostile",
+      "conditions": {
+        "minDay": 4
+      },
+      "speaker": "guard",
+      "text": "« Entrée, ici {speaker}. Une centaine d'hommes de {village} manifestent devant la porte. Pancartes, slogans… Ils accusent la base d'avoir tué un berger. »",
+      "choices": [
+        {
+          "id": "talk",
+          "text": "Recevoir une délégation de trois anciens",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "L'enquête montre que le berger a été tué par une mine ancienne. Les anciens repartent apaisés.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 6
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "La discussion tourne court ; la foule se disperse en lançant des pierres.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -2
+                },
+                "wear": 0.02
+              }
+            }
+          ]
+        },
+        {
+          "id": "compensate",
+          "text": "Proposer un dédommagement à la famille",
+          "effects": {
+            "resources": {
+              "funds": -1000
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La famille accepte, la tension retombe.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 5
+                },
+                "reputation": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "disperse",
+          "text": "Faire disperser la foule par des tirs de sommation",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La foule se disperse. Personne n'oubliera.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": -12,
+                  "influence": 6
+                },
+                "reputation": -3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "suspicious_vehicle",
+      "title": "Véhicule suspect",
+      "category": "threat",
+      "weight": 5,
+      "cooldownDays": 6,
+      "conditions": {
+        "minDay": 3
+      },
+      "speaker": "guard",
+      "text": "« Poste d'entrée, ici {speaker}. Un pick-up s'arrête à deux cents mètres, moteur tournant. Le chauffeur nous observe aux jumelles. Il redémarre, s'arrête encore. »",
+      "choices": [
+        {
+          "id": "warn",
+          "text": "Tirs de sommation",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Le pick-up fait demi-tour en trombe."
+            },
+            {
+              "weight": 1,
+              "text": "Le pick-up s'enfuit, mais une rafale part de la benne. Personne n'est touché, une guérite est criblée.",
+              "effects": {
+                "wear": 0.02
+              }
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "text": "L'intercepter avec une patrouille",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "À bord, un jeune homme terrorisé et des plans grossiers de la base. Arrêté.",
+              "effects": {
+                "intel": "nearest",
+                "morale": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "C'est un livreur de fruits perdu. Les excuses s'imposent.",
+              "effects": {
+                "reputation": -1
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Le véhicule explose à l'approche de la patrouille.",
+              "effects": {
+                "injure": {
+                  "count": 2,
+                  "amount": 40
+                },
+                "morale": -6
+              }
+            }
+          ]
+        },
+        {
+          "id": "watch",
+          "text": "Le laisser partir et noter la plaque",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La plaque est transmise au renseignement."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drone_sighting",
+      "title": "Drone au-dessus de la base",
+      "category": "threat",
+      "weight": 3,
+      "cooldownDays": 10,
+      "conditions": {
+        "minDay": 5
+      },
+      "speaker": "guard",
+      "text": "« Tour nord, ici {speaker}. Un petit drone de loisir tourne au-dessus du dépôt de munitions depuis dix minutes. Quelqu'un nous filme. »",
+      "choices": [
+        {
+          "id": "shoot",
+          "text": "L'abattre",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Abattu au deuxième essai. La carte mémoire contient des vues de toute la base.",
+              "effects": {
+                "intel": "nearest"
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Raté. Le drone s'éloigne vers les collines.",
+              "effects": {
+                "setFlags": {
+                  "base_filmed": true
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "track",
+          "text": "Le suivre jusqu'à son opérateur",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Le pilote, un adolescent payé par des inconnus, est retrouvé. Il donne un nom.",
+              "effects": {
+                "intel": "nearest"
+              }
+            },
+            {
+              "weight": 1,
+              "text": "La piste se perd dans le village."
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Ne rien faire",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Le drone repart. Quelqu'un connaît désormais la base par cœur.",
+              "effects": {
+                "setFlags": {
+                  "base_filmed": true
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rocket_dud",
+      "title": "Roquette non explosée",
+      "category": "threat",
+      "weight": 3,
+      "cooldownDays": 10,
+      "conditions": {
+        "minDay": 4
+      },
+      "speaker": "guard",
+      "text": "« Ici {speaker}. Une roquette est tombée cette nuit près du parc à véhicules sans exploser. Elle est plantée dans le sol, à dix mètres des citernes. »",
+      "choices": [
+        {
+          "id": "eod",
+          "text": "Faire intervenir le déminage",
+          "effects": {
+            "resources": {
+              "funds": -800
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La roquette est neutralisée proprement.",
+              "effects": {
+                "reputation": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "own",
+          "text": "La faire neutraliser par nos hommes",
+          "outcomes": [
+            {
+              "weight": 3,
+              "text": "Neutralisée. Les hommes en parleront longtemps.",
+              "effects": {
+                "morale": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Elle explose pendant l'opération. Un blessé grave, une citerne endommagée.",
+              "effects": {
+                "injure": {
+                  "count": 1,
+                  "amount": 60
+                },
+                "wear": 0.05,
+                "morale": -4
+              }
+            }
+          ]
+        },
+        {
+          "id": "evacuate",
+          "text": "Évacuer la zone et attendre",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Une journée perdue pour le parc à véhicules.",
+              "effects": {
+                "delayOrders": 6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "insurgent_defector",
+      "title": "Un combattant veut se rendre",
+      "category": "threat",
+      "weight": 3,
+      "cooldownDays": 15,
+      "village": "any",
+      "conditions": {
+        "minDay": 6
+      },
+      "speaker": "interpreter",
+      "text": "Farid traduit : « Il dit qu'il a combattu deux ans avec les hommes de la montagne. Il est fatigué, il veut rentrer chez lui à {village}. Il connaît les caches. »",
+      "choices": [
+        {
+          "id": "accept",
+          "text": "Accepter sa reddition et l'interroger",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Il donne l'emplacement d'un dépôt et des noms. Un vrai coup dur pour l'insurrection.",
+              "effects": {
+                "intel": "nearest",
+                "village": {
+                  "id": "$village",
+                  "influence": -6
+                },
+                "reputation": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Ses renseignements sont dépassés, mais sa reddition fait parler dans la vallée.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "influence": -3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "program",
+          "text": "L'intégrer à un programme de réinsertion",
+          "effects": {
+            "resources": {
+              "funds": -800
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Il rentre chez lui avec un emploi dans les travaux du karez. D'autres pourraient suivre.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 5,
+                  "influence": -8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "Refuser, trop risqué",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Il repart dans la montagne."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arms_smuggling",
+      "title": "Trafic d’armes",
+      "category": "threat",
+      "weight": 3,
+      "cooldownDays": 12,
+      "village": "influenced",
+      "conditions": {
+        "minDay": 5
+      },
+      "speaker": "informant",
+      "text": "« Un camion de melons part de {village} cette nuit. Sous les melons : des roquettes et des explosifs. Le chauffeur passera par le gué vers minuit. »",
+      "choices": [
+        {
+          "id": "ambush",
+          "text": "Monter un point de contrôle au gué",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Le camion est arrêté : douze roquettes saisies.",
+              "effects": {
+                "resources": {
+                  "ammo": 40
+                },
+                "village": {
+                  "id": "$village",
+                  "influence": -6
+                },
+                "reputation": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Le camion force le barrage, échange de tirs.",
+              "effects": {
+                "injure": {
+                  "count": 1,
+                  "amount": 35
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Personne ne passe. Le tuyau était faux… ou éventé."
+            }
+          ]
+        },
+        {
+          "id": "follow",
+          "text": "Le laisser passer et le suivre jusqu'à destination",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Le camion mène droit à un dépôt insurgé.",
+              "effects": {
+                "intel": "nearest"
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Le camion est perdu dans la nuit."
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Ne pas agir sur un renseignement non recoupé",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Trois jours plus tard, une roquette tombe près de la base.",
+              "effects": {
+                "wear": 0.02
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ana_joint",
+      "title": "L’armée afghane propose une opération",
+      "category": "visit",
+      "weight": 3,
+      "cooldownDays": 12,
+      "village": "any",
+      "conditions": {
+        "minDay": 5
+      },
+      "speaker": "ana_officer",
+      "text": "Le capitaine Rahimullah, de l'armée nationale afghane, propose une patrouille commune vers {village}. « Mes hommes connaissent le terrain, les vôtres ont l'équipement. »",
+      "choices": [
+        {
+          "id": "accept",
+          "text": "Accepter, avec un briefing commun",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "La patrouille commune est un succès : les habitants parlent plus facilement aux soldats afghans.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 6,
+                  "influence": -5
+                },
+                "intel": "nearest",
+                "reputation": 2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Un soldat afghan disparaît avec une radio pendant la patrouille.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 3
+                },
+                "reputation": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "supply",
+          "text": "Lui fournir des munitions plutôt qu'une patrouille commune",
+          "effects": {
+            "resources": {
+              "ammo": -150
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les Afghans patrouillent seuls, mieux équipés.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "influence": -4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "decline",
+          "text": "Décliner",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Le capitaine repart vexé.",
+              "effects": {
+                "reputation": -1
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "vehicle",
+        "leader": "aide",
+        "escort": [
+          {
+            "visual": "aide",
+            "count": 2
+          }
+        ],
+        "stayMinutes": 120,
+        "vehicle": "humvee"
+      }
+    },
+    {
+      "id": "letter_home",
+      "title": "Mauvaise nouvelle du pays",
+      "category": "personnel",
+      "weight": 5,
+      "cooldownDays": 7,
+      "conditions": {
+        "minAgents": 12
+      },
+      "speaker": "chaplain",
+      "text": "« {commander}, {soldier} vient d'apprendre par courrier que sa femme a accouché prématurément. L'enfant va bien, mais il est effondré de ne pas être là. »",
+      "choices": [
+        {
+          "id": "leave",
+          "text": "Lui accorder une permission exceptionnelle",
+          "effects": {
+            "resources": {
+              "funds": -800
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Il part par le prochain vol. Les hommes apprécient le geste.",
+              "effects": {
+                "morale": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": "call",
+          "text": "Organiser un appel par satellite",
+          "requires": {
+            "building": "toc"
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Vingt minutes avec sa femme. Il revient transformé.",
+              "effects": {
+                "morale": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "duty",
+          "text": "Lui demander de tenir jusqu'à la fin de la rotation",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Il serre les dents et reprend son poste."
+            },
+            {
+              "weight": 1,
+              "text": "Il craque pendant une garde. Le moral de son groupe s'en ressent.",
+              "effects": {
+                "morale": -3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "food_poisoning",
+      "title": "Intoxication alimentaire",
+      "category": "personnel",
+      "weight": 4,
+      "cooldownDays": 10,
+      "conditions": {
+        "minDay": 3,
+        "requiresBuilding": "dfac"
+      },
+      "speaker": "medic",
+      "text": "« Ici {speaker}, infirmerie. Douze hommes malades depuis le dîner : vomissements, fièvre. Ça vient sûrement d'un lot de viande. »",
+      "choices": [
+        {
+          "id": "treat",
+          "text": "Soigner et jeter tout le lot",
+          "effects": {
+            "resources": {
+              "medical": -30
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "En deux jours, tout le monde est sur pied.",
+              "effects": {
+                "resources": {
+                  "food": -150
+                },
+                "morale": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "investigate",
+          "text": "Chercher l'origine exacte",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Une chambre froide en panne. Réparée.",
+              "effects": {
+                "resources": {
+                  "food": -100
+                },
+                "morale": -2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Un fournisseur local a vendu de la viande avariée. Contrat rompu.",
+              "effects": {
+                "resources": {
+                  "food": -100
+                },
+                "morale": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Ce n'est rien, ils s'en remettront",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La moitié de la base passe la nuit malade. Les gardes sont incomplètes.",
+              "effects": {
+                "morale": -6,
+                "injure": {
+                  "count": 2,
+                  "amount": 20
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heroic_act",
+      "title": "Acte de bravoure",
+      "category": "personnel",
+      "weight": 3,
+      "cooldownDays": 12,
+      "conditions": {
+        "minDay": 4
+      },
+      "speaker": "sergeant",
+      "text": "« {commander}, hier, pendant les tirs, {soldier} est allé chercher un blessé sous le feu. Les gars voudraient qu'on le propose pour une décoration. »",
+      "choices": [
+        {
+          "id": "medal",
+          "text": "Le proposer pour une décoration",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La proposition remonte au commandement ; les hommes sont fiers.",
+              "effects": {
+                "morale": 5,
+                "reputation": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "ceremony",
+          "text": "Cérémonie à la base, devant tout le monde",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Une cérémonie simple et émouvante. Le moral remonte.",
+              "effects": {
+                "morale": 6
+              }
+            }
+          ]
+        },
+        {
+          "id": "nothing",
+          "text": "Il a fait son travail",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les hommes ne disent rien, mais n'en pensent pas moins.",
+              "effects": {
+                "morale": -3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gambling_ring",
+      "title": "Tripot clandestin",
+      "category": "personnel",
+      "weight": 3,
+      "cooldownDays": 12,
+      "conditions": {
+        "minAgents": 14
+      },
+      "speaker": "sergeant",
+      "text": "« {commander}, il y a des parties de cartes tous les soirs derrière le parc à véhicules. Certains doivent déjà trois mois de solde. Ça va finir en bagarre. »",
+      "choices": [
+        {
+          "id": "ban",
+          "text": "Interdire les jeux d'argent",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Les parties cessent. Grognements, mais la discipline revient.",
+              "effects": {
+                "morale": -2
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Les parties continuent ailleurs, plus discrètement.",
+              "effects": {
+                "morale": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "tournament",
+          "text": "Organiser un tournoi officiel sans argent",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Le tournoi du vendredi devient une tradition.",
+              "effects": {
+                "morale": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "Les laisser faire",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Une bagarre éclate ; deux hommes à l'infirmerie.",
+              "effects": {
+                "injure": {
+                  "count": 2,
+                  "amount": 15
+                },
+                "morale": -3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "equipment_failure",
+      "title": "Panne d’équipement",
+      "category": "logistics",
+      "weight": 4,
+      "cooldownDays": 8,
+      "conditions": {
+        "minDay": 3,
+        "requiresBuilding": "generator"
+      },
+      "speaker": "mechanic",
+      "text": "« {commander}, ici {speaker}. Le groupe électrogène principal fait un bruit inquiétant. Si on ne l'arrête pas pour révision, il peut lâcher en pleine nuit. »",
+      "choices": [
+        {
+          "id": "service",
+          "text": "Arrêter pour révision complète",
+          "effects": {
+            "resources": {
+              "parts": -25
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Révision faite, quelques heures de courant réduit."
+            }
+          ]
+        },
+        {
+          "id": "patch",
+          "text": "Réparation provisoire",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Le bricolage tient.",
+              "effects": {
+                "resources": {
+                  "parts": -8
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Le groupe lâche à minuit. Nuit noire sur la base.",
+              "effects": {
+                "resources": {
+                  "parts": -8
+                },
+                "wear": 0.04,
+                "morale": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "On verra plus tard",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Le groupe s'arrête net deux jours plus tard.",
+              "effects": {
+                "wear": 0.06
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ngo_clinic",
+      "title": "Une ONG médicale",
+      "category": "visit",
+      "weight": 3,
+      "cooldownDays": 20,
+      "village": "any",
+      "conditions": {
+        "minDay": 6
+      },
+      "speaker": "ngo",
+      "text": "Le docteur Clara Weiss, d'une ONG médicale, veut ouvrir une clinique mobile à {village}. « Nous ne voulons pas d'escorte armée visible. Mais un peu de matériel nous aiderait. »",
+      "choices": [
+        {
+          "id": "give",
+          "text": "Lui fournir du matériel médical",
+          "effects": {
+            "resources": {
+              "medical": -40
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La clinique ouvre ; le village voit la base d'un autre œil.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 8
+                },
+                "reputation": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "discreet",
+          "text": "Assurer une sécurité discrète à distance",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "La clinique fonctionne sans incident pendant un mois.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 6
+                },
+                "reputation": 1
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Un homme armé menace l'équipe ; la sécurité discrète intervient sans tirer.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "La décourager : c'est trop dangereux",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Elle ira quand même, sans vous.",
+              "effects": {
+                "reputation": -1
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "vehicle",
+        "leader": "journalist",
+        "escort": [],
+        "stayMinutes": 90,
+        "vehicle": "pmc_suv"
+      }
+    },
+    {
+      "id": "reconstruction_bid",
+      "title": "Contrat de reconstruction",
+      "category": "visit",
+      "weight": 3,
+      "cooldownDays": 20,
+      "village": "any",
+      "conditions": {
+        "minDay": 8
+      },
+      "speaker": "engineer",
+      "text": "Mike Doyle, ingénieur pour un programme de reconstruction, a des fonds pour une route vers {village}. « Il me faut votre accord et vos patrouilles sur le chantier. »",
+      "choices": [
+        {
+          "id": "support",
+          "text": "Soutenir le chantier avec nos patrouilles",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "La route avance vite ; les camions arrivent au bazar en une heure au lieu de quatre.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 8,
+                  "influence": -6
+                },
+                "reputation": 3,
+                "morale": -1
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Le chantier est attaqué deux fois ; la route avance quand même.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 5
+                },
+                "injure": {
+                  "count": 1,
+                  "amount": 30
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "local",
+          "text": "Exiger qu'il embauche des ouvriers du village",
+          "effects": {
+            "resources": {
+              "funds": -1000
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les salaires font plus pour la sécurité que dix patrouilles.",
+              "effects": {
+                "village": {
+                  "id": "$village",
+                  "attitude": 10,
+                  "influence": -8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "Refuser : trop de risques pour nos hommes",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les fonds partiront vers une autre province.",
+              "effects": {
+                "reputation": -1
+              }
+            }
+          ]
+        }
+      ],
+      "visit": {
+        "mode": "vehicle",
+        "leader": "aide",
+        "escort": [],
+        "stayMinutes": 120,
+        "vehicle": "pmc_suv"
+      }
+    },
+    {
+      "id": "heatwave",
+      "title": "Canicule",
+      "category": "environment",
+      "weight": 4,
+      "cooldownDays": 8,
+      "conditions": {
+        "minDay": 2,
+        "hours": [
+          10,
+          17
+        ]
+      },
+      "speaker": "medic",
+      "text": "« Ici {speaker}. Cinquante-deux degrés à l'ombre. Trois coups de chaleur aux postes de garde depuis ce matin. »",
+      "choices": [
+        {
+          "id": "shifts",
+          "text": "Raccourcir les gardes et distribuer de l'eau à volonté",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Pas de nouveau malaise, mais l'eau baisse vite.",
+              "effects": {
+                "resources": {
+                  "water": -300
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "shade",
+          "text": "Installer des abris de toile aux postes",
+          "effects": {
+            "resources": {
+              "funds": -500
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les abris font la différence.",
+              "effects": {
+                "morale": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "nothing",
+          "text": "Les hommes sont entraînés pour ça",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Deux hommes de plus à l'infirmerie.",
+              "effects": {
+                "injure": {
+                  "count": 2,
+                  "amount": 25
+                },
+                "morale": -3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cold_night",
+      "title": "Nuit glaciale",
+      "category": "environment",
+      "weight": 3,
+      "cooldownDays": 10,
+      "conditions": {
+        "minDay": 4,
+        "hours": [
+          20,
+          6
+        ]
+      },
+      "speaker": "sergeant",
+      "text": "« {commander}, il a gelé cette nuit. Les gardes grelottent dans les tours et les poêles des tentes manquent de carburant. »",
+      "choices": [
+        {
+          "id": "fuel",
+          "text": "Distribuer du carburant pour les poêles",
+          "effects": {
+            "resources": {
+              "fuel": -120
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les tentes sont chauffées ; les hommes dorment enfin.",
+              "effects": {
+                "morale": 3
+              }
+            }
+          ]
+        },
+        {
+          "id": "blankets",
+          "text": "Distribuer des couvertures supplémentaires",
+          "effects": {
+            "resources": {
+              "funds": -300
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Ça aide un peu.",
+              "effects": {
+                "morale": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "nothing",
+          "text": "Ils s'habitueront",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Plusieurs hommes tombent malades.",
+              "effects": {
+                "morale": -4,
+                "injure": {
+                  "count": 1,
+                  "amount": 20
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "supply_delay",
+      "title": "Route coupée",
+      "category": "logistics",
+      "weight": 4,
+      "cooldownDays": 10,
+      "village": "any",
+      "conditions": {
+        "minDay": 3
+      },
+      "speaker": "logistician",
+      "text": "« Ici {speaker}. Un glissement de terrain bloque la route principale près de {village}. Les convois prévus devront attendre ou faire un long détour. »",
+      "choices": [
+        {
+          "id": "wait",
+          "text": "Attendre la réouverture",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "La route rouvre en une journée.",
+              "effects": {
+                "delayOrders": 12
+              }
+            }
+          ]
+        },
+        {
+          "id": "clear",
+          "text": "Envoyer une équipe dégager la route",
+          "effects": {
+            "resources": {
+              "fuel": -40
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Route dégagée en quelques heures, avec l'aide des villageois.",
+              "effects": {
+                "delayOrders": 3,
+                "village": {
+                  "id": "$village",
+                  "attitude": 3
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "L'équipe est accrochée pendant les travaux.",
+              "effects": {
+                "delayOrders": 6,
+                "injure": {
+                  "count": 1,
+                  "amount": 30
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "pay",
+          "text": "Payer les villageois pour dégager la route",
+          "effects": {
+            "resources": {
+              "funds": -700
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Les villageois dégagent la route en une matinée.",
+              "effects": {
+                "delayOrders": 2,
+                "village": {
+                  "id": "$village",
+                  "attitude": 5
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "windfall",
+      "title": "Livraison inattendue",
+      "category": "logistics",
+      "weight": 3,
+      "cooldownDays": 15,
+      "conditions": {
+        "minDay": 5
+      },
+      "speaker": "logistician",
+      "text": "« {commander}, un camion est arrivé avec une cargaison qui ne figure sur aucun bon de commande : {cargo}. Le chauffeur veut juste une signature. »",
+      "choices": [
+        {
+          "id": "sign",
+          "text": "Signer et garder la cargaison",
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Une erreur d'aiguillage logistique… dont la base profite.",
+              "effects": {
+                "resources": {
+                  "ammo": 120,
+                  "parts": 40
+                }
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Le commandement réclame la cargaison une semaine plus tard, avec un savon en prime.",
+              "effects": {
+                "reputation": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "return",
+          "text": "Renvoyer la cargaison à son destinataire",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Le commandement note votre honnêteté.",
+              "effects": {
+                "reputation": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "black_market",
+      "title": "Marché noir",
+      "category": "logistics",
+      "weight": 3,
+      "cooldownDays": 15,
+      "conditions": {
+        "minDay": 6
+      },
+      "speaker": "trader",
+      "text": "Le marchand baisse la voix : « Je sais que certains de vos hommes revendent du carburant et des rations au bazar. Je peux vous dire qui… ou vous en racheter, moins cher que vos convois. »",
+      "choices": [
+        {
+          "id": "names",
+          "text": "Obtenir les noms",
+          "effects": {
+            "resources": {
+              "funds": -200
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Deux soldats sont sanctionnés. Le trafic cesse.",
+              "effects": {
+                "morale": -2,
+                "reputation": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "buy",
+          "text": "Racheter du carburant au marché noir",
+          "effects": {
+            "resources": {
+              "funds": -800
+            }
+          },
+          "outcomes": [
+            {
+              "weight": 2,
+              "text": "Carburant livré, de bonne qualité. Personne ne pose de questions.",
+              "effects": {
+                "resources": {
+                  "fuel": 400
+                },
+                "reputation": -1
+              }
+            },
+            {
+              "weight": 1,
+              "text": "Carburant coupé à l'eau : un groupe électrogène tombe en panne.",
+              "effects": {
+                "resources": {
+                  "fuel": 200
+                },
+                "wear": 0.03
+              }
+            }
+          ]
+        },
+        {
+          "id": "refuse",
+          "text": "Le congédier",
+          "outcomes": [
+            {
+              "weight": 1,
+              "text": "Il s'en va en haussant les épaules."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
