@@ -611,7 +611,14 @@ export class MissionSystem implements System {
     // Gains et effets
     this.applyEffects(m, def.rewards[result]);
     if (result !== 'failure' && (m.target.kind === 'site' || m.target.kind === 'sector')) m.gains.push(...this.ctx.sim.world.visit(m, result === 'partial'));
-    for (const id of m.memberIds) s.agents[id].xp += result === 'success' ? this.cfg.xpSuccess : result === 'partial' ? this.cfg.xpPartial : 0;
+    // Expérience : même une mission ratée apprend quelque chose ; les blessés en reviennent aguerris
+    const career = this.ctx.content.balance.career;
+    const woundedNames = new Set(m.casualties.wounded);
+    for (const id of m.memberIds) {
+      const a = s.agents[id];
+      const xp = result === 'success' ? this.cfg.xpSuccess : result === 'partial' ? this.cfg.xpPartial : career.missionFailureXp;
+      this.ctx.sim.career.gain(a, xp + (woundedNames.has(` `) ? career.missionWoundedXp : 0));
+    }
     const prog = this.ctx.content.balance.progression;
     this.ctx.sim.economy.gainPoints(result === 'success' ? (prog.pointsMissionSuccess ?? 0) : result === 'partial' ? (prog.pointsMissionPartial ?? 0) : 0);
     const morale = m.casualties.kia.length > 0 ? this.cfg.kiaMorale : result === 'success' ? this.cfg.successMorale : 0;

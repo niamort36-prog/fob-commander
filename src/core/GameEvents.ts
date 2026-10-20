@@ -63,6 +63,8 @@ export interface GameEvents {
   'zone:rejected': { reason: 'max' | 'funds' };
 
   'agent:spawned': { id: Id };
+  /** Promotion au grade supérieur (CareerSystem). */
+  'agent:promoted': { id: Id; rank: string };
   'agent:removed': { id: Id };
 
   'event:started': { eventId: string };

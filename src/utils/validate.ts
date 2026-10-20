@@ -282,6 +282,16 @@ export function validateContent(raw: RawContent): string[] {
     if (!isStr(p.name)) err(`${w}.name`, 'texte requis');
     if (!routineIds.has(p.routine as string)) err(`${w}.routine`, `emploi du temps inconnu « ${String(p.routine)} »`);
     if (!Array.isArray(p.ranks) || p.ranks.length === 0) err(`${w}.ranks`, 'au moins un grade requis');
+    // Carrière : grades par XP croissante, contenant tous les grades de départ
+    if (!Array.isArray(p.career) || p.career.length === 0) err(`${w}.career`, 'au moins un grade requis');
+    else {
+      const steps = p.career as { rank?: unknown; xp?: unknown }[];
+      steps.forEach((s, i) => {
+        if (!isStr(s.rank) || !isNum(s.xp)) err(`${w}.career[${i}]`, '{ rank, xp } requis');
+        else if (i > 0 && (s.xp as number) <= (steps[i - 1].xp as number)) err(`${w}.career[${i}]`, 'XP croissante requise');
+      });
+      if (Array.isArray(p.ranks)) for (const r of p.ranks) if (!steps.some((s) => s.rank === r)) err(`${w}.ranks`, `grade « ${String(r)} » absent de la carrière`);
+    }
     num(w, p, 'walkSpeed', 0.01);
     num(w, p, 'salaryPerDay', 0);
     if (!isObj(p.skills)) err(`${w}.skills`, 'objet requis');

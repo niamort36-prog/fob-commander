@@ -20,6 +20,8 @@ export class AgentPanel {
   private bars = new Map<string, Bar>();
   private stats!: HTMLElement;
   private gearLine!: HTMLElement;
+  private title!: HTMLElement;
+  private careerNext!: HTMLElement;
   private groupSig = '';
 
   constructor(
@@ -66,6 +68,12 @@ export class AgentPanel {
     this.bars.set('health', healthBar);
     needs.append(healthRow);
 
+    // Carrière : avancement vers le grade suivant
+    this.careerNext = el('div', { class: 'muted small' });
+    const [careerRow, careerBar] = this.bar(t('agent.career'), '#c9a14a', t('agent.careerHint'));
+    this.bars.set('career', careerBar);
+    const career = el('div', { class: 'bars' }, [careerRow]);
+
     const skills = el('div', { class: 'bars' });
     for (const s of content.skills) {
       const [row, bar] = this.bar(s.name, '#8e9a5a');
@@ -85,15 +93,16 @@ export class AgentPanel {
     );
 
     const shiftLabel = routine.shifts > 1 ? ` · ${t('agent.shift', { shift: String.fromCharCode(65 + a.shift) })}` : '';
+    this.title = el('span', { text: `${a.rank} ${a.firstName} ${a.lastName}` });
     this.root.append(
-      el('div', { class: 'panel-title' }, [
-        `${a.rank} ${a.firstName} ${a.lastName}`,
-        el('button', { class: 'btn close', text: '×', onClick: () => this.ctx.bus.emit('ui:select', { target: null }) }),
-      ]),
+      el('div', { class: 'panel-title' }, [this.title, el('button', { class: 'btn close', text: '×', onClick: () => this.ctx.bus.emit('ui:select', { target: null }) })]),
       el('div', { class: 'muted small', text: `${def.name}${shiftLabel}` }),
       this.groupSelect(a),
       this.activity,
       this.home,
+      el('div', { class: 'section-title', text: t('agent.careerTitle') }),
+      career,
+      this.careerNext,
       el('div', { class: 'section-title', text: t('agent.needs') }),
       needs,
       el('div', { class: 'section-title', text: t('agent.skills') }),
@@ -169,6 +178,13 @@ export class AgentPanel {
       bar.fill.parentElement!.classList.toggle('critical', v < nd.critical);
       setText(bar.value, String(Math.round(v)));
     }
+    // Grade (peut changer en cours de route) et avancement
+    setText(this.title, `${a.rank} ${a.firstName} ${a.lastName}`);
+    const pg = this.ctx.sim.career.progress(a);
+    const cb = this.bars.get('career')!;
+    cb.fill.style.width = `${Math.round(pg.ratio * 100)}%`;
+    setText(cb.value, pg.next ? `${Math.floor(a.xp)}/${pg.to}` : String(Math.floor(a.xp)));
+    setText(this.careerNext, pg.next ? t('agent.careerNext', { rank: pg.next.rank, n: Math.max(0, Math.ceil(pg.to - a.xp)) }) : t('agent.careerTop'));
     const hb = this.bars.get('health')!;
     hb.fill.style.width = `${a.health}%`;
     setText(hb.value, String(Math.round(a.health)));

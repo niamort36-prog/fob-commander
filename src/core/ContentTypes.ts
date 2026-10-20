@@ -232,6 +232,8 @@ export interface PersonnelDef {
   name: string;
   routine: string; // → routines.json
   ranks: string[];
+  /** Grades successifs du métier et XP requise (promotion automatique). */
+  career: CareerStep[];
   walkSpeed: number; // cases par minute de jeu
   salaryPerDay: number;
   traitCount: [number, number];
@@ -401,6 +403,23 @@ export interface SiteDef {
   terrain: SiteTerrainParams;
 }
 
+/** Expérience gagnée hors activités, et effets d'une promotion. */
+export interface CareerConfig {
+  missionFailureXp: number;
+  missionWoundedXp: number;
+  combatSurvivedXp: number;
+  killXp: number;
+  checkpointCatchXp: number;
+  promotionMorale: number;
+  promotionSkills: Record<string, number>;
+}
+
+/** Grade d'une carrière et XP requise pour l'atteindre. */
+export interface CareerStep {
+  rank: string;
+  xp: number;
+}
+
 export interface BalanceDef {
   time: {
     ticksPerSecondAtX1: number;
@@ -487,6 +506,7 @@ export interface BalanceDef {
     pointsMissionPartial?: number;
     pointsProject?: number;
   };
+  career: CareerConfig;
   save: { slots: number; autosaveEveryDays: number; storagePrefix: string };
   camera: {
     minZoom: number;

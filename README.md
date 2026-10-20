@@ -549,6 +549,23 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
   La fiche du poste affiche la chance de détection et le bilan des contrôles.
 - La guérite a été redessinée : les sacs de sable de devant passent bien devant la cabane.
 
+## Expérience et grades
+
+- **Carrières** (`personnel.json` → `career`) : chaque métier a ses grades successifs et l'XP requise.
+  Fantassin : Soldat → Soldat de 1re classe (30) → Caporal (90) → Caporal-chef (170) → Sergent (280)
+  → Sergent-chef (420) → Adjudant (600). Officier jusqu'à Capitaine, commandant jusqu'à
+  Lieutenant-colonel, forces spéciales jusqu'à Major, médical d'Infirmier à Médecin-chef, etc.
+  Une recrue arrive avec l'expérience correspondant à son grade.
+- **Gagner de l'XP** : heures de garde, de chantier, de manutention, de cuisine, de soins, de
+  commandement, d'entraînement et surtout de défense (`activities.json` → `xpPerHour`) ; missions
+  (10 si réussie, 5 si partielle, 3 si ratée, +4 pour un blessé) ; ennemi abattu (+5) ; attaque au
+  sol repoussée pour les défenseurs et gardes (+6) ; menace démasquée au poste de garde pour la
+  sentinelle (+12) ; décisions radio réussies (`balance.json` → `career`).
+- **Promotion automatique** dès le seuil atteint : annonce au journal et notification, moral +15,
+  commandement +4 et tir +1. La fiche du soldat montre son grade, une barre d'XP et l'XP restante
+  avant le grade suivant. Au rythme d'une base normale, un fantassin gagne un grade par mois environ,
+  plus vite s'il part en mission et défend la base.
+
 ## Ajouter du contenu (sans toucher au code)
 
 - **Bâtiment** : ajouter une entrée dans `src/data/buildings.json` (catégorie, emprise, coût, entretien,

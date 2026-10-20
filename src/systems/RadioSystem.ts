@@ -338,7 +338,7 @@ export class RadioSystem implements System {
         m.enemyKilled += Math.round(1 + e.enemyDamage * 6 * this.ctx.random());
       }
     }
-    if (e.xp) for (const a of this.members(m)) a.xp += e.xp;
+    if (e.xp) for (const a of this.members(m)) this.ctx.sim.career.gain(a, e.xp);
     if (e.success) m.mods.success += e.success;
     if (e.casualty) m.mods.casualty += e.casualty;
     // Coût (une issue aléatoire ne peut pas faire passer un stock sous zéro)

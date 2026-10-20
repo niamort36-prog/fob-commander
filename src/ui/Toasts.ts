@@ -33,6 +33,10 @@ export class Toasts {
         this.show(t(stats.kia > 0 ? 'toast.combatLoss' : 'toast.combatEnd', { kia: stats.kia, wounded: stats.wounded, enemies: stats.enemyKilled }), stats.kia > 0 ? 'error' : 'good'),
       ),
       bus.on('combat:spotted', () => this.show(t('toast.spotted'), 'good')),
+      bus.on('agent:promoted', ({ id, rank }) => {
+        const a = ctx.state.agents[id];
+        if (a) this.show(t('toast.promoted', { name: a.lastName, rank }), 'good');
+      }),
       bus.on('progression:unlocked', ({ defId }) => this.show(t('toast.unlocked', { name: ctx.content.building(defId).name }), 'good')),
       bus.on('visit:started', () => {
         const v = ctx.state.visit;

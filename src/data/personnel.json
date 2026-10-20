@@ -6,6 +6,20 @@
     "ranks": [
       "Capitaine"
     ],
+    "career": [
+      {
+        "rank": "Capitaine",
+        "xp": 0
+      },
+      {
+        "rank": "Commandant",
+        "xp": 400
+      },
+      {
+        "rank": "Lieutenant-colonel",
+        "xp": 900
+      }
+    ],
     "walkSpeed": 0.6,
     "salaryPerDay": 40,
     "traitCount": [
@@ -54,6 +68,20 @@
     "ranks": [
       "Sous-lieutenant",
       "Lieutenant"
+    ],
+    "career": [
+      {
+        "rank": "Sous-lieutenant",
+        "xp": 0
+      },
+      {
+        "rank": "Lieutenant",
+        "xp": 150
+      },
+      {
+        "rank": "Capitaine",
+        "xp": 400
+      }
     ],
     "walkSpeed": 0.6,
     "salaryPerDay": 25,
@@ -107,6 +135,36 @@
       "Caporal",
       "Sergent"
     ],
+    "career": [
+      {
+        "rank": "Soldat",
+        "xp": 0
+      },
+      {
+        "rank": "Soldat de 1re classe",
+        "xp": 30
+      },
+      {
+        "rank": "Caporal",
+        "xp": 90
+      },
+      {
+        "rank": "Caporal-chef",
+        "xp": 170
+      },
+      {
+        "rank": "Sergent",
+        "xp": 280
+      },
+      {
+        "rank": "Sergent-chef",
+        "xp": 420
+      },
+      {
+        "rank": "Adjudant",
+        "xp": 600
+      }
+    ],
     "walkSpeed": 0.65,
     "salaryPerDay": 10,
     "traitCount": [
@@ -159,6 +217,24 @@
       "Sergent-chef",
       "Adjudant"
     ],
+    "career": [
+      {
+        "rank": "Sergent-chef",
+        "xp": 0
+      },
+      {
+        "rank": "Adjudant",
+        "xp": 200
+      },
+      {
+        "rank": "Adjudant-chef",
+        "xp": 500
+      },
+      {
+        "rank": "Major",
+        "xp": 900
+      }
+    ],
     "walkSpeed": 0.7,
     "salaryPerDay": 60,
     "traitCount": [
@@ -210,6 +286,16 @@
     "ranks": [
       "Commandant"
     ],
+    "career": [
+      {
+        "rank": "Commandant",
+        "xp": 0
+      },
+      {
+        "rank": "Lieutenant-colonel",
+        "xp": 800
+      }
+    ],
     "walkSpeed": 0.65,
     "salaryPerDay": 90,
     "traitCount": [
@@ -259,6 +345,20 @@
     "ranks": [
       "Contractor",
       "Chef d'équipe"
+    ],
+    "career": [
+      {
+        "rank": "Contractor",
+        "xp": 0
+      },
+      {
+        "rank": "Chef d'équipe",
+        "xp": 200
+      },
+      {
+        "rank": "Chef de mission",
+        "xp": 500
+      }
     ],
     "walkSpeed": 0.65,
     "salaryPerDay": 120,
@@ -311,6 +411,20 @@
     "ranks": [
       "Officier de liaison"
     ],
+    "career": [
+      {
+        "rank": "Officier de liaison",
+        "xp": 0
+      },
+      {
+        "rank": "Officier traitant",
+        "xp": 300
+      },
+      {
+        "rank": "Chef de poste",
+        "xp": 800
+      }
+    ],
     "walkSpeed": 0.6,
     "salaryPerDay": 80,
     "traitCount": [
@@ -360,6 +474,32 @@
       "Soldat",
       "Soldat de 1re classe",
       "Caporal"
+    ],
+    "career": [
+      {
+        "rank": "Soldat",
+        "xp": 0
+      },
+      {
+        "rank": "Soldat de 1re classe",
+        "xp": 30
+      },
+      {
+        "rank": "Caporal",
+        "xp": 90
+      },
+      {
+        "rank": "Caporal-chef",
+        "xp": 170
+      },
+      {
+        "rank": "Sergent",
+        "xp": 280
+      },
+      {
+        "rank": "Sergent-chef",
+        "xp": 420
+      }
     ],
     "walkSpeed": 0.6,
     "salaryPerDay": 10,
@@ -417,6 +557,32 @@
       "Caporal",
       "Sergent"
     ],
+    "career": [
+      {
+        "rank": "Soldat",
+        "xp": 0
+      },
+      {
+        "rank": "Soldat de 1re classe",
+        "xp": 30
+      },
+      {
+        "rank": "Caporal",
+        "xp": 90
+      },
+      {
+        "rank": "Caporal-chef",
+        "xp": 170
+      },
+      {
+        "rank": "Sergent",
+        "xp": 280
+      },
+      {
+        "rank": "Sergent-chef",
+        "xp": 420
+      }
+    ],
     "walkSpeed": 0.55,
     "salaryPerDay": 10,
     "traitCount": [
@@ -471,6 +637,24 @@
       "Infirmier",
       "Médecin"
     ],
+    "career": [
+      {
+        "rank": "Infirmier",
+        "xp": 0
+      },
+      {
+        "rank": "Infirmier-chef",
+        "xp": 200
+      },
+      {
+        "rank": "Médecin",
+        "xp": 450
+      },
+      {
+        "rank": "Médecin-chef",
+        "xp": 800
+      }
+    ],
     "walkSpeed": 0.6,
     "salaryPerDay": 20,
     "traitCount": [
@@ -520,6 +704,20 @@
       "Auxiliaire",
       "Auxiliaire",
       "Chef de groupe"
+    ],
+    "career": [
+      {
+        "rank": "Auxiliaire",
+        "xp": 0
+      },
+      {
+        "rank": "Chef de groupe",
+        "xp": 150
+      },
+      {
+        "rank": "Chef de section",
+        "xp": 400
+      }
     ],
     "names": "afghan",
     "walkSpeed": 0.75,

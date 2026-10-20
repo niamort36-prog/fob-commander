@@ -419,6 +419,10 @@ export class CheckpointSystem implements System {
     gain(s, { funds });
     this.rewardMorale(reward.morale);
     this.state.stats.caught++;
+    // La sentinelle qui a démasqué la menace gagne de l'expérience
+    for (const a of Object.values(s.agents)) {
+      if (post && a.activity?.id === 'guard' && a.activity.stage === 'acting' && a.activity.targetId === post.id) this.ctx.sim.career.gain(a, this.ctx.content.balance.career.checkpointCatchXp);
+    }
     pushLog(this.ctx, 'good', `log.cp.caught.${threat}`, { funds });
     this.ctx.bus.emit('checkpoint:caught', { x: e.pos.x, y: e.pos.y });
     e.phase = 'detained';

@@ -838,7 +838,7 @@ export class AttackSystem implements System {
         if (target.health <= 0) {
           delete s.combat.enemies[target.id];
           s.combat.stats.enemyKilled++;
-          a.xp += 5;
+          this.ctx.sim.career.gain(a, this.ctx.content.balance.career.killXp);
           this.ctx.bus.emit('combat:death', { x: target.pos.x, y: target.pos.y, friendly: false });
         }
       }
@@ -931,6 +931,12 @@ export class AttackSystem implements System {
     const stats = { ...c.stats };
     const morale = stats.kia > 0 ? this.cfg.lossMorale : def?.type === 'indirect' ? this.cfg.fearMorale : this.cfg.victoryMorale;
     for (const a of Object.values(s.agents)) a.needs.morale = Math.max(0, Math.min(100, a.needs.morale + morale));
+    // Attaque au sol repoussée : les défenseurs et les gardes au feu gagnent de l'expérience
+    if (def?.type === 'ground') {
+      for (const a of Object.values(s.agents)) {
+        if (a.status === 'on_base' && (a.activity?.id === 'defend' || a.activity?.id === 'guard')) this.ctx.sim.career.gain(a, this.ctx.content.balance.career.combatSurvivedXp);
+      }
+    }
     s.combat = emptyCombat();
     this.cooldowns.clear();
     this.positions.clear();

@@ -24,6 +24,7 @@ import { DiplomacySystem } from '../systems/DiplomacySystem';
 import { IntelSystem } from '../systems/IntelSystem';
 import { VisitSystem } from '../systems/VisitSystem';
 import { CheckpointSystem } from '../systems/CheckpointSystem';
+import { CareerSystem } from '../systems/CareerSystem';
 import { GroupSystem } from '../systems/GroupSystem';
 import { LogisticsSystem } from '../systems/LogisticsSystem';
 import { WorldSystem } from '../systems/WorldSystem';
@@ -43,6 +44,7 @@ export class Simulation {
   readonly diplomacy: DiplomacySystem;
   readonly visits: VisitSystem;
   readonly checkpoint: CheckpointSystem;
+  readonly career: CareerSystem;
   readonly groups: GroupSystem;
   readonly logistics: LogisticsSystem;
   readonly world: WorldSystem;
@@ -70,6 +72,7 @@ export class Simulation {
     this.diplomacy = new DiplomacySystem(ctx);
     this.visits = new VisitSystem(ctx);
     this.checkpoint = new CheckpointSystem(ctx);
+    this.career = new CareerSystem(ctx);
     this.groups = new GroupSystem(ctx);
     this.logistics = new LogisticsSystem(ctx);
     this.world = new WorldSystem(ctx);
@@ -84,6 +87,7 @@ export class Simulation {
       this.supply,
       this.visits, // après SupplySystem : pilote les véhicules des délégations
       this.checkpoint, // civils fouillés au poste de garde (véhicules pilotés ici aussi)
+      this.career, // promotions (XP des activités, missions, combats)
       this.groups,
       this.attacks,
       this.missions,
