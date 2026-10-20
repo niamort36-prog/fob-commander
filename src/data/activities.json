@@ -35,7 +35,8 @@
     "durationMin": 40,
     "effectsPerHour": {
       "food": 90,
-      "morale": 3
+      "morale": 3,
+      "fun": 25
     },
     "consumes": {
       "food": 1
@@ -192,7 +193,8 @@
     "effectsPerHour": {
       "morale": 8,
       "sleep": -2,
-      "hygiene": -3
+      "hygiene": -3,
+      "fun": 12
     }
   },
   {
@@ -223,9 +225,75 @@
     "mode": "schedule",
     "durationMin": 180,
     "effectsPerHour": {
+      "morale": 3,
+      "fun": 8
+    },
+    "helpUnload": true,
+    "options": [
+      "hangout",
+      "drink",
+      "barbecue"
+    ]
+  },
+  {
+    "id": "hangout",
+    "name": "Se détend sous la tente commune",
+    "service": "lounge",
+    "fallback": "drink",
+    "inside": true,
+    "mode": "need",
+    "durationMin": 90,
+    "effectsPerHour": {
+      "fun": 45,
       "morale": 3
     },
-    "helpUnload": true
+    "endWhenFull": "fun"
+  },
+  {
+    "id": "drink",
+    "name": "Boit un verre au bar",
+    "service": "bar",
+    "fallback": "barbecue",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 75,
+    "hours": [
+      16,
+      1
+    ],
+    "effectsPerHour": {
+      "fun": 60,
+      "morale": 4,
+      "sleep": -1
+    },
+    "endWhenFull": "fun"
+  },
+  {
+    "id": "barbecue",
+    "name": "Discute autour du barbecue",
+    "service": "grill",
+    "fallback": "chat",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 60,
+    "effectsPerHour": {
+      "fun": 35,
+      "morale": 3
+    },
+    "endWhenFull": "fun"
+  },
+  {
+    "id": "chat",
+    "name": "Discute avec les camarades",
+    "inside": false,
+    "wander": true,
+    "mode": "need",
+    "durationMin": 40,
+    "effectsPerHour": {
+      "fun": 18,
+      "morale": 1
+    },
+    "endWhenFull": "fun"
   },
   {
     "id": "idle",
@@ -379,7 +447,8 @@
     "effectsPerHour": {
       "morale": 6,
       "sleep": -2,
-      "hygiene": -3
+      "hygiene": -3,
+      "fun": 8
     }
   },
   {

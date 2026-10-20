@@ -1500,6 +1500,352 @@
     ]
   },
   {
+    "id": "rec_tent",
+    "name": "Tente de détente",
+    "desc": "Grande tente commune (MWR) où les hommes se retrouvent pour décompresser : canapés, cartes, café. À équiper d'une télévision, de consoles, d'un téléphone satellite pour appeler la famille…",
+    "category": "life",
+    "footprint": [
+      4,
+      2
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 1100
+    },
+    "buildTimeMin": 210,
+    "upkeepPerDay": {
+      "funds": 12
+    },
+    "powerDemand": 2,
+    "wearPerDay": 0.015,
+    "services": {
+      "lounge": {
+        "slots": 10
+      }
+    },
+    "levels": [
+      {
+        "name": "Grande tente de détente",
+        "cost": {
+          "funds": 900
+        },
+        "buildTimeMin": 180,
+        "services": {
+          "lounge": {
+            "slots": 16
+          }
+        }
+      }
+    ],
+    "hp": 100,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.rec_tent",
+      "style": "tent",
+      "color": "#6f7552",
+      "height": 28
+    },
+    "light": {
+      "radius": 2,
+      "color": "#ffd38a",
+      "power": true
+    },
+    "entrance": true,
+    "cleaning": {
+      "dirtPerUse": 0.004
+    },
+    "modules": [
+      {
+        "id": "tv",
+        "name": "Télévision et antenne satellite",
+        "desc": "Matchs et informations du pays : un lien avec la maison.",
+        "cost": {
+          "funds": 700,
+          "parts": 8
+        },
+        "buildTimeMin": 90,
+        "visual": "dish",
+        "powerDemand": 2,
+        "serviceEffects": {
+          "lounge": {
+            "fun": 15,
+            "morale": 1
+          }
+        }
+      },
+      {
+        "id": "consoles",
+        "name": "Consoles de jeu",
+        "desc": "Parties endiablées en réseau entre escouades.",
+        "cost": {
+          "funds": 800,
+          "parts": 6
+        },
+        "buildTimeMin": 60,
+        "requires": "tv",
+        "powerDemand": 2,
+        "serviceEffects": {
+          "lounge": {
+            "fun": 22
+          }
+        }
+      },
+      {
+        "id": "pingpong",
+        "name": "Ping-pong et baby-foot",
+        "desc": "Tables de jeu au fond de la tente.",
+        "cost": {
+          "funds": 450
+        },
+        "buildTimeMin": 60,
+        "serviceEffects": {
+          "lounge": {
+            "fun": 12,
+            "morale": 1
+          }
+        }
+      },
+      {
+        "id": "satphone",
+        "name": "Coin téléphone satellite",
+        "desc": "Quelques minutes au téléphone avec la famille : le moral remonte.",
+        "cost": {
+          "funds": 900,
+          "parts": 5
+        },
+        "buildTimeMin": 90,
+        "visual": "mast",
+        "powerDemand": 1,
+        "serviceEffects": {
+          "lounge": {
+            "morale": 5,
+            "fun": 4
+          }
+        }
+      },
+      {
+        "id": "library",
+        "name": "Bibliothèque et jeux de société",
+        "desc": "Livres, cartes et jeux de plateau envoyés par les familles.",
+        "cost": {
+          "funds": 200
+        },
+        "buildTimeMin": 30,
+        "serviceEffects": {
+          "lounge": {
+            "fun": 6,
+            "morale": 2
+          }
+        }
+      },
+      {
+        "id": "ac",
+        "name": "Climatisation",
+        "desc": "Un coin frais pour souffler pendant les heures chaudes.",
+        "cost": {
+          "funds": 1100,
+          "parts": 15
+        },
+        "buildTimeMin": 150,
+        "visual": "ac",
+        "powerDemand": 2,
+        "serviceEffects": {
+          "lounge": {
+            "fun": 4,
+            "morale": 2
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "bar",
+    "name": "Bar de fortune",
+    "desc": "Comptoir en planches et palettes monté par les hommes, tabourets, caisses en guise de tables. On s'y retrouve le soir (16 h – 1 h) : l'amusement remonte vite. Attention : plusieurs bars trop proches les uns des autres favorisent l'alcoolisme (bagarres, gueules de bois, matériel abîmé). Un peu bruyant pour les tentes voisines.",
+    "category": "life",
+    "footprint": [
+      3,
+      2
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 850
+    },
+    "buildTimeMin": 180,
+    "upkeepPerDay": {
+      "funds": 10
+    },
+    "wearPerDay": 0.02,
+    "services": {
+      "bar": {
+        "slots": 6
+      }
+    },
+    "levels": [
+      {
+        "name": "Bar aménagé",
+        "cost": {
+          "funds": 650
+        },
+        "buildTimeMin": 150,
+        "services": {
+          "bar": {
+            "slots": 9
+          }
+        }
+      }
+    ],
+    "hp": 90,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.bar",
+      "style": "bar",
+      "color": "#7a5a38",
+      "accent": "#c9a46a",
+      "height": 26
+    },
+    "light": {
+      "radius": 2.2,
+      "color": "#ffc070",
+      "power": false
+    },
+    "noise": {
+      "radius": 7,
+      "sleepMult": 0.75,
+      "moralePerHour": -1
+    },
+    "cleaning": {
+      "dirtPerUse": 0.006
+    },
+    "alcohol": {
+      "radius": 12
+    },
+    "modules": [
+      {
+        "id": "lights",
+        "name": "Guirlandes lumineuses",
+        "desc": "Ampoules tendues entre deux poteaux : l'ambiance d'une terrasse.",
+        "cost": {
+          "funds": 250,
+          "parts": 4
+        },
+        "buildTimeMin": 60,
+        "powerDemand": 1,
+        "serviceEffects": {
+          "bar": {
+            "fun": 10,
+            "morale": 1
+          }
+        }
+      },
+      {
+        "id": "darts",
+        "name": "Cible de fléchettes",
+        "desc": "Tournois acharnés entre escouades.",
+        "cost": {
+          "funds": 150
+        },
+        "buildTimeMin": 30,
+        "serviceEffects": {
+          "bar": {
+            "fun": 12
+          }
+        }
+      },
+      {
+        "id": "sound",
+        "name": "Sono",
+        "desc": "Musique le soir. Plus bruyant pour les tentes voisines.",
+        "cost": {
+          "funds": 400,
+          "parts": 6
+        },
+        "buildTimeMin": 60,
+        "powerDemand": 1,
+        "noiseMult": 1.5,
+        "serviceEffects": {
+          "bar": {
+            "fun": 15,
+            "morale": 2
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "bbq",
+    "name": "Coin barbecue",
+    "desc": "Demi-fût transformé en grill, bancs et table en palettes : on s'y retrouve autour des grillades et d'un feu.",
+    "category": "life",
+    "footprint": [
+      2,
+      2
+    ],
+    "rotatable": false,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 300
+    },
+    "buildTimeMin": 60,
+    "upkeepPerDay": {
+      "funds": 3
+    },
+    "services": {
+      "grill": {
+        "slots": 6
+      }
+    },
+    "hp": 60,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.bbq",
+      "style": "bbq",
+      "color": "#6b5434",
+      "accent": "#3a3a34",
+      "height": 14
+    },
+    "light": {
+      "radius": 1.8,
+      "color": "#ff9a50",
+      "power": false
+    }
+  },
+  {
     "id": "generator",
     "name": "Groupe électrogène",
     "desc": "Produit l'électricité de la base en brûlant du carburant. Sans carburant, plus de courant.",

@@ -138,6 +138,11 @@ export class InfoPanel {
         ]);
       }
     }
+    // Bar : risque d'alcoolisme si d'autres bars sont trop proches
+    if (def.alcohol && b.state !== 'construction') {
+      const n = this.ctx.sim.leisure.neighbourBars(b).length;
+      rows.push([t('info.alcohol'), n > 0 ? t('info.alcoholHigh', { n }) : t('info.alcoholLow')]);
+    }
     if (def.breachMin !== undefined && (def.gate || def.placement.line)) rows.push([t('info.breach'), t('info.breachMin', { min: Math.round(def.breachMin * (1 - b.wear)) })]);
     if (def.noise) rows.push([t('info.noise'), t('info.noiseRadius', { r: Math.round(noiseRadius(def, b)) })]);
     if (def.services?.sleep) {

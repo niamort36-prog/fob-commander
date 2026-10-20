@@ -247,7 +247,7 @@ export class AgentAI implements System {
       rank: pick(def.ranks),
       skills,
       traits,
-      needs: { food: range(75, 100), water: 100, sleep: range(85, 100), hygiene: range(70, 100), toilet: range(60, 100), morale: range(60, 75) },
+      needs: { food: range(75, 100), water: 100, sleep: range(85, 100), hygiene: range(70, 100), toilet: range(60, 100), fun: range(60, 90), morale: range(60, 75) },
       health: 100,
       xp: 0,
       efficiency: 1,
@@ -556,6 +556,8 @@ export class AgentAI implements System {
   private start(a: Agent, actId: string, urgent: boolean, depth: number): void {
     const content = this.ctx.content;
     const def = content.activity(actId);
+    // Hors des heures permises (bar fermé le jour…) : solution de repli
+    if (def.hours && !this.activityAllowed(def) && def.fallback && depth < 4) return this.start(a, def.fallback, urgent, depth + 1);
 
     // Corvée de déchargement : un véhicule attend, on prête main-forte.
     if (def.helpUnload && depth === 0 && !urgent && this.pickHaulVehicle(a)) return this.start(a, 'haul', false, depth + 1);

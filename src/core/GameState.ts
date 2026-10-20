@@ -10,7 +10,7 @@ import type { ContentRegistry } from './ContentRegistry';
 import { carveTrack, entryCell, generateTerrain } from '../utils/terrainGen';
 
 /** Version du format de sauvegarde (incrémenter + ajouter une migration dans SaveSystem en cas de changement). */
-export const SAVE_VERSION = 15;
+export const SAVE_VERSION = 16;
 
 export type Id = string;
 
@@ -70,7 +70,7 @@ export interface LogEntry {
 
 // ---------------------------------------------------------------- Personnel (Phase 2)
 
-export const NEED_IDS = ['food', 'water', 'sleep', 'hygiene', 'toilet', 'morale'] as const;
+export const NEED_IDS = ['food', 'water', 'sleep', 'hygiene', 'toilet', 'fun', 'morale'] as const;
 export type NeedId = (typeof NEED_IDS)[number];
 
 export interface AgentActivity {

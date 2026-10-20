@@ -62,6 +62,17 @@
       "color": "#9a8fb8"
     },
     {
+      "id": "fun",
+      "name": "Amusement",
+      "decayPerHour": 2.2,
+      "low": 35,
+      "critical": 15,
+      "lowEfficiency": 0.92,
+      "criticalEfficiency": 0.8,
+      "healthLossPerHourAtZero": 0,
+      "color": "#d98ab0"
+    },
+    {
       "id": "morale",
       "name": "Moral",
       "decayPerHour": 0,
@@ -77,7 +88,8 @@
     "food": "eat",
     "sleep": "sleep",
     "hygiene": "hygiene",
-    "toilet": "toilet"
+    "toilet": "toilet",
+    "fun": "hangout"
   },
   "morale": {
     "baseTarget": 60,

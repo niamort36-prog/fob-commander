@@ -25,7 +25,7 @@
   },
   "build": {
     "refundRatio": 0.5,
-    "refundRatioUnderConstruction": 1.0,
+    "refundRatioUnderConstruction": 1,
     "baseCrewRate": 0.5,
     "workerRate": 0.5,
     "maxWorkersPerSite": 4
@@ -93,7 +93,7 @@
   },
   "wear": {
     "damagedAt": 0.7,
-    "disabledAt": 1.0,
+    "disabledAt": 1,
     "repairStartAt": 0.4,
     "repairDoneAt": 0.02,
     "repairPerHourPerWorker": 0.25,
@@ -179,15 +179,114 @@
     "maxPenalty": 20,
     "graceDays": 3,
     "items": [
-      { "id": "beds", "name": "Couchage", "service": ["sleep"], "perAgents": 1, "minHeadcount": 0, "moralePenalty": 0, "advice": "Montez des tentes (8 lits) ou renforcez-les (10 lits)." },
-      { "id": "meal", "name": "Places au réfectoire", "service": ["meal"], "perAgents": 4, "minHeadcount": 8, "moralePenalty": 6, "advice": "Agrandissez le réfectoire (20 puis 30 places) ou construisez-en un second." },
-      { "id": "hygiene", "name": "Douches", "service": ["hygiene"], "perAgents": 8, "minHeadcount": 0, "moralePenalty": 5, "advice": "Construisez des douches ou améliorez-les (7 puis 10 cabines)." },
-      { "id": "toilet", "name": "Latrines", "service": ["toilet"], "perAgents": 6, "minHeadcount": 0, "moralePenalty": 6, "hygieneDecayMult": 1.4, "advice": "Construisez des latrines ou améliorez-les (5 puis 8 cabines)." },
-      { "id": "medical", "name": "Postes de soins", "service": ["medical"], "perAgents": 15, "minHeadcount": 15, "moralePenalty": 3, "advice": "Construisez ou agrandissez l'infirmerie (4 postes)." },
-      { "id": "fitness", "name": "Sport et détente", "service": ["fitness", "outdoor_fitness"], "perAgents": 10, "minHeadcount": 20, "moralePenalty": 4, "advice": "Aire de musculation, salle de sport, ou grande salle (10 places)." },
-      { "id": "cooks", "name": "Cuisiniers", "personnel": "cook", "perAgents": 20, "minHeadcount": 12, "moralePenalty": 3, "advice": "Recrutez des cuisiniers (un pour 20 personnes)." },
-      { "id": "medics", "name": "Personnel médical", "personnel": "medic", "perAgents": 25, "minHeadcount": 20, "moralePenalty": 2, "advice": "Recrutez du personnel médical (un pour 25 personnes)." },
-      { "id": "logistics", "name": "Logisticiens", "personnel": "logistics", "perAgents": 12, "minHeadcount": 15, "moralePenalty": 2, "advice": "Recrutez des logisticiens (un pour 12 personnes) : ravitaillement, nettoyage, chantiers." }
+      {
+        "id": "beds",
+        "name": "Couchage",
+        "service": [
+          "sleep"
+        ],
+        "perAgents": 1,
+        "minHeadcount": 0,
+        "moralePenalty": 0,
+        "advice": "Montez des tentes (8 lits) ou renforcez-les (10 lits)."
+      },
+      {
+        "id": "meal",
+        "name": "Places au réfectoire",
+        "service": [
+          "meal"
+        ],
+        "perAgents": 4,
+        "minHeadcount": 8,
+        "moralePenalty": 6,
+        "advice": "Agrandissez le réfectoire (20 puis 30 places) ou construisez-en un second."
+      },
+      {
+        "id": "hygiene",
+        "name": "Douches",
+        "service": [
+          "hygiene"
+        ],
+        "perAgents": 8,
+        "minHeadcount": 0,
+        "moralePenalty": 5,
+        "advice": "Construisez des douches ou améliorez-les (7 puis 10 cabines)."
+      },
+      {
+        "id": "toilet",
+        "name": "Latrines",
+        "service": [
+          "toilet"
+        ],
+        "perAgents": 6,
+        "minHeadcount": 0,
+        "moralePenalty": 6,
+        "hygieneDecayMult": 1.4,
+        "advice": "Construisez des latrines ou améliorez-les (5 puis 8 cabines)."
+      },
+      {
+        "id": "medical",
+        "name": "Postes de soins",
+        "service": [
+          "medical"
+        ],
+        "perAgents": 15,
+        "minHeadcount": 15,
+        "moralePenalty": 3,
+        "advice": "Construisez ou agrandissez l'infirmerie (4 postes)."
+      },
+      {
+        "id": "fitness",
+        "name": "Sport et détente",
+        "service": [
+          "fitness",
+          "outdoor_fitness"
+        ],
+        "perAgents": 10,
+        "minHeadcount": 20,
+        "moralePenalty": 4,
+        "advice": "Aire de musculation, salle de sport, ou grande salle (10 places)."
+      },
+      {
+        "id": "cooks",
+        "name": "Cuisiniers",
+        "personnel": "cook",
+        "perAgents": 20,
+        "minHeadcount": 12,
+        "moralePenalty": 3,
+        "advice": "Recrutez des cuisiniers (un pour 20 personnes)."
+      },
+      {
+        "id": "medics",
+        "name": "Personnel médical",
+        "personnel": "medic",
+        "perAgents": 25,
+        "minHeadcount": 20,
+        "moralePenalty": 2,
+        "advice": "Recrutez du personnel médical (un pour 25 personnes)."
+      },
+      {
+        "id": "logistics",
+        "name": "Logisticiens",
+        "personnel": "logistics",
+        "perAgents": 12,
+        "minHeadcount": 15,
+        "moralePenalty": 2,
+        "advice": "Recrutez des logisticiens (un pour 12 personnes) : ravitaillement, nettoyage, chantiers."
+      },
+      {
+        "id": "leisure",
+        "name": "Détente",
+        "service": [
+          "lounge",
+          "bar",
+          "grill"
+        ],
+        "perAgents": 6,
+        "minHeadcount": 10,
+        "moralePenalty": 4,
+        "advice": "Tente de détente, bar ou coin barbecue (une place pour 6 personnes)."
+      }
     ]
   },
   "career": {
@@ -219,5 +318,16 @@
   },
   "log": {
     "maxEntries": 100
+  },
+  "leisure": {
+    "_doc": "Alcool : chaque bar opérationnel à moins de alcohol.radius cases d'un autre bar augmente le risque d'incident par heure passée au bar (base + parBarVoisin × nombre de bars voisins).",
+    "basePerHour": 0.004,
+    "perNeighbourPerHour": 0.06,
+    "brawlHealth": [
+      8,
+      16
+    ],
+    "hangoverSleep": 30,
+    "damageParts": 6
   }
 }

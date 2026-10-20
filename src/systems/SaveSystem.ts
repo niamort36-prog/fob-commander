@@ -225,6 +225,12 @@ const MIGRATIONS: Record<number, (file: SaveFile, content: ContentRegistry) => S
     for (const a of Object.values(st.agents)) a.needs.toilet ??= 100;
     return { ...file, version: 15, state: st };
   },
+  /** v15 → v16 : besoin « amusement » (bar, tente de détente, barbecue). */
+  15: (file) => {
+    const st = file.state;
+    for (const a of Object.values(st.agents)) a.needs.fun ??= 70;
+    return { ...file, version: 16, state: st };
+  },
 };
 
 function defaultStorage(): StorageLike | null {

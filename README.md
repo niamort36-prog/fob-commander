@@ -585,6 +585,27 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
 - **Bâtiments plus grands** : *Grand réfectoire* (30 places, 4 cuisiniers), *Grand bloc de
   douches* (10), *Infirmerie agrandie* (4 postes), *Grande salle de sport* (10 places).
 
+## Amusement et détente
+
+- **Nouveau besoin « Amusement »** : il baisse doucement au fil des heures. Trop bas, le soldat
+  est moins efficace (−8 %, −20 % au plus bas) et son moral tire vers le bas, comme celui de toute
+  une base sans distraction. Le repas au réfectoire, le temps libre et le sport le font remonter.
+- **Tente de détente** (1 100 $, 10 places, puis 16) : la tente commune où l'on décompresse.
+  Améliorations : *Télévision et antenne satellite* (antenne visible sur le toit), *Consoles de
+  jeu* (après la télé), *Ping-pong et baby-foot*, *Coin téléphone satellite* (appeler la famille :
+  gros bonus de moral), *Bibliothèque et jeux de société*, *Climatisation*.
+- **Bar de fortune** (850 $, 6 places, puis 9) : comptoir en planches et palettes sous un auvent
+  de tôle, tabourets, tonneau, enseigne peinte et guirlande d'ampoules. Ouvert de 16 h à 1 h, très
+  efficace pour l'amusement, un peu bruyant pour les tentes voisines. Améliorations : guirlandes,
+  cible de fléchettes, sono.
+- **Alcool** (`balance.json` → `leisure`) : un bar isolé ne pose pas de problème, mais chaque autre
+  bar à moins de 12 cases multiplie le risque d'incident pendant qu'on y boit : bagarre (deux
+  blessés), gueule de bois (épuisé, déshydraté), matériel abîmé. La fiche du bar indique le risque.
+- **Coin barbecue** (300 $, 6 places) : demi-fût sur pieds aux braises rougeoyantes, table et bancs
+  en palettes.
+- Le temps libre envoie les soldats vers ces lieux s'il y a de la place ; un nouveau besoin
+  « Détente » (une place pour 6 personnes dès 10 personnes) apparaît dans le panneau Besoins.
+
 ## Interface : panneaux réductibles
 
 Le bandeau de construction et le journal se réduisent à leur barre de titre (bouton « − / + »

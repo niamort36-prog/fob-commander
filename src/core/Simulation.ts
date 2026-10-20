@@ -26,6 +26,7 @@ import { VisitSystem } from '../systems/VisitSystem';
 import { CheckpointSystem } from '../systems/CheckpointSystem';
 import { CareerSystem } from '../systems/CareerSystem';
 import { RequirementsSystem } from '../systems/RequirementsSystem';
+import { LeisureSystem } from '../systems/LeisureSystem';
 import { GroupSystem } from '../systems/GroupSystem';
 import { LogisticsSystem } from '../systems/LogisticsSystem';
 import { WorldSystem } from '../systems/WorldSystem';
@@ -47,6 +48,7 @@ export class Simulation {
   readonly checkpoint: CheckpointSystem;
   readonly career: CareerSystem;
   readonly requirements: RequirementsSystem;
+  readonly leisure: LeisureSystem;
   readonly groups: GroupSystem;
   readonly logistics: LogisticsSystem;
   readonly world: WorldSystem;
@@ -76,6 +78,7 @@ export class Simulation {
     this.checkpoint = new CheckpointSystem(ctx);
     this.career = new CareerSystem(ctx);
     this.requirements = new RequirementsSystem(ctx);
+    this.leisure = new LeisureSystem(ctx);
     this.groups = new GroupSystem(ctx);
     this.logistics = new LogisticsSystem(ctx);
     this.world = new WorldSystem(ctx);
@@ -92,6 +95,7 @@ export class Simulation {
       this.checkpoint, // civils fouillés au poste de garde (véhicules pilotés ici aussi)
       this.career, // promotions (XP des activités, missions, combats)
       this.requirements, // besoins de la base selon l'effectif
+      this.leisure, // détente et incidents liés à l'alcool
       this.groups,
       this.attacks,
       this.missions,

@@ -19,9 +19,15 @@ describe('Améliorations des bâtiments', () => {
     ctx.sim.agents.markHomesDirty();
     ctx.sim.step();
     const resident = Object.values(ctx.state.agents).find((a) => a.homeId === tent.id)!;
+    // Besoins figés : on ne mesure que l'effet des améliorations, pas le temps écoulé pendant les travaux
+    const fill = (): void => {
+      for (const k of Object.keys(resident.needs) as (keyof typeof resident.needs)[]) if (k !== 'morale') resident.needs[k] = 90;
+    };
+    fill();
     const before = ctx.sim.needs.moraleTarget(resident);
     install(ctx, tent, 'beds');
     install(ctx, tent, 'ac');
+    fill();
     expect(ctx.sim.needs.moraleTarget(resident)).toBeGreaterThan(before);
     ctx.sim.economy.recomputePower();
     expect(ctx.state.resources.power.demand).toBeGreaterThanOrEqual(2);

@@ -31,7 +31,7 @@ export interface CategoryDef {
   order: number;
 }
 
-export const VISUAL_STYLES = ['box', 'flat', 'hesco', 'tent', 'tank', 'tower', 'building', 'bunker', 'pole', 'howitzer', 'range', 'course', 'killhouse', 'workout', 'gate', 'booth', 'latrine'] as const;
+export const VISUAL_STYLES = ['box', 'flat', 'hesco', 'tent', 'tank', 'tower', 'building', 'bunker', 'pole', 'howitzer', 'range', 'course', 'killhouse', 'workout', 'gate', 'booth', 'latrine', 'bar', 'bbq'] as const;
 export type VisualStyle = (typeof VISUAL_STYLES)[number];
 
 /** Service rendu par un bâtiment aux habitants (couchage, repas, garde…). */
@@ -123,6 +123,8 @@ export interface BuildingDef {
   replaces?: string;
   /** Poste de contrôle des civils entrant dans la base (cf. visitors.json → traffic). */
   checkpoint?: CheckpointDef;
+  /** Débit de boissons : un autre bar à moins de `radius` cases augmente le risque d'alcoolisme. */
+  alcohol?: { radius: number };
   visual: {
     key: string;
     style: VisualStyle;
@@ -523,6 +525,8 @@ export interface BalanceDef {
   };
   career: CareerConfig;
   requirements: { maxPenalty: number; graceDays: number; items: RequirementDef[] };
+  /** Incidents liés à l'alcool autour des bars trop rapprochés. */
+  leisure: { basePerHour: number; perNeighbourPerHour: number; brawlHealth: [number, number]; hangoverSleep: number; damageParts: number };
   save: { slots: number; autosaveEveryDays: number; storagePrefix: string };
   camera: {
     minZoom: number;

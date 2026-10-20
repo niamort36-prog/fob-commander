@@ -620,6 +620,125 @@ function drawLatrine(g: G, P: Proj, geo: BuildingGeometry, color: number, accent
   prism(g, P, w - 0.22, 0.02, w - 0.04, 0.2, 0, top + 2, 0x6e6b5c);
 }
 
+/**
+ * Bar de fortune : plancher en planches, mur du fond avec étagère à bouteilles, toit de tôle sur
+ * poteaux, comptoir en palettes, tabourets, tonneau et caisses, guirlande d'ampoules et enseigne.
+ * Dessiné le long de la plus grande dimension ; le comptoir fait face au côté visible.
+ */
+function drawBar(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number): void {
+  const { w, h } = geo;
+  const alongX = w >= h;
+  const L = alongX ? w : h;
+  const D = alongX ? h : w;
+  // Repère local : u le long du bar, t en travers (t croissant = côté clients, visible)
+  const Q = (u: number, t: number, z: number): Pt => (alongX ? P(u, t, z) : P(t, u, z));
+  const box = (u0: number, u1: number, t0: number, t1: number, z0: number, z1: number, c: number): void => {
+    if (alongX) prism(g, P, u0, t0, u1, t1, z0, z1, c);
+    else prism(g, P, t0, u0, t1, u1, z0, z1, c);
+  };
+  const plank = shade(color, 1.15);
+  // Plancher en planches
+  poly(g, [Q(0.08, 0.08, 1), Q(L - 0.08, 0.08, 1), Q(L - 0.08, D - 0.08, 1), Q(0.08, D - 0.08, 1)], shade(color, 0.9));
+  g.lineStyle(1, shade(color, 0.6), 0.55);
+  for (let u = 0.3; u < L - 0.1; u += 0.22) {
+    const a = Q(u, 0.08, 1);
+    const b = Q(u, D - 0.08, 1);
+    g.lineBetween(a.x, a.y, b.x, b.y);
+  }
+  // Mur du fond en planches et étagère à bouteilles
+  const wallH = height - 4;
+  box(0.12, L - 0.12, 0.1, 0.22, 1, wallH, shade(color, 0.85));
+  g.lineStyle(1, shade(color, 0.55), 0.6);
+  for (const z of [6, 11, 16]) {
+    const a = Q(0.12, 0.22, z);
+    const b = Q(L - 0.12, 0.22, z);
+    g.lineBetween(a.x, a.y, b.x, b.y);
+  }
+  const bottles = [0x3f7a4a, 0x8a5a2a, 0xd8d0b0, 0x2f5a7a, 0xa03a2a];
+  let bi = 0;
+  for (let u = 0.35; u < L - 0.3; u += 0.17) {
+    for (const z of [11, 16]) {
+      const p = Q(u, 0.24, z);
+      g.fillStyle(bottles[bi++ % bottles.length], 1);
+      g.fillRect(Math.round(p.x), Math.round(p.y) - 3, 1, 3);
+    }
+  }
+  // Poteaux et auvent de tôle au-dessus de l'arrière-bar (en pente vers l'avant) ; comptoir à l'air libre
+  const eave = D * 0.42;
+  for (const u of [0.15, L - 0.2]) box(u, u + 0.06, eave - 0.06, eave, 1, height - 5, shade(color, 0.7));
+  const roof = [Q(0.04, 0.02, height), Q(L - 0.04, 0.02, height), Q(L - 0.04, eave, height - 5), Q(0.04, eave, height - 5)];
+  poly(g, roof, shade(accent, 0.75), 0.96);
+  g.lineStyle(1, shade(accent, 0.5), 0.5);
+  for (let u = 0.2; u < L; u += 0.18) {
+    const a = Q(u, 0.02, height);
+    const b = Q(u, eave, height - 5);
+    g.lineBetween(a.x, a.y, b.x, b.y);
+  }
+  outline(g, roof, shade(accent, 0.4), 0.7);
+  // Enseigne peinte sur le bord du toit
+  const s0 = Q(L * 0.38, eave, height - 5);
+  const s1 = Q(L * 0.62, eave, height - 5);
+  poly(g, [s0, s1, { x: s1.x, y: s1.y + 4 }, { x: s0.x, y: s0.y + 4 }], 0xa8322a);
+  g.lineStyle(1, 0xf0e2b0, 0.9);
+  g.lineBetween(s0.x + 3, s0.y + 2, s1.x - 3, s1.y + 2);
+  // Guirlande d'ampoules le long du bord du toit
+  for (let u = 0.2; u < L - 0.1; u += 0.28) {
+    const p = Q(u, eave, height - 6 - Math.abs(Math.sin((u / L) * Math.PI * 3)) * 2);
+    g.fillStyle(0xffd27a, 1);
+    g.fillRect(Math.round(p.x), Math.round(p.y), 2, 2);
+  }
+  // Comptoir en palettes, plateau clair
+  box(0.3, L - 0.3, D * 0.5, D * 0.64, 1, 11, color);
+  box(0.26, L - 0.26, D * 0.48, D * 0.66, 11, 13, plank);
+  g.lineStyle(1, shade(color, 0.55), 0.6);
+  for (let u = 0.45; u < L - 0.3; u += 0.3) {
+    const a = Q(u, D * 0.64, 1);
+    const b = Q(u, D * 0.64, 11);
+    g.lineBetween(a.x, a.y, b.x, b.y);
+  }
+  // Tonneau et caisses à une extrémité
+  box(L - 0.3, L - 0.08, 0.3, 0.5, 1, 9, shade(color, 0.65));
+  box(L - 0.32, L - 0.1, 0.52, 0.72, 1, 6, 0x6b6a44);
+  // Tabourets devant le comptoir
+  for (let u = 0.5; u < L - 0.35; u += 0.45) {
+    box(u, u + 0.1, D * 0.8, D * 0.8 + 0.1, 1, 7, shade(color, 0.75));
+    box(u - 0.03, u + 0.13, D * 0.8 - 0.03, D * 0.8 + 0.13, 7, 8.5, plank);
+  }
+}
+
+/** Coin barbecue : demi-fût sur pieds avec braises, table et bancs en palettes. */
+function drawBbq(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number): void {
+  const { w, h } = geo;
+  // Sol de gravier tassé
+  poly(g, [P(0.1, 0.1, 0), P(w - 0.1, 0.1, 0), P(w - 0.1, h - 0.1, 0), P(0.1, h - 0.1, 0)], 0x9a8a68, 0.7);
+  // Banc du fond
+  prism(g, P, 0.25, 0.2, w - 0.3, 0.4, 0, 6, shade(color, 0.85));
+  // Table en palettes
+  prism(g, P, 0.5, 0.65, w - 0.6, 1.05, 0, 9, color);
+  prism(g, P, 0.45, 0.6, w - 0.55, 1.1, 9, 10.5, shade(color, 1.2));
+  // Grill : demi-fût noir sur pieds, braises rougeoyantes et fumée
+  const gx = w - 0.55;
+  const gy = h - 0.55;
+  for (const [dx, dy] of [[-0.18, -0.1], [0.18, -0.1], [-0.18, 0.1], [0.18, 0.1]]) {
+    const a = P(gx + dx, gy + dy, 0);
+    const b = P(gx + dx, gy + dy, 7);
+    g.lineStyle(1, 0x2a2a26, 1);
+    g.lineBetween(a.x, a.y, b.x, b.y);
+  }
+  prism(g, P, gx - 0.25, gy - 0.14, gx + 0.25, gy + 0.14, 7, 11, accent);
+  poly(g, [P(gx - 0.22, gy - 0.11, 11), P(gx + 0.22, gy - 0.11, 11), P(gx + 0.22, gy + 0.11, 11), P(gx - 0.22, gy + 0.11, 11)], 0xd8582a);
+  g.fillStyle(0xffb050, 1);
+  for (const [dx, dy] of [[-0.1, 0], [0.05, -0.04], [0.12, 0.05]]) {
+    const p = P(gx + dx, gy + dy, 11);
+    g.fillRect(Math.round(p.x), Math.round(p.y), 2, 1);
+  }
+  g.lineStyle(1, 0x8a8a84, 0.6);
+  const s = P(gx, gy, 12);
+  for (let i = 0; i < 3; i++) g.lineBetween(s.x + i * 2 - 2, s.y - i * 4, s.x + i * 2, s.y - i * 4 - 4);
+  // Banc de devant
+  prism(g, P, 0.25, h - 0.42, w - 1, h - 0.22, 0, 6, shade(color, 0.85));
+}
+
 /** Poste de garde : guérite en bois à toit de tôle, ceinturée de sacs de sable. */
 function drawBooth(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number): void {
   const { w, h } = geo;
@@ -960,6 +1079,10 @@ function drawBuilding(g: G, def: BuildingDef, geo: BuildingGeometry, tw: number,
       return drawBooth(g, P, geo, color, accent, height);
     case 'latrine':
       return drawLatrine(g, P, geo, color, accent, height);
+    case 'bar':
+      return drawBar(g, P, geo, color, accent, height);
+    case 'bbq':
+      return drawBbq(g, P, geo, color, accent);
     case 'tent':
       return drawTent(g, P, geo, color, height, door);
     case 'tank':
