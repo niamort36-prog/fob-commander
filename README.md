@@ -1,5 +1,8 @@
 # FOB COMMANDER (nom provisoire)
 
+**Jouer en ligne :** https://niamort36-prog.github.io/fob-commander/ — mis à jour automatiquement à chaque envoi sur `main` (workflow `.github/workflows/deploy.yml`).
+Les sauvegardes restent dans le navigateur utilisé (stockage local).
+
 Jeu de gestion et de construction d'une base opérationnelle avancée (FOB), Afghanistan années 2000-2010.
 Tous les lieux, personnages et factions sont fictifs.
 
