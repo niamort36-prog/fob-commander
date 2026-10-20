@@ -971,7 +971,7 @@
   {
     "id": "dfac",
     "name": "Réfectoire (DFAC)",
-    "desc": "Repas chauds préparés par les cuisiniers avec les rations livrées depuis l'entrepôt. Sans cuisinier ni rations, ce sera ration froide. Fonctionne au ralenti sans électricité.",
+    "desc": "Repas chauds préparés par les cuisiniers avec les rations livrées depuis l'entrepôt. Sans cuisinier ni rations, ce sera ration froide. Fonctionne au ralenti sans électricité. Comptez une place assise pour 4 personnes.",
     "category": "life",
     "footprint": [
       4,
@@ -1017,6 +1017,21 @@
           },
           "kitchen": {
             "slots": 3
+          }
+        }
+      },
+      {
+        "name": "Grand réfectoire",
+        "cost": {
+          "funds": 3200
+        },
+        "buildTimeMin": 360,
+        "services": {
+          "meal": {
+            "slots": 30
+          },
+          "kitchen": {
+            "slots": 4
           }
         }
       }
@@ -1082,7 +1097,7 @@
       }
     },
     "kitchen": {
-      "mealCapacity": 40
+      "mealCapacity": 60
     },
     "cleaning": {
       "dirtPerUse": 0.004
@@ -1090,8 +1105,8 @@
   },
   {
     "id": "showers",
-    "name": "Douches et latrines",
-    "desc": "Conteneurs sanitaires. Indispensables à l'hygiène ; consomment de l'eau à chaque passage et se salissent : le soutien doit les nettoyer.",
+    "name": "Douches",
+    "desc": "Conteneur de douches. Indispensable à l'hygiène ; consomme de l'eau à chaque passage et se salit : le soutien doit le nettoyer. Comptez une cabine pour 8 personnes.",
     "category": "life",
     "footprint": [
       2,
@@ -1131,6 +1146,18 @@
         "services": {
           "hygiene": {
             "slots": 7
+          }
+        }
+      },
+      {
+        "name": "Grand bloc de douches",
+        "cost": {
+          "funds": 1300
+        },
+        "buildTimeMin": 200,
+        "services": {
+          "hygiene": {
+            "slots": 10
           }
         }
       }
@@ -1177,9 +1204,86 @@
     }
   },
   {
+    "id": "latrines",
+    "name": "Latrines",
+    "desc": "Rangée de toilettes de chantier. Sans elles, les soldats se soulagent derrière les murs : hygiène et moral en pâtissent. Se salissent vite : le soutien doit les nettoyer. Comptez une cabine pour 6 personnes.",
+    "category": "life",
+    "footprint": [
+      2,
+      1
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false,
+      "allowedTerrain": [
+        "dirt",
+        "sand",
+        "gravel",
+        "track"
+      ]
+    },
+    "cost": {
+      "funds": 380
+    },
+    "buildTimeMin": 90,
+    "upkeepPerDay": {
+      "funds": 6
+    },
+    "wearPerDay": 0.02,
+    "services": {
+      "toilet": {
+        "slots": 3
+      }
+    },
+    "levels": [
+      {
+        "name": "Bloc de latrines",
+        "cost": {
+          "funds": 450
+        },
+        "buildTimeMin": 120,
+        "services": {
+          "toilet": {
+            "slots": 5
+          }
+        }
+      },
+      {
+        "name": "Sanitaires en dur",
+        "cost": {
+          "funds": 900
+        },
+        "buildTimeMin": 200,
+        "services": {
+          "toilet": {
+            "slots": 8
+          }
+        },
+        "upkeepPerDay": {
+          "funds": 10
+        }
+      }
+    ],
+    "hp": 80,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.latrines",
+      "style": "latrine",
+      "color": "#3f6f9a",
+      "accent": "#d8d4c6",
+      "height": 22
+    },
+    "cleaning": {
+      "dirtPerUse": 0.01
+    }
+  },
+  {
     "id": "infirmary",
     "name": "Infirmerie",
-    "desc": "Poste de soins. Le personnel médical y travaille et accélère la guérison des malades.",
+    "desc": "Poste de soins. Le personnel médical y travaille et accélère la guérison des malades. Comptez un poste de soins pour 15 personnes.",
     "category": "life",
     "footprint": [
       3,
@@ -1247,7 +1351,21 @@
         "capacity": 30,
         "refillBelow": 12
       }
-    }
+    },
+    "levels": [
+      {
+        "name": "Infirmerie agrandie",
+        "cost": {
+          "funds": 1800
+        },
+        "buildTimeMin": 300,
+        "services": {
+          "medical": {
+            "slots": 4
+          }
+        }
+      }
+    ]
   },
   {
     "id": "gym",
@@ -1314,7 +1432,7 @@
             "morale": 3
           }
         },
-        "skillMult": 1.0
+        "skillMult": 1
       },
       {
         "id": "cardio",
@@ -1362,6 +1480,20 @@
         "serviceEffects": {
           "fitness": {
             "morale": 2
+          }
+        }
+      }
+    ],
+    "levels": [
+      {
+        "name": "Grande salle de sport",
+        "cost": {
+          "funds": 1200
+        },
+        "buildTimeMin": 200,
+        "services": {
+          "fitness": {
+            "slots": 10
           }
         }
       }

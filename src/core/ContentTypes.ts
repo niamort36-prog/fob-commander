@@ -31,7 +31,7 @@ export interface CategoryDef {
   order: number;
 }
 
-export const VISUAL_STYLES = ['box', 'flat', 'hesco', 'tent', 'tank', 'tower', 'building', 'bunker', 'pole', 'howitzer', 'range', 'course', 'killhouse', 'workout', 'gate', 'booth'] as const;
+export const VISUAL_STYLES = ['box', 'flat', 'hesco', 'tent', 'tank', 'tower', 'building', 'bunker', 'pole', 'howitzer', 'range', 'course', 'killhouse', 'workout', 'gate', 'booth', 'latrine'] as const;
 export type VisualStyle = (typeof VISUAL_STYLES)[number];
 
 /** Service rendu par un bâtiment aux habitants (couchage, repas, garde…). */
@@ -348,6 +348,8 @@ export interface ActivityDef {
   consumesPerHour?: ResourceBag;
   /** Progression des compétences (points par heure, ralentie près du maximum). */
   skillsPerHour?: Record<string, number>;
+  /** Service saturé : l'agent fait la queue devant le bâtiment (activité « queue ») avant de se rabattre sur le repli. */
+  queue?: boolean;
 }
 
 export interface RoutineDef {
@@ -412,6 +414,19 @@ export interface CareerConfig {
   checkpointCatchXp: number;
   promotionMorale: number;
   promotionSkills: Record<string, number>;
+}
+
+/** Besoin de la base proportionnel à l'effectif : places d'un service ou spécialistes. */
+export interface RequirementDef {
+  id: string;
+  name: string;
+  service?: string[];
+  personnel?: string;
+  perAgents: number;
+  minHeadcount: number;
+  moralePenalty: number;
+  hygieneDecayMult?: number;
+  advice: string;
 }
 
 /** Grade d'une carrière et XP requise pour l'atteindre. */
@@ -507,6 +522,7 @@ export interface BalanceDef {
     pointsProject?: number;
   };
   career: CareerConfig;
+  requirements: { maxPenalty: number; graceDays: number; items: RequirementDef[] };
   save: { slots: number; autosaveEveryDays: number; storagePrefix: string };
   camera: {
     minZoom: number;

@@ -48,6 +48,49 @@ export function uiRoot(): HTMLElement {
   return root;
 }
 
+/**
+ * Panneau réductible : un bouton « − / + » dans la barre de titre (ou un clic sur le titre) ne
+ * laisse plus que la barre de titre visible. L'état est mémorisé dans le navigateur.
+ */
+export function makeCollapsible(root: HTMLElement, title: HTMLElement, key: string, onChange?: (collapsed: boolean) => void): { collapsed: () => boolean } {
+  const storageKey = `fobcmd.ui.collapsed.${key}`;
+  let collapsed = false;
+  try {
+    collapsed = localStorage.getItem(storageKey) === '1';
+  } catch {
+    // stockage indisponible : panneau ouvert
+  }
+  const btn = el('button', { class: 'btn collapse-btn', title: 'Réduire / agrandir' });
+  const apply = (): void => {
+    root.classList.toggle('collapsed', collapsed);
+    btn.textContent = collapsed ? '+' : '−';
+    onChange?.(collapsed);
+  };
+  const toggle = (): void => {
+    collapsed = !collapsed;
+    try {
+      localStorage.setItem(storageKey, collapsed ? '1' : '0');
+    } catch {
+      // sans mémoire : tant pis
+    }
+    apply();
+  };
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggle();
+  });
+  title.classList.add('collapsible-title');
+  title.addEventListener('click', (e) => {
+    if (e.target === title || (e.target as HTMLElement).classList?.contains('title-text')) toggle();
+  });
+  // Le bouton se place avant un éventuel bouton de fermeture
+  const close = title.querySelector('.btn.close');
+  if (close) title.insertBefore(btn, close);
+  else title.append(btn);
+  apply();
+  return { collapsed: () => collapsed };
+}
+
 /** Met à jour un texte seulement s'il a changé (évite de casser les survols et la sélection). */
 export function setText(node: HTMLElement, text: string): void {
   if (node.textContent !== text) node.textContent = text;

@@ -247,7 +247,7 @@ export class AgentAI implements System {
       rank: pick(def.ranks),
       skills,
       traits,
-      needs: { food: range(75, 100), water: 100, sleep: range(85, 100), hygiene: range(70, 100), morale: range(60, 75) },
+      needs: { food: range(75, 100), water: 100, sleep: range(85, 100), hygiene: range(70, 100), toilet: range(60, 100), morale: range(60, 75) },
       health: 100,
       xp: 0,
       efficiency: 1,
@@ -390,6 +390,7 @@ export class AgentAI implements System {
       }
       return;
     }
+    if (act.id === 'queue') return this.queueStep(a, act);
     // Défenseur à court de munitions : il quitte sa position pour aller se rééquiper
     if (act.id === 'defend' && this.lowAmmo(a, true)) return this.endActivity(a);
     if (act.id === 'clean' && act.targetId) {
@@ -611,6 +612,8 @@ export class AgentAI implements System {
       goals = this.nav.accessCells(target);
       if (goals.length === 0) target = null;
     }
+    // Service saturé (réfectoire, douches, latrines pleins) : on fait la queue devant la porte
+    if (needsTarget && !target && def.queue && def.service && this.startQueue(a, actId, def.service, urgent)) return;
     if (needsTarget && !target) {
       if (def.fallback && depth < 4) return this.start(a, def.fallback, urgent, depth + 1);
       if (actId !== 'idle') return this.start(a, 'idle', urgent, depth + 1);
@@ -626,6 +629,68 @@ export class AgentAI implements System {
       goals = spot ? [spot] : null;
     }
     this.goTo(a, goals);
+  }
+
+  /** Bâtiment le plus proche offrant ce service, même plein (pour y faire la queue). */
+  private queueTarget(a: Agent, service: string, def: ActivityDef): BuildingInstance | null {
+    let best: BuildingInstance | null = null;
+    let bestDist = Infinity;
+    for (const b of Object.values(this.ctx.state.fob.buildings)) {
+      if (!this.isOperational(b) || !(this.stats(b).services[service]?.slots ?? 0)) continue;
+      // Réfectoire sans repas prêt : inutile d'attendre, ration froide
+      if (def.usesMeals && this.ctx.content.building(b.defId).kitchen && this.ctx.sim.logistics.meals(b) < 1) continue;
+      const d = this.distanceTo(a, b);
+      if (d < bestDist) {
+        bestDist = d;
+        best = b;
+      }
+    }
+    return best;
+  }
+
+  /** Va faire la queue devant un service saturé ; renvoie false s'il n'en existe aucun. */
+  private startQueue(a: Agent, actId: string, service: string, urgent: boolean): boolean {
+    const b = this.queueTarget(a, service, this.ctx.content.activity(actId));
+    if (!b) return false;
+    const access = this.nav.accessCells(b);
+    if (access.length === 0) return false;
+    // Places dans la file : devant les portes et juste à côté, pour ne pas s'entasser
+    const spots: GridPos[] = [];
+    for (const c of access) {
+      for (const [dx, dy] of [
+        [0, 0],
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ]) {
+        const x = c.x + dx;
+        const y = c.y + dy;
+        if (this.nav.walkable(x, y) && !this.ctx.sim.build.buildingAt({ x, y }) && !spots.some((s) => s.x === x && s.y === y)) spots.push({ x, y });
+      }
+    }
+    const spot = spots.length ? spots[Math.floor(this.ctx.random() * spots.length)] : access[0];
+    const now = this.ctx.state.time.tick;
+    a.activity = { id: 'queue', targetId: b.id, stage: 'moving', urgent, startTick: now, endTick: now, queueFor: actId };
+    this.goTo(a, [spot]);
+    return true;
+  }
+
+  /** Dans la file : une place se libère → on entre ; trop d'attente → solution de repli. */
+  private queueStep(a: Agent, act: AgentActivity): void {
+    const want = this.ctx.content.activity(act.queueFor ?? 'idle');
+    const minutes = (this.ctx.state.time.tick - act.startTick) * this.ctx.content.balance.time.minutesPerTick;
+    const free = want.service ? this.pickService(a, want.service, want) : null;
+    if (free) {
+      this.ctx.sim.requirements.recordWait(want.service!, minutes, false);
+      a.activity = null;
+      return this.start(a, want.id, act.urgent, 1);
+    }
+    if (this.ctx.state.time.tick >= act.endTick) {
+      this.ctx.sim.requirements.recordWait(want.service ?? '', minutes, true);
+      a.activity = null;
+      return this.start(a, want.fallback ?? 'idle', act.urgent, 1);
+    }
   }
 
   /** Activité possible maintenant : plage horaire et ressources consommées disponibles. */

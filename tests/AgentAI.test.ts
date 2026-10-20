@@ -92,6 +92,8 @@ describe('AgentAI et NeedsSystem', () => {
     ctx.sim.build.place('showers', { x: cx + 2, y: cy - 1 }, 0);
     ctx.sim.build.place('water_well', { x: cx + 6, y: cy - 1 }, 0);
     ctx.sim.build.place('water_well', { x: cx + 9, y: cy - 1 }, 0); // 21 personnes : un seul puits ne suffit pas
+    ctx.sim.build.place('latrines', { x: cx - 1, y: cy + 3 }, 0); // une cabine pour 6 : deux rangées
+    ctx.sim.build.place('latrines', { x: cx + 2, y: cy + 3 }, 0);
     stepTicks(ctx, 4 * 24 * 60);
     const agents = Object.values(ctx.state.agents);
     const avg = (k: 'food' | 'sleep' | 'hygiene' | 'morale') => agents.reduce((s, a) => s + a.needs[k], 0) / agents.length;

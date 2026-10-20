@@ -566,6 +566,31 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
   avant le grade suivant. Au rythme d'une base normale, un fantassin gagne un grade par mois environ,
   plus vite s'il part en mission et défend la base.
 
+## Besoins de la base selon l'effectif
+
+- **Panneau « Besoins »** (bouton de la barre du haut ou touche **B**) : pour l'effectif actuel,
+  places disponibles face au nécessaire, file d'attente mesurée sur 24 h, conseil et coût en moral
+  de chaque manque. Le bouton clignote et compte les besoins non couverts.
+- **Ratios** (`balance.json` → `requirements`) : 1 lit par personne ; 1 place au réfectoire pour 4
+  (dès 8 personnes) ; 1 douche pour 8 ; 1 cabine de latrines pour 6 ; 1 poste de soins pour 15
+  (dès 15) ; 1 place de sport pour 10 (dès 20) ; 1 cuisinier pour 20, 1 soignant pour 25,
+  1 logisticien pour 12. Chaque manque abaisse le moral visé de tous (jusqu'à −20), en douceur
+  les 3 premiers jours le temps de s'installer ; des latrines insuffisantes salissent plus vite.
+- **Nouveau besoin « Toilettes »** et bâtiment **Latrines** (rangée de cabines de chantier, 380 $,
+  améliorable en *Bloc de latrines* puis *Sanitaires en dur* : 3 → 5 → 8 cabines). Sans latrines,
+  les soldats se soulagent derrière un mur : hygiène et moral en baisse.
+- **Files d'attente** : quand le réfectoire, les douches ou les latrines sont pleins, les soldats
+  font la queue devant la porte (« Fait la queue »), puis se rabattent sur la ration froide ou
+  la solution de fortune si l'attente dure trop.
+- **Bâtiments plus grands** : *Grand réfectoire* (30 places, 4 cuisiniers), *Grand bloc de
+  douches* (10), *Infirmerie agrandie* (4 postes), *Grande salle de sport* (10 places).
+
+## Interface : panneaux réductibles
+
+Le bandeau de construction et le journal se réduisent à leur barre de titre (bouton « − / + »
+ou clic sur le titre) ; l'état est mémorisé. Le journal s'illumine à chaque nouveau message
+(vert, orange ou rouge selon la gravité) et, réduit, affiche le nombre de messages non lus.
+
 ## Ajouter du contenu (sans toucher au code)
 
 - **Bâtiment** : ajouter une entrée dans `src/data/buildings.json` (catégorie, emprise, coût, entretien,

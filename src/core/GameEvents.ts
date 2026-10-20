@@ -95,6 +95,7 @@ export interface GameEvents {
   'ui:openReport': { id: Id };
   'ui:toggleOps': Record<string, never>;
   'ui:toggleCampaign': Record<string, never>;
+  'ui:toggleNeeds': Record<string, never>;
   'ui:quitToMenu': Record<string, never>;
   'ui:openOptions': Record<string, never>;
   'ui:openVillage': { id: string };

@@ -1,13 +1,84 @@
 {
   "needs": [
-    { "id": "food",    "name": "Nourriture", "decayPerHour": 4.5, "low": 35, "critical": 15, "lowEfficiency": 0.9,  "criticalEfficiency": 0.6,  "healthLossPerHourAtZero": 2, "color": "#c2ab6e" },
-    { "id": "water",   "name": "Eau",        "decayPerHour": 6,   "low": 35, "critical": 15, "lowEfficiency": 0.85, "criticalEfficiency": 0.5,  "healthLossPerHourAtZero": 4, "color": "#7fb3c9",
-      "passive": { "consumesPerHour": { "water": 0.2 }, "restorePerHour": 12 } },
-    { "id": "sleep",   "name": "Sommeil",    "decayPerHour": 4.2, "low": 30, "critical": 12, "lowEfficiency": 0.85, "criticalEfficiency": 0.55, "healthLossPerHourAtZero": 0, "color": "#8a8fc0" },
-    { "id": "hygiene", "name": "Hygiène",    "decayPerHour": 2.5, "low": 30, "critical": 10, "lowEfficiency": 0.95, "criticalEfficiency": 0.85, "healthLossPerHourAtZero": 0.5, "color": "#8fbfa0" },
-    { "id": "morale",  "name": "Moral",      "decayPerHour": 0,   "low": 35, "critical": 15, "lowEfficiency": 0.9,  "criticalEfficiency": 0.7,  "healthLossPerHourAtZero": 0, "color": "#d9a441" }
+    {
+      "id": "food",
+      "name": "Nourriture",
+      "decayPerHour": 4.5,
+      "low": 35,
+      "critical": 15,
+      "lowEfficiency": 0.9,
+      "criticalEfficiency": 0.6,
+      "healthLossPerHourAtZero": 2,
+      "color": "#c2ab6e"
+    },
+    {
+      "id": "water",
+      "name": "Eau",
+      "decayPerHour": 6,
+      "low": 35,
+      "critical": 15,
+      "lowEfficiency": 0.85,
+      "criticalEfficiency": 0.5,
+      "healthLossPerHourAtZero": 4,
+      "color": "#7fb3c9",
+      "passive": {
+        "consumesPerHour": {
+          "water": 0.2
+        },
+        "restorePerHour": 12
+      }
+    },
+    {
+      "id": "sleep",
+      "name": "Sommeil",
+      "decayPerHour": 4.2,
+      "low": 30,
+      "critical": 12,
+      "lowEfficiency": 0.85,
+      "criticalEfficiency": 0.55,
+      "healthLossPerHourAtZero": 0,
+      "color": "#8a8fc0"
+    },
+    {
+      "id": "hygiene",
+      "name": "Hygiène",
+      "decayPerHour": 2.5,
+      "low": 30,
+      "critical": 10,
+      "lowEfficiency": 0.95,
+      "criticalEfficiency": 0.85,
+      "healthLossPerHourAtZero": 0.5,
+      "color": "#8fbfa0"
+    },
+    {
+      "id": "toilet",
+      "name": "Toilettes",
+      "decayPerHour": 11,
+      "low": 35,
+      "critical": 15,
+      "lowEfficiency": 0.95,
+      "criticalEfficiency": 0.8,
+      "healthLossPerHourAtZero": 0,
+      "color": "#9a8fb8"
+    },
+    {
+      "id": "morale",
+      "name": "Moral",
+      "decayPerHour": 0,
+      "low": 35,
+      "critical": 15,
+      "lowEfficiency": 0.9,
+      "criticalEfficiency": 0.7,
+      "healthLossPerHourAtZero": 0,
+      "color": "#d9a441"
+    }
   ],
-  "needActivities": { "food": "eat", "sleep": "sleep", "hygiene": "hygiene" },
+  "needActivities": {
+    "food": "eat",
+    "sleep": "sleep",
+    "hygiene": "hygiene",
+    "toilet": "toilet"
+  },
   "morale": {
     "baseTarget": 60,
     "driftPerHour": 0.1,
@@ -16,14 +87,31 @@
     "lowNeedPenalty": 8,
     "criticalNeedPenalty": 18
   },
-  "health": { "regenPerHour": 0.4 },
+  "health": {
+    "regenPerHour": 0.4
+  },
   "incidents": {
     "moraleThreshold": 20,
     "chancePerHour": 0.02,
     "types": [
-      { "id": "altercation",     "text": "{name} s'est battu avec un camarade.",            "morale": -6, "health": -5 },
-      { "id": "negligence",      "text": "{name} a égaré du matériel par négligence.",       "resources": { "parts": -10 } },
-      { "id": "insubordination", "text": "{name} a refusé un ordre de son chef de groupe.", "morale": -3 }
+      {
+        "id": "altercation",
+        "text": "{name} s'est battu avec un camarade.",
+        "morale": -6,
+        "health": -5
+      },
+      {
+        "id": "negligence",
+        "text": "{name} a égaré du matériel par négligence.",
+        "resources": {
+          "parts": -10
+        }
+      },
+      {
+        "id": "insubordination",
+        "text": "{name} a refusé un ordre de son chef de groupe.",
+        "morale": -3
+      }
     ]
   }
 }

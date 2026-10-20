@@ -29,6 +29,8 @@ export class Hud {
   private readonly command: HTMLElement;
   private readonly stability: HTMLElement;
   private readonly points: HTMLElement;
+  /** Bouton « Besoins » : signale un besoin de la base non couvert. */
+  private readonly needsBtn: HTMLElement;
   private readonly speedButtons = new Map<GameSpeed, HTMLButtonElement>();
 
   constructor(
@@ -66,6 +68,7 @@ export class Hud {
       speeds.append(btn);
     }
 
+    this.needsBtn = el('button', { class: 'btn', text: t('hud.needs'), title: t('hud.needsHint'), onClick: () => ctx.bus.emit('ui:toggleNeeds', {}) });
     this.population = el('div', { class: 'hud-pop' });
     this.command = el('div', { class: 'hud-pop' });
     this.stability = el('div', { class: 'hud-pop hud-stability', onClick: () => ctx.bus.emit('ui:toggleCampaign', {}) });
@@ -73,6 +76,7 @@ export class Hud {
     const system = el('div', { class: 'hud-system' }, [
       el('button', { class: 'btn', text: t('hud.logistics'), title: t('hud.logisticsHint'), onClick: () => ctx.bus.emit('ui:toggleLogistics', {}) }),
       el('button', { class: 'btn', text: t('hud.personnel'), title: t('hud.personnelHint'), onClick: () => ctx.bus.emit('ui:toggleRoster', {}) }),
+      this.needsBtn,
       el('button', { class: 'btn', text: t('hud.map'), title: t('hud.mapHint'), onClick: () => ctx.bus.emit('ui:toggleMap', {}) }),
       el('button', { class: 'btn', text: t('hud.ops'), title: t('hud.opsHint'), onClick: () => ctx.bus.emit('ui:toggleOps', {}) }),
       el('button', { class: 'btn', text: t('hud.campaign'), title: t('hud.campaignHint'), onClick: () => ctx.bus.emit('ui:toggleCampaign', {}) }),
@@ -99,6 +103,11 @@ export class Hud {
       document.documentElement.style.setProperty('--hud-h', height);
     }
     const { state, content } = this.ctx;
+    // Un besoin de la base non couvert fait clignoter le bouton « Besoins »
+    const shortNeeds = this.ctx.sim.requirements.status().filter((r) => r.state === 'short').length;
+    this.needsBtn.classList.toggle('attention', shortNeeds > 0);
+    const needsText = shortNeeds > 0 ? `${t('hud.needs')} (${shortNeeds})` : t('hud.needs');
+    if (this.needsBtn.textContent !== needsText) this.needsBtn.textContent = needsText;
     const projections = this.ctx.sim.economy.projections();
     const lowDays = content.balance.economy.lowStockDays;
 

@@ -18,6 +18,7 @@ import { MissionPlanner } from '../ui/MissionPlanner';
 import { OpsPanel } from '../ui/OpsPanel';
 import { RadioPanel } from '../ui/RadioPanel';
 import { VillagePanel } from '../ui/VillagePanel';
+import { NeedsPanel } from '../ui/NeedsPanel';
 import { CampaignPanel } from '../ui/CampaignPanel';
 import { VehiclePanel } from '../ui/VehiclePanel';
 import { RosterPanel } from '../ui/RosterPanel';
@@ -70,6 +71,7 @@ export class UIScene extends Phaser.Scene {
       new MissionPlanner(this.layer, ctx),
       new RadioPanel(this.layer, ctx),
       new CampaignPanel(this.layer, ctx),
+      new NeedsPanel(this.layer, ctx),
       new VillagePanel(this.layer, ctx),
       new TutorialPanel(this.layer, ctx),
     ];

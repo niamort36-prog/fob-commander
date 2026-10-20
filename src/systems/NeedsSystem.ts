@@ -30,6 +30,8 @@ export class NeedsSystem implements System {
       const svc = Object.keys(content.building(b.defId).services ?? {})[0];
       return svc ? this.ctx.sim.agents.occupancy(b.id, svc) > 0 : false;
     });
+    // Latrines insuffisantes : l'hygiène se dégrade plus vite pour tous
+    const hygieneMult = this.ctx.sim.requirements.hygieneDecayMult();
     for (const a of Object.values(this.ctx.state.agents)) {
       if (a.status !== 'on_base') continue;
       a.disturbed = false;
@@ -37,7 +39,8 @@ export class NeedsSystem implements System {
 
       for (const nd of content.needs.needs) {
         if (nd.id === 'morale') continue;
-        a.needs[nd.id] -= (nd.decayPerHour * this.decayMult(a, nd.id) * minutes) / 60;
+        const crowd = nd.id === 'hygiene' ? hygieneMult : 1;
+        a.needs[nd.id] -= (nd.decayPerHour * this.decayMult(a, nd.id) * crowd * minutes) / 60;
       }
       // Le moral tend vers une cible qui dépend des conditions de vie.
       const drift = content.needs.morale.driftPerHour * this.moraleDriftMult(a);
@@ -132,6 +135,8 @@ export class NeedsSystem implements System {
     const cfg = this.ctx.content.needs.morale;
     let target = cfg.baseTarget + this.traitsOf(a).reduce((s, t) => s + (t.moraleBase ?? 0), 0);
     target += a.homeId ? cfg.bedBonus : -cfg.noBedPenalty;
+    // Base sous-dimensionnée pour son effectif (réfectoire, douches, latrines…)
+    target -= this.ctx.sim.requirements.moralePenalty();
     // Confort du logement (climatisation, literie), réduit si le courant manque
     const home = a.homeId ? this.ctx.state.fob.buildings[a.homeId] : undefined;
     if (home) {

@@ -104,7 +104,7 @@ describe('SaveSystem', () => {
     storage.setItem(key, JSON.stringify({ version: 2, summary: { slot: '2', savedAt: '', day: 1, minuteOfDay: 360, siteName: 'x', funds: 0, version: 2 }, state: v2 }));
 
     const st = ctx.sim.save.load('2')!;
-    expect(st.meta.version).toBe(14);
+    expect(st.meta.version).toBe(15);
     expect(st.checkpoint.entrants).toEqual([]);
     expect(st.region.initialized).toBe(false);
     expect(st.diplomacy.initialized).toBe(false);

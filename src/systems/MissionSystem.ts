@@ -617,7 +617,7 @@ export class MissionSystem implements System {
     for (const id of m.memberIds) {
       const a = s.agents[id];
       const xp = result === 'success' ? this.cfg.xpSuccess : result === 'partial' ? this.cfg.xpPartial : career.missionFailureXp;
-      this.ctx.sim.career.gain(a, xp + (woundedNames.has(` `) ? career.missionWoundedXp : 0));
+      this.ctx.sim.career.gain(a, xp + (woundedNames.has(`${a.rank} ${a.lastName}`) ? career.missionWoundedXp : 0));
     }
     const prog = this.ctx.content.balance.progression;
     this.ctx.sim.economy.gainPoints(result === 'success' ? (prog.pointsMissionSuccess ?? 0) : result === 'partial' ? (prog.pointsMissionPartial ?? 0) : 0);

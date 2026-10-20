@@ -239,6 +239,7 @@ export class FobScene extends Phaser.Scene {
     kb.on('keydown-M', () => this.ctx.bus.emit('ui:toggleMap', {}));
     kb.on('keydown-O', () => this.ctx.bus.emit('ui:toggleOps', {}));
     kb.on('keydown-C', () => this.ctx.bus.emit('ui:toggleCampaign', {}));
+    kb.on('keydown-B', () => this.ctx.bus.emit('ui:toggleNeeds', {}));
     kb.on('keydown-G', () => {
       this.gridPinned = !this.gridPinned;
       this.terrain.setGridVisible(this.tool.kind === 'build' || this.gridPinned);

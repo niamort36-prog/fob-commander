@@ -40,7 +40,8 @@
     "consumes": {
       "food": 1
     },
-    "usesMeals": true
+    "usesMeals": true,
+    "queue": true
   },
   {
     "id": "eat_mre",
@@ -70,6 +71,48 @@
     },
     "consumes": {
       "water": 3
+    },
+    "queue": true
+  },
+  {
+    "id": "toilet",
+    "name": "Va aux latrines",
+    "service": "toilet",
+    "fallback": "toilet_rough",
+    "inside": true,
+    "mode": "need",
+    "durationMin": 6,
+    "effectsPerHour": {
+      "toilet": 1200
+    },
+    "endWhenFull": "toilet",
+    "consumes": {
+      "water": 0.5
+    },
+    "queue": true
+  },
+  {
+    "id": "toilet_rough",
+    "name": "Se soulage derrière un mur",
+    "inside": false,
+    "wander": true,
+    "mode": "need",
+    "durationMin": 8,
+    "effectsPerHour": {
+      "toilet": 900,
+      "hygiene": -40,
+      "morale": -12
+    },
+    "endWhenFull": "toilet"
+  },
+  {
+    "id": "queue",
+    "name": "Fait la queue",
+    "inside": false,
+    "mode": "need",
+    "durationMin": 20,
+    "effectsPerHour": {
+      "morale": -3
     }
   },
   {

@@ -4,7 +4,7 @@ import type { GameContext } from '../core/GameContext';
 import type { ToolMode } from '../core/GameEvents';
 import { bagEntries, canAfford } from '../core/resources';
 import { formatNumber, t } from '../utils/i18n';
-import { clear, el } from './dom';
+import { clear, el, makeCollapsible } from './dom';
 
 interface Entry {
   def: BuildingDef;
@@ -50,8 +50,9 @@ export class BuildMenu {
     this.hint = el('div', { class: 'hint' });
     this.expandBtn = el('button', { class: 'btn wide expand', title: t('build.expandHint'), onClick: () => ctx.commands.push({ type: 'expandZone' }) });
 
+    const title = el('div', { class: 'panel-title' }, [el('span', { class: 'title-text', text: t('build.title') })]);
     this.root = el('div', { class: 'panel build-menu' }, [
-      el('div', { class: 'panel-title', text: t('build.title') }),
+      title,
       el('div', { class: 'tools' }, [this.selectBtn, this.demolishBtn]),
       tabBar,
       this.list,
@@ -59,6 +60,7 @@ export class BuildMenu {
       this.hint,
     ]);
     parent.append(this.root);
+    makeCollapsible(this.root, title, 'build');
 
     const firstWithContent = ctx.content.categories.find((c) => ctx.content.buildingsInCategory(c.id).length > 0);
     this.category = firstWithContent?.id ?? ctx.content.categories[0].id;

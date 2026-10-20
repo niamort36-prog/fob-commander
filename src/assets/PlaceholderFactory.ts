@@ -571,6 +571,53 @@ function drawGate(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: n
   }
 }
 
+/**
+ * Latrines : rangée de cabines de chantier en plastique bleu sur un caillebotis, porte claire,
+ * aération sur le toit et voyant libre / occupé.
+ */
+function drawLatrine(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number): void {
+  const { w, h } = geo;
+  // Caillebotis
+  poly(g, [P(0.05, 0.12, 0), P(w - 0.05, 0.12, 0), P(w - 0.05, h - 0.06, 0), P(0.05, h - 0.06, 0)], 0x7a6a4e);
+  g.lineStyle(1, 0x5a4c36, 0.6);
+  for (let u = 0.25; u < w - 0.1; u += 0.25) {
+    const a = P(u, 0.12, 0);
+    const b = P(u, h - 0.06, 0);
+    g.lineBetween(a.x, a.y, b.x, b.y);
+  }
+  // Cabines le long de la plus grande dimension, portes vers +y (face visible)
+  const n = Math.max(2, Math.round(w * 1.5));
+  const cw = (w - 0.16) / n;
+  const y0 = 0.18;
+  const y1 = h - 0.18;
+  const top = height - 3;
+  for (let i = 0; i < n; i++) {
+    const x0 = 0.08 + i * cw + 0.02;
+    const x1 = 0.08 + (i + 1) * cw - 0.02;
+    prism(g, P, x0, y0, x1, y1, 0, top, i % 2 ? shade(color, 0.94) : color);
+    // Toit bombé plus clair et aération
+    poly(g, [P(x0, y0, top), P(x1, y0, top), P(x1, y1, top), P(x0, y1, top)], shade(color, 1.25));
+    const vent = P((x0 + x1) / 2, (y0 + y1) / 2, top + 1);
+    g.fillStyle(shade(color, 0.6), 1);
+    g.fillRect(Math.round(vent.x) - 1, Math.round(vent.y) - 3, 3, 3);
+    // Porte claire sur la face avant, poignée et voyant
+    poly(g, [P(x0 + 0.04, y1, 1), P(x1 - 0.04, y1, 1), P(x1 - 0.04, y1, top - 3), P(x0 + 0.04, y1, top - 3)], accent);
+    const handle = P(x1 - 0.09, y1, top * 0.45);
+    g.fillStyle(0x3a3a34, 1);
+    g.fillRect(Math.round(handle.x), Math.round(handle.y), 1, 2);
+    const lamp = P(x1 - 0.09, y1, top * 0.62);
+    g.fillStyle(i % 3 === 1 ? 0xc0302a : 0x3f9a4a, 1);
+    g.fillRect(Math.round(lamp.x), Math.round(lamp.y), 2, 1);
+    // Arête de séparation
+    g.lineStyle(1, shade(color, 0.55), 0.8);
+    const e0 = P(x1, y1, 0);
+    const e1 = P(x1, y1, top);
+    g.lineBetween(e0.x, e0.y, e1.x, e1.y);
+  }
+  // Réservoir d'eau de rinçage au bout de la rangée
+  prism(g, P, w - 0.22, 0.02, w - 0.04, 0.2, 0, top + 2, 0x6e6b5c);
+}
+
 /** Poste de garde : guérite en bois à toit de tôle, ceinturée de sacs de sable. */
 function drawBooth(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number): void {
   const { w, h } = geo;
@@ -909,6 +956,8 @@ function drawBuilding(g: G, def: BuildingDef, geo: BuildingGeometry, tw: number,
       return drawGate(g, P, geo, color, accent, height, gateAlongX(def, rot), def.gate?.leaves === 2);
     case 'booth':
       return drawBooth(g, P, geo, color, accent, height);
+    case 'latrine':
+      return drawLatrine(g, P, geo, color, accent, height);
     case 'tent':
       return drawTent(g, P, geo, color, height, door);
     case 'tank':

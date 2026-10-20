@@ -219,6 +219,12 @@ const MIGRATIONS: Record<number, (file: SaveFile, content: ContentRegistry) => S
     st.checkpoint ??= emptyCheckpoint();
     return { ...file, version: 14, state: st };
   },
+  /** v14 → v15 : besoin « toilettes » (latrines). */
+  14: (file) => {
+    const st = file.state;
+    for (const a of Object.values(st.agents)) a.needs.toilet ??= 100;
+    return { ...file, version: 15, state: st };
+  },
 };
 
 function defaultStorage(): StorageLike | null {

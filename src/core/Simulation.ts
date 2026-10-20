@@ -25,6 +25,7 @@ import { IntelSystem } from '../systems/IntelSystem';
 import { VisitSystem } from '../systems/VisitSystem';
 import { CheckpointSystem } from '../systems/CheckpointSystem';
 import { CareerSystem } from '../systems/CareerSystem';
+import { RequirementsSystem } from '../systems/RequirementsSystem';
 import { GroupSystem } from '../systems/GroupSystem';
 import { LogisticsSystem } from '../systems/LogisticsSystem';
 import { WorldSystem } from '../systems/WorldSystem';
@@ -45,6 +46,7 @@ export class Simulation {
   readonly visits: VisitSystem;
   readonly checkpoint: CheckpointSystem;
   readonly career: CareerSystem;
+  readonly requirements: RequirementsSystem;
   readonly groups: GroupSystem;
   readonly logistics: LogisticsSystem;
   readonly world: WorldSystem;
@@ -73,6 +75,7 @@ export class Simulation {
     this.visits = new VisitSystem(ctx);
     this.checkpoint = new CheckpointSystem(ctx);
     this.career = new CareerSystem(ctx);
+    this.requirements = new RequirementsSystem(ctx);
     this.groups = new GroupSystem(ctx);
     this.logistics = new LogisticsSystem(ctx);
     this.world = new WorldSystem(ctx);
@@ -88,6 +91,7 @@ export class Simulation {
       this.visits, // après SupplySystem : pilote les véhicules des délégations
       this.checkpoint, // civils fouillés au poste de garde (véhicules pilotés ici aussi)
       this.career, // promotions (XP des activités, missions, combats)
+      this.requirements, // besoins de la base selon l'effectif
       this.groups,
       this.attacks,
       this.missions,
