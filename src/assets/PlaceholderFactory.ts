@@ -534,6 +534,74 @@ function drawHesco(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: 
   g.lineBetween(m2.x, m2.y, m3.x, m3.y);
 }
 
+/**
+ * Cadre d'une porte dans le mur : deux piliers de gabions et un seuil ; pour un portail, une
+ * traverse métallique. Les battants, animés, sont dessinés par le rendu (GateRenderer).
+ */
+function drawGate(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number, alongX: boolean, double: boolean): void {
+  const { w, h } = geo;
+  const p = 0.24; // épaisseur des piliers
+  // Seuil de gravier tassé
+  const sill = alongX ? [P(0, 0.3, 0), P(w, 0.3, 0), P(w, 0.7, 0), P(0, 0.7, 0)] : [P(0.3, 0, 0), P(0.7, 0, 0), P(0.7, h, 0), P(0.3, h, 0)];
+  poly(g, sill, shade(color, 0.8), 0.7);
+  const pillar = (x0: number, y0: number, x1: number, y1: number): void => {
+    prism(g, P, x0, y0, x1, y1, 0, height, color);
+    poly(g, [P(x0 + 0.03, y0 + 0.03, height), P(x1 - 0.03, y0 + 0.03, height), P(x1 - 0.03, y1 - 0.03, height), P(x0 + 0.03, y1 - 0.03, height)], shade(color, 1.2));
+    g.lineStyle(1, shade(color, 0.5), 0.6);
+    const a = alongX ? P(x0 + (x1 - x0) / 2, y1, 0) : P(x1, y0 + (y1 - y0) / 2, 0);
+    const b = alongX ? P(x0 + (x1 - x0) / 2, y1, height) : P(x1, y0 + (y1 - y0) / 2, height);
+    g.lineBetween(a.x, a.y, b.x, b.y);
+  };
+  if (alongX) {
+    pillar(0, 0.15, p, 0.85);
+    pillar(w - p, 0.15, w, 0.85);
+  } else {
+    pillar(0.15, 0, 0.85, p);
+    pillar(0.15, h - p, 0.85, h);
+  }
+  if (double) {
+    // Traverse métallique au-dessus du passage
+    const z0 = height + 2;
+    const a = alongX ? P(p / 2, 0.5, z0) : P(0.5, p / 2, z0);
+    const b = alongX ? P(w - p / 2, 0.5, z0) : P(0.5, h - p / 2, z0);
+    g.lineStyle(3, shade(accent, 0.7), 1);
+    g.lineBetween(a.x, a.y, b.x, b.y);
+    g.lineStyle(1, shade(accent, 1.3), 0.8);
+    g.lineBetween(a.x, a.y - 1, b.x, b.y - 1);
+  }
+}
+
+/** Poste de garde : guérite en bois à toit de tôle, ceinturée de sacs de sable. */
+function drawBooth(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number): void {
+  const { w, h } = geo;
+  const bag = 0xa8946a;
+  // Sacs de sable sur trois côtés (l'arrière reste ouvert)
+  prism(g, P, 0.06, 0.06, w - 0.06, 0.2, 0, 8, bag);
+  prism(g, P, 0.06, 0.2, 0.2, h - 0.06, 0, 8, bag);
+  prism(g, P, 0.2, h - 0.2, w - 0.35, h - 0.06, 0, 8, bag);
+  g.lineStyle(1, shade(bag, 0.6), 0.5);
+  for (const z of [3, 6]) {
+    const a = P(0.2, h - 0.06, z);
+    const b = P(w - 0.35, h - 0.06, z);
+    g.lineBetween(a.x, a.y, b.x, b.y);
+  }
+  // Guérite et toit
+  prism(g, P, 0.3, 0.25, w - 0.25, h - 0.3, 0, height - 6, color);
+  const win = [P(0.38, h - 0.3, height - 10), P(w - 0.33, h - 0.3, height - 10), P(w - 0.33, h - 0.3, height - 15), P(0.38, h - 0.3, height - 15)];
+  poly(g, win, 0x2b3a46);
+  prism(g, P, 0.2, 0.15, w - 0.15, h - 0.2, height - 6, height - 4, accent);
+  // Lampe et panneau « STOP »
+  const lamp = P(w - 0.2, h - 0.25, height - 7);
+  g.fillStyle(0xffe08a, 1);
+  g.fillRect(Math.round(lamp.x) - 1, Math.round(lamp.y) - 1, 2, 2);
+  const sign = P(w - 0.12, h - 0.12, 14);
+  g.fillStyle(0xc0302a, 1);
+  g.fillRect(Math.round(sign.x) - 2, Math.round(sign.y) - 2, 5, 4);
+  const pole0 = P(w - 0.12, h - 0.12, 0);
+  g.lineStyle(1, 0x3a3a34, 1);
+  g.lineBetween(pole0.x, pole0.y, sign.x, sign.y + 2);
+}
+
 function drawTent(g: G, P: Proj, geo: BuildingGeometry, color: number, height: number, door: DoorFace = 'x'): void {
   const { w, h } = geo;
   const i = 0.12;
@@ -783,6 +851,13 @@ function doorFace(def: BuildingDef, rot: Rotation): DoorFace {
   return side.x > 0 ? 'x' : side.y > 0 ? 'y' : null;
 }
 
+/** Axe du mur dans lequel la porte est posée : le long de x (passage selon y) ou l'inverse. */
+export function gateAlongX(def: BuildingDef, rot: Rotation): boolean {
+  const [w, h] = def.footprint;
+  if (w !== h) return (rot % 2 === 0) === w > h;
+  return rot % 2 === 0;
+}
+
 function drawBuilding(g: G, def: BuildingDef, geo: BuildingGeometry, tw: number, th: number, rot: Rotation = 0): void {
   const door = doorFace(def, rot);
   const P: Proj = (gx, gy, z) => ({
@@ -797,6 +872,10 @@ function drawBuilding(g: G, def: BuildingDef, geo: BuildingGeometry, tw: number,
       return drawFlat(g, P, geo, color, accent, def.visual.markings);
     case 'hesco':
       return drawHesco(g, P, geo, color, accent, height);
+    case 'gate':
+      return drawGate(g, P, geo, color, accent, height, gateAlongX(def, rot), def.gate?.leaves === 2);
+    case 'booth':
+      return drawBooth(g, P, geo, color, accent, height);
     case 'tent':
       return drawTent(g, P, geo, color, height, door);
     case 'tank':

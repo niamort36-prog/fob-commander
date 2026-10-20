@@ -15,6 +15,11 @@ const ROCK_COST = 4;
 const VEHICLE_FLAT_COST = 0.5;
 const VEHICLE_TRACK_COST = 0.6;
 const VEHICLE_OFFROAD_COST = 1.5;
+/** Un piéton ralentit un peu pour passer une porte. */
+const GATE_WALK_COST = 1.3;
+/** Coût d'itinéraire d'une porte ou d'un mur à forcer pour un assaillant. */
+const GATE_BREACH_COST = 25;
+const WALL_BREACH_COST = 70;
 
 export class NavGrid implements CostGrid {
   width = 0;
@@ -23,6 +28,14 @@ export class NavGrid implements CostGrid {
   cost = new Float32Array(0);
   /** Coûts véhicules. */
   readonly vehicles: { width: number; height: number; cost: Float32Array } = { width: 0, height: 0, cost: new Float32Array(0) };
+  /**
+   * Coûts des assaillants : comme les piétons, mais portes et murs ne s'ouvrent pas devant eux.
+   * Ils restent « franchissables » à un coût élevé (il faut les forcer) : l'itinéraire préfère une
+   * ouverture existante, puis une porte, et en dernier recours un mur à souffler.
+   */
+  readonly enemy: { width: number; height: number; cost: Float32Array } = { width: 0, height: 0, cost: new Float32Array(0) };
+  /** Case → porte ou tronçon de mur à forcer. */
+  private breach = new Map<number, string>();
   private dirty = true;
   private readonly astar = new AStar();
 
@@ -55,6 +68,12 @@ export class NavGrid implements CostGrid {
     v.height = fob.height;
     if (v.cost.length !== n) v.cost = new Float32Array(n);
 
+    const e = this.enemy;
+    e.width = fob.width;
+    e.height = fob.height;
+    if (e.cost.length !== n) e.cost = new Float32Array(n);
+    this.breach.clear();
+
     for (let i = 0; i < n; i++) {
       const t = content.terrainAt(fob.terrain[i]);
       this.cost[i] = t.buildable ? 1 : ROCK_COST;
@@ -63,15 +82,24 @@ export class NavGrid implements CostGrid {
     for (const b of Object.values(fob.buildings)) {
       const def = content.building(b.defId);
       const flat = def.visual.style === 'flat';
-      const walk = flat ? (b.state === 'construction' ? 1 : 1 / (def.walkSpeedMult ?? 1)) : Infinity;
-      const drive = flat ? (b.state === 'construction' ? VEHICLE_OFFROAD_COST : VEHICLE_FLAT_COST) : Infinity;
+      let walk = flat ? (b.state === 'construction' ? 1 : 1 / (def.walkSpeedMult ?? 1)) : Infinity;
+      let drive = flat ? (b.state === 'construction' ? VEHICLE_OFFROAD_COST : VEHICLE_FLAT_COST) : Infinity;
+      // Porte : le personnel passe (et les véhicules s'il s'agit d'un portail)
+      if (def.gate) {
+        walk = GATE_WALK_COST;
+        drive = def.gate.vehicles ? VEHICLE_FLAT_COST : Infinity;
+      }
+      const breachable = !!def.gate || (def.placement.line && def.breachMin !== undefined);
       for (const c of BuildSystem.cells(def, b.pos, b.rot)) {
         if (c.x < 0 || c.y < 0 || c.x >= fob.width || c.y >= fob.height) continue;
         const i = c.y * fob.width + c.x;
         this.cost[i] = walk;
         v.cost[i] = drive;
+        if (breachable) this.breach.set(i, b.id);
       }
     }
+    for (let i = 0; i < n; i++) e.cost[i] = this.cost[i];
+    for (const [i, id] of this.breach) e.cost[i] = content.building(fob.buildings[id].defId).gate ? GATE_BREACH_COST : WALL_BREACH_COST;
     this.dirty = false;
   }
 
@@ -148,6 +176,27 @@ export class NavGrid implements CostGrid {
 
   findVehiclePath(start: GridPos, goals: readonly GridPos[]): GridPos[] | null {
     return this.astar.find(this.vehicles, start, goals, this.ctx.content.balance.agents.maxPathNodes);
+  }
+
+  /** Itinéraire d'un assaillant (passe par les ouvertures, sinon par une porte ou un mur à forcer). */
+  findEnemyPath(start: GridPos, goals: readonly GridPos[]): GridPos[] | null {
+    return this.astar.find(this.enemy, start, goals, this.ctx.content.balance.agents.maxPathNodes * 2);
+  }
+
+  /** Porte ou tronçon de mur à forcer sur cette case (null si aucun). */
+  breachAt(x: number, y: number): string | null {
+    return this.inBounds(x, y) ? (this.breach.get(y * this.width + x) ?? null) : null;
+  }
+
+  /** Case que l'assaillant peut traverser sans rien forcer. */
+  enemyPassable(x: number, y: number): boolean {
+    return this.walkable(x, y) && !this.breach.has(y * this.width + x);
+  }
+
+  /** Porte (bâtiment avec `gate`) sur cette case, ou null. */
+  gateAt(x: number, y: number): string | null {
+    const id = this.breachAt(x, y);
+    return id && this.ctx.content.building(this.ctx.state.fob.buildings[id]?.defId ?? 'hesco').gate ? id : null;
   }
 
   /** Case franchissable aléatoire dans un rayon donné (null si aucune trouvée). */

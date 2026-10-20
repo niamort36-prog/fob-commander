@@ -114,7 +114,8 @@
         6,
         10
       ],
-      "durationMin": 150
+      "durationMin": 150,
+      "penetrate": true
     }
   }
 }

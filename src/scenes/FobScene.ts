@@ -8,6 +8,7 @@ import type { Selection, ToolMode } from '../core/GameEvents';
 import type { BuildingInstance, GridPos, Rotation } from '../core/GameState';
 import { AgentRenderer } from '../render/AgentRenderer';
 import { PropRenderer } from '../render/PropRenderer';
+import { GateRenderer } from '../render/GateRenderer';
 import { BuildingRenderer } from '../render/BuildingRenderer';
 import { CombatRenderer } from '../render/CombatRenderer';
 import { CameraController } from '../render/CameraController';
@@ -30,6 +31,7 @@ export class FobScene extends Phaser.Scene {
   private zone!: ZoneRenderer;
   private buildings!: BuildingRenderer;
   private props!: PropRenderer;
+  private gates!: GateRenderer;
   private agents!: AgentRenderer;
   private vehicles!: VehicleRenderer;
   private combat!: CombatRenderer;
@@ -70,6 +72,7 @@ export class FobScene extends Phaser.Scene {
     this.zone = new ZoneRenderer(this, this.ctx, this.iso);
     this.buildings = new BuildingRenderer(this, this.ctx, this.iso);
     this.props = new PropRenderer(this, this.ctx, this.iso);
+    this.gates = new GateRenderer(this, this.ctx, this.iso);
     this.agents = new AgentRenderer(this, this.ctx, this.iso);
     this.vehicles = new VehicleRenderer(this, this.ctx, this.iso);
     this.combat = new CombatRenderer(this, this.ctx, this.iso);
@@ -101,6 +104,7 @@ export class FobScene extends Phaser.Scene {
     this.refreshPreview();
     this.buildings.sync();
     this.props.sync();
+    this.gates.sync(time);
     this.agents.sync(this.ctx.sim.alpha);
     this.vehicles.sync(this.ctx.sim.alpha, time);
     this.combat.sync(this.ctx.sim.alpha);
@@ -355,6 +359,7 @@ export class FobScene extends Phaser.Scene {
     this.zone.destroy();
     this.buildings.destroy();
     this.props.destroy();
+    this.gates.destroy();
     this.agents.destroy();
     this.vehicles.destroy();
     this.combat.destroy();

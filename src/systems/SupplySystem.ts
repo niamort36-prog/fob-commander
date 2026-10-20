@@ -37,6 +37,8 @@ const ACTIVE_STATUSES: readonly OrderStatus[] = ['pending', 'en_route', 'unloadi
 const ORDER_HISTORY = 20;
 export const AIR_ALTITUDE = 70;
 const LANDING_DISTANCE = 5;
+/** Durée du contrôle d'un véhicule à une porte gardée (minutes de jeu). */
+const GATE_CHECK_MIN = 2;
 
 export function bagTotal(bag: ResourceBag): number {
   return bagEntries(bag).reduce((s, [, v]) => s + v, 0);
@@ -488,6 +490,21 @@ export class SupplySystem implements System {
     }
   }
 
+  /** Une sentinelle occupe un poste de garde à moins de 4 cases de cette porte. */
+  gateGuarded(gateId: Id): boolean {
+    const gate = this.ctx.state.fob.buildings[gateId];
+    if (!gate) return false;
+    const gc = this.ctx.sim.agents.buildingCenter(gate);
+    return Object.values(this.ctx.state.agents).some((a) => {
+      const act = a.activity;
+      if (act?.id !== 'guard' || act.stage !== 'acting' || !act.targetId) return false;
+      const post = this.ctx.state.fob.buildings[act.targetId];
+      if (!post || post.defId !== 'guard_post') return false;
+      const pc = this.ctx.sim.agents.buildingCenter(post);
+      return Math.hypot(pc.x - gc.x, pc.y - gc.y) <= 4;
+    });
+  }
+
   /** Avance le long du trajet ; renvoie true à l'arrivée. */
   private move(v: Vehicle, vdef: VehicleDef): boolean {
     const nav = this.ctx.sim.agents.nav;
@@ -532,6 +549,18 @@ export class SupplySystem implements System {
         else this.route(v);
         return false;
       }
+      // Porte gardée : arrêt pour contrôle avant de la franchir
+      const gate = nav.gateAt(next.x, next.y);
+      if (gate && v.gateChecked !== gate && this.gateGuarded(gate)) {
+        if (v.gateWaitUntil === undefined) {
+          v.gateWaitUntil = this.now + Math.max(1, Math.round(GATE_CHECK_MIN / this.ctx.content.balance.time.minutesPerTick));
+          pushLog(this.ctx, 'info', 'log.gateCheck', { vehicle: vdef.name });
+        }
+        if (this.now < v.gateWaitUntil) return false;
+        v.gateChecked = gate;
+        v.gateWaitUntil = undefined;
+      }
+      if (!gate && v.gateChecked) v.gateChecked = null;
       const tx = next.x + 0.5;
       const ty = next.y + 0.5;
       const dx = tx - v.pos.x;

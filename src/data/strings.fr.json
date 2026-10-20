@@ -709,5 +709,16 @@
   "map.incidents": "FAITS MARQUANTS",
   "map.noIncident": "Rien de signalé ces derniers jours.",
   "map.distance": "Distance de la FOB",
-  "map.travel": "Trajet : à pied {foot} h · véhicule {car} h · hélico {heli} min"
+  "map.travel": "Trajet : à pied {foot} h · véhicule {car} h · hélico {heli} min",
+  "log.breach": "Brèche ! L'ennemi a forcé : {name}.",
+  "log.breaching": "Des assaillants tentent de forcer : {name} !",
+  "log.gateCheck": "Contrôle à l'entrée : {vehicle}.",
+  "info.gate": "Passage",
+  "info.gateVehicles": "personnel et véhicules",
+  "info.gatePeople": "personnel seulement",
+  "info.guarded": "Contrôle",
+  "info.guardedYes": "poste de garde occupé",
+  "info.guardedNo": "aucun poste de garde occupé",
+  "info.breach": "Résistance à une attaque",
+  "info.breachMin": "≈ {min} min pour un assaillant"
 }

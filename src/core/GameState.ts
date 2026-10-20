@@ -203,6 +203,9 @@ export type VehicleState =
 export interface Vehicle {
   id: Id;
   defId: string; // → vehicles.json
+  /** Contrôle à une porte gardée : arrêt jusqu'à ce tick, porte déjà contrôlée. */
+  gateWaitUntil?: number;
+  gateChecked?: Id | null;
   pos: { x: number; y: number };
   prevPos: { x: number; y: number };
   path: GridPos[];
@@ -266,8 +269,10 @@ export interface Enemy {
   path: GridPos[];
   health: number;
   skill: number;
-  state: 'approach' | 'engage' | 'retreat';
+  state: 'approach' | 'engage' | 'retreat' | 'breach';
   cooldown: number; // tick du prochain tir
+  /** Bâtiment (porte, mur) que l'assaillant est en train de forcer. */
+  breachId?: Id | null;
 }
 
 export interface CombatStats {

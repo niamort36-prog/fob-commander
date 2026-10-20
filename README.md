@@ -504,10 +504,26 @@ Fonds de départ ×1,8 (`sites.json`), budget quotidien du commandement 1 500 �
 6 000 → 4 000 $, convoi 1 200 → 900 $, carburant 3 000 → 2 000 $, hélicoptère 5 000 → 4 000 $.
 Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 à 14 000 $ en caisse.
 
+## Portes, poste de garde et assauts dans l'enceinte
+
+- **Porte piétonne** (1 case, 250 $) et **portail double** (2 cases, 600 $) dans l'onglet
+  Défense : ils se posent directement sur un tronçon de hesco existant (qui est remplacé), et
+  pivotent avec R. Les battants grillagés s'ouvrent vers l'intérieur à l'approche d'un soldat
+  (et d'un véhicule pour le portail) puis se referment. Seul le portail laisse passer les véhicules.
+- **Poste de garde** (400 $) : guérite sacs de sable + tôle, lampe et panneau STOP. Un soldat de
+  garde y contrôle les portes à moins de 4 cases : chaque véhicule qui entre ou sort marque un
+  arrêt de 2 min (journal : « contrôle à la porte »).
+- **Assauts** (`combat.json` → `penetrate`) : les assaillants cherchent un chemin vers le TOC,
+  puis les dépôts de munitions/artillerie, puis les tentes. Ils passent par une ouverture du mur
+  si elle existe ; sinon ils forcent la porte la plus accessible (10 min pour une porte, 16 pour
+  un portail) ou, en dernier recours, éventrent un hesco (35 min), sous le feu des défenseurs.
+  La brèche détruit l'élément et ouvre le passage. Le harcèlement reste, lui, à l'extérieur.
+  Le panneau d'info d'une porte ou d'un mur indique le temps de brèche restant.
+
 ## Ajouter du contenu (sans toucher au code)
 
 - **Bâtiment** : ajouter une entrée dans `src/data/buildings.json` (catégorie, emprise, coût, entretien,
-  consommation, stockage, style visuel parmi `box`, `flat`, `hesco`, `tent`, `tank`, `tower`, `building`) et services offerts aux agents.
+  consommation, stockage, style visuel parmi `box`, `flat`, `hesco`, `tent`, `tank`, `tower`, `building`, `gate`, `booth`) et services offerts aux agents.
 - **Site de départ** : `src/data/sites.json` (ressources initiales, budget, périmètre, terrain).
 - **Événement** : une entrée dans `events.json` (personnage, texte, choix, issues, effets).
 - **Personnel** : `personnel.json`, `skills.json`, `traits.json`, `names.json`, force de départ dans

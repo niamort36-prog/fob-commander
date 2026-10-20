@@ -2,7 +2,7 @@
   {
     "id": "hesco",
     "name": "Mur HESCO",
-    "desc": "Gabions grillagés remplis de terre. Pose en ligne par glisser. Bloque le passage : prévoyez une entrée pour le personnel et les véhicules.",
+    "desc": "Gabions grillagés remplis de terre. Pose en ligne par glisser. Bloque le passage : prévoyez une porte pour le personnel et un portail pour les véhicules. Un assaillant peut le souffler à l'explosif.",
     "category": "defense",
     "footprint": [
       1,
@@ -30,6 +30,140 @@
       "color": "#b39a6b",
       "accent": "#c9b07c",
       "height": 22
+    },
+    "breachMin": 35
+  },
+  {
+    "id": "gate_small",
+    "name": "Porte piétonne",
+    "desc": "Porte grillagée dans le mur d'enceinte, pour le personnel. Se pose aussi directement sur un tronçon de mur hesco. Fermée à l'ennemi, qui doit l'enfoncer.",
+    "category": "defense",
+    "footprint": [
+      1,
+      1
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false
+    },
+    "cost": {
+      "funds": 250
+    },
+    "buildTimeMin": 40,
+    "upkeepPerDay": {
+      "funds": 1
+    },
+    "hp": 200,
+    "gate": {
+      "vehicles": false,
+      "leaves": 1
+    },
+    "breachMin": 10,
+    "replaces": "hesco",
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.gate_small",
+      "style": "gate",
+      "color": "#b39a6b",
+      "accent": "#5f6152",
+      "height": 22
+    }
+  },
+  {
+    "id": "gate_double",
+    "name": "Portail véhicules",
+    "desc": "Portail à deux battants pour les camions et les véhicules de patrouille. Se pose sur deux tronçons de mur hesco. Les véhicules s'y arrêtent pour un contrôle si un poste de garde occupé est à côté.",
+    "category": "defense",
+    "footprint": [
+      2,
+      1
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false
+    },
+    "cost": {
+      "funds": 600
+    },
+    "buildTimeMin": 90,
+    "upkeepPerDay": {
+      "funds": 2
+    },
+    "hp": 320,
+    "gate": {
+      "vehicles": true,
+      "leaves": 2
+    },
+    "breachMin": 16,
+    "replaces": "hesco",
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.gate_double",
+      "style": "gate",
+      "color": "#b39a6b",
+      "accent": "#5f6152",
+      "height": 24
+    }
+  },
+  {
+    "id": "guard_post",
+    "name": "Poste de garde",
+    "desc": "Guérite protégée par des sacs de sable, à placer près d'une porte. Une sentinelle y contrôle les entrées et sorties (arrêt des véhicules) et tire à l'abri pendant une attaque.",
+    "category": "defense",
+    "footprint": [
+      1,
+      1
+    ],
+    "rotatable": true,
+    "placement": {
+      "line": false
+    },
+    "cost": {
+      "funds": 400
+    },
+    "buildTimeMin": 60,
+    "upkeepPerDay": {
+      "funds": 2
+    },
+    "hp": 180,
+    "consumptionPerDay": {
+      "ammo": 2
+    },
+    "supplies": {
+      "ammo": {
+        "capacity": 15,
+        "refillBelow": 6
+      }
+    },
+    "services": {
+      "guard": {
+        "slots": 1,
+        "standZ": 1,
+        "hidePx": 7
+      }
+    },
+    "breachMin": 12,
+    "unlock": {
+      "reputation": 0,
+      "points": 0
+    },
+    "visual": {
+      "key": "bld.guard_post",
+      "style": "booth",
+      "color": "#8a7f5a",
+      "accent": "#c9b07c",
+      "height": 26
+    },
+    "light": {
+      "radius": 1.4,
+      "color": "#ffe2a8",
+      "power": false
     }
   },
   {

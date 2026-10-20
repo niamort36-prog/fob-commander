@@ -31,7 +31,7 @@ export interface CategoryDef {
   order: number;
 }
 
-export const VISUAL_STYLES = ['box', 'flat', 'hesco', 'tent', 'tank', 'tower', 'building', 'bunker', 'pole', 'howitzer', 'range', 'course', 'killhouse', 'workout'] as const;
+export const VISUAL_STYLES = ['box', 'flat', 'hesco', 'tent', 'tank', 'tower', 'building', 'bunker', 'pole', 'howitzer', 'range', 'course', 'killhouse', 'workout', 'gate', 'booth'] as const;
 export type VisualStyle = (typeof VISUAL_STYLES)[number];
 
 /** Service rendu par un bâtiment aux habitants (couchage, repas, garde…). */
@@ -108,6 +108,12 @@ export interface BuildingDef {
   cleaning?: { dirtPerUse: number };
   /** Point de retrait des matériaux de construction (entrepôt, zone de déchargement). */
   materialDepot?: boolean;
+  /** Porte dans un mur : franchissable par le personnel (et les véhicules si portail), fermée à l'ennemi. */
+  gate?: { vehicles: boolean; leaves: 1 | 2 };
+  /** Minutes qu'il faut à un assaillant pour forcer ce bâtiment (porte enfoncée, mur soufflé à l'explosif). */
+  breachMin?: number;
+  /** Peut se poser à la place d'un tronçon de ce bâtiment (une porte dans un mur hesco). */
+  replaces?: string;
   visual: {
     key: string;
     style: VisualStyle;
@@ -1379,6 +1385,8 @@ export interface AttackDef {
   agentDamage?: [number, number];
   enemies?: [number, number];
   durationMin?: number;
+  /** Les assaillants cherchent à entrer dans la base (brèches, portes et murs forcés). */
+  penetrate?: boolean;
 }
 
 export interface CombatConfig {

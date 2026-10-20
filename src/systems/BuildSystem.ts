@@ -186,7 +186,9 @@ export class BuildSystem implements System {
       const i = c.y * fob.width + c.x;
       const terrain = this.ctx.content.terrainAt(fob.terrain[i]);
       if (!terrain.buildable || (allowed && !allowed.includes(terrain.id))) return 'terrain';
-      if (fob.occupancy[i] !== null) return 'occupied';
+      const occ = fob.occupancy[i];
+      // Une porte peut prendre la place d'un tronçon de mur
+      if (occ !== null && !(def.replaces && fob.buildings[occ]?.defId === def.replaces)) return 'occupied';
     }
     return null;
   }
@@ -241,6 +243,13 @@ export class BuildSystem implements System {
       moduleWork: null,
     };
     spend(state, def.cost);
+    // Porte posée dans un mur : les tronçons remplacés disparaissent
+    if (def.replaces) {
+      for (const c of BuildSystem.cells(def, b.pos, b.rot)) {
+        const old = this.buildingAt(c);
+        if (old && old.defId === def.replaces) this.destroy(old.id, true);
+      }
+    }
     if (b.state === 'construction') this.ctx.sim.logistics.startMaterials(b, def.cost);
     state.fob.buildings[b.id] = b;
     this.setOccupancy(b, b.id);
@@ -400,6 +409,18 @@ export class BuildSystem implements System {
   }
 
   /** Dégâts (tirs, explosions, tempête) : augmente l'usure et met à jour l'état du bâtiment. */
+  /** Supprime un bâtiment sans remboursement (mur remplacé par une porte, brèche ouverte par l'ennemi). */
+  destroy(id: Id, quiet = false): boolean {
+    const state = this.ctx.state;
+    const b = state.fob.buildings[id];
+    if (!b) return false;
+    this.setOccupancy(b, null);
+    delete state.fob.buildings[id];
+    if (!quiet) pushLog(this.ctx, 'bad', 'log.breach', { name: this.ctx.content.building(b.defId).name });
+    this.ctx.bus.emit('building:removed', { id, defId: b.defId, refund: {} });
+    return true;
+  }
+
   applyDamage(b: BuildingInstance, amount: number): void {
     if (b.state === 'construction' || amount <= 0) return;
     b.wear = Math.min(1, b.wear + amount);

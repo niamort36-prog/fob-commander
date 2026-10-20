@@ -21,6 +21,9 @@ import type { System } from './System';
 import { powerRatio } from './lighting';
 import { gearOf, installedModules } from './modules';
 
+/** Objectifs d'un assaut, du plus convoité au moins convoité (liste vide = tout bâtiment). */
+const OBJECTIVE_PRIORITY: string[][] = [['toc'], ['ammo_depot', 'artillery'], ['tent_group', 'dfac', 'infirmary'], []];
+
 interface Shooter {
   pos: { x: number; y: number };
   z: number;
@@ -41,6 +44,8 @@ export class AttackSystem implements System {
   private artilleryAnnounced = false;
   /** Prochaine rafale de chaque hélicoptère de combat (non sauvegardé). */
   private readonly heliReady = new Map<Id, number>();
+  /** Portes et murs dont on a déjà signalé qu'ils étaient attaqués (pendant l'attaque en cours). */
+  private readonly breachAnnounced = new Set<Id>();
 
   constructor(private readonly ctx: GameContext) {}
 
@@ -124,6 +129,7 @@ export class AttackSystem implements System {
     s.combat = c;
     this.cooldowns.clear();
     this.positions.clear();
+    this.breachAnnounced.clear();
     this.wounded.clear();
     pushLog(this.ctx, 'bad', 'log.attackStarted', { name: def.name });
     this.ctx.bus.emit('combat:started', { attackId, mode });
@@ -380,6 +386,8 @@ export class AttackSystem implements System {
     const s = this.ctx.state;
     const c = s.combat;
     const nav = this.ctx.sim.agents.nav;
+    nav.ensure();
+    const penetrate = this.ctx.content.combat.attacks[c.attackId ?? '']?.penetrate === true;
     const losses = c.initialEnemies - Object.keys(c.enemies).length;
     const retreat = this.now >= c.endsTick || losses >= Math.ceil(c.initialEnemies * this.cfg.retreatAtLosses);
     for (const e of Object.values(c.enemies)) {
@@ -397,6 +405,12 @@ export class AttackSystem implements System {
         continue;
       }
       const target = this.enemyTarget(e, def.range);
+      // En train de forcer une porte ou un mur : on continue (en tirant si un soldat se montre)
+      if (e.state === 'breach') {
+        if (target?.agent && this.now >= e.cooldown) this.enemyShoot(e, target);
+        this.breachStep(e);
+        continue;
+      }
       // Un soldat en vue : on s'arrête et on tire. Seulement des bâtiments : on tire en avançant
       // jusqu'au périmètre, pour accrocher les défenseurs abrités derrière les murs.
       if (target?.agent) {
@@ -406,15 +420,129 @@ export class AttackSystem implements System {
         continue;
       }
       if (target && this.now >= e.cooldown) this.enemyShoot(e, target);
+      // Assaut : plus personne en vue, on reprend la progression vers l'intérieur de la base
+      if (penetrate) {
+        if (e.state === 'engage') e.state = 'approach';
+        if (e.path.length === 0) e.path = nav.findEnemyPath(this.cell(e.pos), this.objectiveGoals(e)) ?? [];
+        if (e.path.length === 0) {
+          e.state = 'engage'; // arrivé sur l'objectif
+          continue;
+        }
+        e.state = 'approach';
+        this.stepEnemy(e, def.speed, true);
+        continue;
+      }
       if (e.state !== 'engage') {
         if (e.path.length === 0) {
-          e.path = nav.findPath(this.cell(e.pos), this.approachGoals(e)) ?? [];
+          e.path = nav.findEnemyPath(this.cell(e.pos), this.approachGoals(e)) ?? [];
           if (e.path.length === 0) e.state = 'engage'; // arrivé au contact du périmètre
         }
         if (e.state !== 'engage') {
           e.state = 'approach';
-          this.step(e, def.speed);
+          this.stepEnemy(e, def.speed, false);
         }
+      }
+    }
+  }
+
+  /**
+   * Objectif d'un assaut à l'intérieur de la base : TOC, dépôt de munitions, logements… le plus
+   * proche des bâtiments de la catégorie la plus prioritaire présente.
+   */
+  private objectiveGoals(e: Enemy): GridPos[] {
+    const nav = this.ctx.sim.agents.nav;
+    const buildings = Object.values(this.ctx.state.fob.buildings).filter((b) => {
+      const d = this.ctx.content.building(b.defId);
+      return b.state !== 'construction' && d.visual.style !== 'flat' && !d.gate && !d.placement.line;
+    });
+    for (const ids of OBJECTIVE_PRIORITY) {
+      const list = buildings.filter((b) => ids.length === 0 || ids.includes(b.defId)).sort((a, b) => this.distTo(e, a) - this.distTo(e, b));
+      for (const b of list) {
+        const cells = nav.accessCells(b).filter((x) => nav.enemyPassable(x.x, x.y));
+        if (cells.length) return cells;
+      }
+    }
+    const z = this.ctx.state.fob.zone;
+    const center = { x: Math.floor(z.x + z.width / 2), y: Math.floor(z.y + z.height / 2) };
+    return [nav.randomWalkableNear(center, 4, () => this.ctx.random()) ?? center];
+  }
+
+  private distTo(e: Enemy, b: BuildingInstance): number {
+    const c = this.ctx.sim.agents.buildingCenter(b);
+    return Math.hypot(c.x - e.pos.x, c.y - e.pos.y);
+  }
+
+  /** Avance sur la grille des assaillants ; une porte ou un mur sur le chemin : on le force (assaut) ou on s'arrête. */
+  private stepEnemy(e: Enemy, speed: number, canBreach: boolean): void {
+    const nav = this.ctx.sim.agents.nav;
+    let budget = speed * this.ctx.content.balance.time.minutesPerTick;
+    while (budget > 0 && e.path.length > 0) {
+      const next = e.path[0];
+      const blocking = nav.breachAt(next.x, next.y);
+      if (blocking) {
+        e.path = [];
+        if (!canBreach) {
+          e.state = 'engage';
+          return;
+        }
+        e.state = 'breach';
+        e.breachId = blocking;
+        if (!this.breachAnnounced.has(blocking)) {
+          this.breachAnnounced.add(blocking);
+          const b = this.ctx.state.fob.buildings[blocking];
+          if (b) pushLog(this.ctx, 'bad', 'log.breaching', { name: this.ctx.content.building(b.defId).name });
+        }
+        return;
+      }
+      if (!nav.enemyPassable(next.x, next.y)) {
+        e.path = [];
+        return;
+      }
+      const tx = next.x + 0.5;
+      const ty = next.y + 0.5;
+      const dx = tx - e.pos.x;
+      const dy = ty - e.pos.y;
+      const dist = Math.hypot(dx, dy);
+      const step = budget / nav.costAt(next.x, next.y);
+      if (step >= dist) {
+        e.pos.x = tx;
+        e.pos.y = ty;
+        e.path.shift();
+        budget -= dist * nav.costAt(next.x, next.y);
+      } else {
+        e.pos.x += (dx / dist) * step;
+        e.pos.y += (dy / dist) * step;
+        budget = 0;
+      }
+    }
+  }
+
+  /** Un assaillant force une porte (à coups de crosse, de pied-de-biche) ou souffle un mur à l'explosif. */
+  private breachStep(e: Enemy): void {
+    const s = this.ctx.state;
+    const b = e.breachId ? s.fob.buildings[e.breachId] : undefined;
+    if (!b) {
+      e.state = 'approach';
+      e.breachId = null;
+      e.path = [];
+      return;
+    }
+    const def = this.ctx.content.building(b.defId);
+    const minutes = this.ctx.content.balance.time.minutesPerTick;
+    b.wear = Math.min(1, b.wear + minutes / Math.max(1, def.breachMin ?? 20));
+    const ctr = this.ctx.sim.agents.buildingCenter(b);
+    // Coups sur la porte : petites gerbes d'étincelles de temps en temps
+    if (def.gate && this.ctx.random() < 0.25) this.ctx.bus.emit('combat:shot', { fromX: e.pos.x, fromY: e.pos.y, fromZ: 10, toX: ctr.x + 0.5, toY: ctr.y + 0.5, toZ: 10, hit: true, friendly: false });
+    if (b.wear < 1) return;
+    // Brèche ouverte
+    if (!def.gate) this.ctx.bus.emit('combat:impact', { x: ctr.x + 0.5, y: ctr.y + 0.5, radius: 1 });
+    s.combat.stats.damaged++;
+    this.ctx.sim.build.destroy(b.id);
+    for (const other of Object.values(s.combat.enemies)) {
+      if (other.breachId === b.id) {
+        other.state = 'approach';
+        other.breachId = null;
+        other.path = [];
       }
     }
   }
@@ -434,7 +562,7 @@ export class AttackSystem implements System {
       for (let dy = -3; dy <= 3; dy++) {
         const x = px + dx;
         const y = py + dy;
-        if (nav.walkable(x, y)) goals.push({ x, y });
+        if (nav.enemyPassable(x, y)) goals.push({ x, y });
       }
     }
     return goals;

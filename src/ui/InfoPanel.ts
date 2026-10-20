@@ -116,6 +116,12 @@ export class InfoPanel {
       rows.push([t(`service.${service}`), `${used} / ${svc.slots}`]);
     }
     if (def.walkSpeedMult) rows.push([t('info.walkSpeed'), `×${def.walkSpeedMult}`]);
+    // Portes et murs : passage, contrôle par un poste de garde, résistance à un assaut
+    if (def.gate) {
+      rows.push([t('info.gate'), t(def.gate.vehicles ? 'info.gateVehicles' : 'info.gatePeople')]);
+      rows.push([t('info.guarded'), t(this.ctx.sim.supply.gateGuarded(b.id) ? 'info.guardedYes' : 'info.guardedNo')]);
+    }
+    if (def.breachMin !== undefined && (def.gate || def.placement.line)) rows.push([t('info.breach'), t('info.breachMin', { min: Math.round(def.breachMin * (1 - b.wear)) })]);
     if (def.noise) rows.push([t('info.noise'), t('info.noiseRadius', { r: Math.round(noiseRadius(def, b)) })]);
     if (def.services?.sleep) {
       for (const z of noiseZones(this.ctx.content, this.ctx.state)) {
