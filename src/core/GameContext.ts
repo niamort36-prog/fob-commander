@@ -56,6 +56,8 @@ export class GameContext {
     this.current = state;
     this.commands.drain();
     this.sim.onStateLoaded();
+    // Une partie reprise démarre en pause (Espace reprend à la vitesse d'avant)
+    state.time.speed = 0;
     pushLog(this, 'info', 'log.loaded');
     this.bus.emit('state:loaded', {});
   }

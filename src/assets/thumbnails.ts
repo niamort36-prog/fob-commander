@@ -5,7 +5,7 @@
 import type Phaser from 'phaser';
 import type { BuildingDef } from '../core/ContentTypes';
 import { AssetLoader } from './AssetLoader';
-import { buildingKey } from './spriteKeys';
+import { buildingKey, vehicleHeadingKey } from './spriteKeys';
 
 let textures: Phaser.Textures.TextureManager | null = null;
 const cache = new Map<string, string>();
@@ -14,6 +14,27 @@ const cache = new Map<string, string>();
 export function setThumbnailTextures(manager: Phaser.Textures.TextureManager): void {
   textures = manager;
   cache.clear();
+}
+
+/** Image (data URL) d'un véhicule vu de trois quarts, ou chaîne vide. */
+export function vehicleThumb(defId: string): string {
+  const key = `veh:${defId}`;
+  const hit = cache.get(key);
+  if (hit !== undefined) return hit;
+  if (!textures) return '';
+  let url = '';
+  for (const k of [1, 0]) {
+    try {
+      const ref = AssetLoader.resolve(vehicleHeadingKey(defId, k));
+      if (!textures.exists(ref.texture)) continue;
+      url = textures.getBase64(ref.texture, ref.frame) as string;
+      break;
+    } catch {
+      url = '';
+    }
+  }
+  cache.set(key, url);
+  return url;
 }
 
 /** Image (data URL) du bâtiment, ou chaîne vide si les textures ne sont pas prêtes. */

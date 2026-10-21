@@ -18,6 +18,9 @@ describe('SaveSystem', () => {
     const loaded = ctx.sim.save.load('1');
     expect(loaded).not.toBeNull();
     ctx.loadState(loaded!);
+    // Une partie reprise démarre en pause ; le reste de l'état est identique
+    expect(ctx.state.time.speed).toBe(0);
+    ctx.state.time.speed = snapshot.time.speed;
     const { log: _a, ...restLoaded } = ctx.state;
     const { log: _b, ...restSnapshot } = snapshot;
     // prevPos des véhicules : valeur d'interpolation, réinitialisée au chargement

@@ -616,6 +616,20 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
   s'allume alors à chaque nouveau message (vert, orange ou rouge selon le plus grave) avec le
   nombre de messages non lus. Ouvert, le journal s'illumine brièvement à chaque entrée.
 - L'état ouvert / rangé est mémorisé ; sur petit écran, ouvrir l'un range l'autre.
+- Le bandeau porte aussi les boutons **Logistique**, **Personnel** et **Besoins** (qui clignote
+  et compte les besoins non couverts). Une partie reprise (chargement, continuer) démarre en pause.
+
+## Écran logistique
+
+Plein écran (bouton Logistique ou touche L, Échap pour fermer), en quatre onglets :
+- **Commander** : 1. le moyen de transport (carte avec le véhicule, délai, capacité, risque
+  coloré, bâtiment requis), 2. le chargement (stock actuel et jours d'autonomie de chaque
+  ressource, boutons ±50 / ±250, « Remplir », jauge de chargement colorée par ressource ;
+  renforts et véhicules en soute), 3. le **bon de commande** (lignes détaillées, total, fonds avant
+  et après, fourchette d'arrivée, risque d'embuscade, raison d'un refus) et le bouton de validation.
+- **Convois en cours** : chaque commande avec ses étapes (commandée → en route → déchargement →
+  livrée), son statut et un bouton pour voir le véhicule sur la carte.
+- **Véhicules de la base** et **Équipement individuel** : cartes d'achat illustrées.
 
 ## Ajouter du contenu (sans toucher au code)
 

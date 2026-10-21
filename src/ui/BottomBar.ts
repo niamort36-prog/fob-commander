@@ -17,6 +17,8 @@ export class BottomBar {
   private readonly hint: HTMLElement;
   private readonly mailBtn: HTMLButtonElement;
   private readonly badge: HTMLElement;
+  /** Bouton « Besoins » : clignote et compte les besoins de la base non couverts. */
+  private readonly needsBtn: HTMLButtonElement;
   private tool: ToolMode = { kind: 'select' };
   private chipSig = '';
   private readonly unsubs: (() => void)[] = [];
@@ -33,7 +35,13 @@ export class BottomBar {
       el('span', { class: 'mail-icon', text: '✉' }),
       this.badge,
     ]);
-    this.root = el('div', { class: 'panel bottom-bar' }, [this.buildBtn, this.chip, this.hint, el('div', { class: 'bar-spacer' }), this.mailBtn]);
+    this.needsBtn = el('button', { class: 'btn bar-btn', text: t('hud.needs'), title: t('hud.needsHint'), onClick: () => ctx.bus.emit('ui:toggleNeeds', {}) });
+    const panels = el('div', { class: 'bar-panels' }, [
+      el('button', { class: 'btn bar-btn', text: t('hud.logistics'), title: t('hud.logisticsHint'), onClick: () => ctx.bus.emit('ui:toggleLogistics', {}) }),
+      el('button', { class: 'btn bar-btn', text: t('hud.personnel'), title: t('hud.personnelHint'), onClick: () => ctx.bus.emit('ui:toggleRoster', {}) }),
+      this.needsBtn,
+    ]);
+    this.root = el('div', { class: 'panel bottom-bar' }, [this.buildBtn, this.chip, this.hint, panels, this.mailBtn]);
     parent.append(this.root);
     this.setBuildOpen(true);
     this.unsubs.push(
@@ -64,6 +72,9 @@ export class BottomBar {
     // Hauteur du bandeau : les panneaux du bas se placent au-dessus
     const h = `${this.root.offsetHeight}px`;
     if (document.documentElement.style.getPropertyValue('--bar-h') !== h) document.documentElement.style.setProperty('--bar-h', h);
+    const shortNeeds = this.ctx.sim.requirements.status().filter((r) => r.state === 'short').length;
+    this.needsBtn.classList.toggle('attention', shortNeeds > 0);
+    setText(this.needsBtn, shortNeeds > 0 ? `${t('hud.needs')} (${shortNeeds})` : t('hud.needs'));
     const tool = this.tool;
     let sig = tool.kind;
     if (tool.kind === 'build') sig += `:${tool.defId}:${canAfford(this.ctx.state, this.ctx.content.building(tool.defId).cost)}`;
