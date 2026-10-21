@@ -1,37 +1,78 @@
 /**
- * Journal des opérations (derniers messages). Réductible : réduit, il s'illumine à chaque nouvelle
- * entrée (couleur selon la gravité) et affiche le nombre de messages non lus jusqu'à sa réouverture.
+ * Journal des opérations (derniers messages). Réduit, il se range dans le bandeau du bas sous la
+ * forme d'une enveloppe qui s'allume (couleur selon la gravité) et compte les messages non lus ;
+ * ouvert, il s'illumine brièvement à chaque nouvelle entrée.
  */
 import type { GameContext } from '../core/GameContext';
 import type { LogEntry } from '../core/GameState';
 import { formatClock, formatNumber, t } from '../utils/i18n';
-import { el, makeCollapsible } from './dom';
+import { el } from './dom';
 
 const VISIBLE = 7;
 /** Durée de l'éclat lumineux à l'arrivée d'un message (ms). */
 const FLASH_MS = 1600;
+const OPEN_KEY = 'fobcmd.ui.log.open';
+const RANK: Record<string, number> = { info: 0, good: 1, warn: 2, bad: 3 };
 
 export class LogPanel {
   private readonly root: HTMLElement;
   private readonly list: HTMLElement;
-  private readonly badge: HTMLElement;
-  private readonly unsub: () => void;
+  private readonly unsubs: (() => void)[] = [];
   private unread = 0;
   private unreadLevel: LogEntry['type'] = 'info';
   private flashTimer = 0;
-  private readonly isCollapsed: () => boolean;
+  private open = true;
 
-  constructor(parent: HTMLElement, ctx: GameContext) {
+  constructor(
+    parent: HTMLElement,
+    private readonly ctx: GameContext,
+  ) {
     this.list = el('div', { class: 'log-list' });
-    this.badge = el('span', { class: 'log-badge hidden' });
-    const title = el('div', { class: 'panel-title' }, [el('span', { class: 'title-text', text: t('log.title') }), this.badge]);
+    const title = el('div', { class: 'panel-title' }, [
+      el('span', { class: 'title-text', text: t('log.title') }),
+      el('button', { class: 'btn collapse-btn', text: '▼', title: t('bar.mailClose'), onClick: () => this.setOpen(false) }),
+    ]);
     this.root = el('div', { class: 'panel log-panel' }, [title, this.list]);
     parent.append(this.root);
-    this.isCollapsed = makeCollapsible(this.root, title, 'log', (collapsed) => {
-      if (!collapsed) this.clearUnread();
-    }).collapsed;
+    // Sur petit écran, le journal démarre rangé dans le bandeau
+    let stored: string | null = null;
+    try {
+      stored = localStorage.getItem(OPEN_KEY);
+    } catch {
+      stored = null;
+    }
+    this.open = stored === null ? window.innerWidth >= 700 : stored === '1';
     for (const entry of ctx.state.log.slice(-VISIBLE)) this.add(entry, false);
-    this.unsub = ctx.bus.on('log:added', ({ entry }) => this.add(entry, true));
+    this.unsubs.push(
+      ctx.bus.on('log:added', ({ entry }) => this.add(entry, true)),
+      ctx.bus.on('ui:toggleLog', () => this.setOpen(!this.open)),
+      // Petit écran : ouvrir le menu de construction range le journal
+      ctx.bus.on('ui:buildOpen', ({ open }) => {
+        if (open && this.open && window.innerWidth < 700) this.setOpen(false);
+      }),
+    );
+    this.setOpen(this.open, false);
+  }
+
+  private setOpen(open: boolean, remember = true): void {
+    this.open = open;
+    this.root.classList.toggle('hidden', !open);
+    if (open) {
+      this.unread = 0;
+      this.unreadLevel = 'info';
+    }
+    if (remember) {
+      try {
+        localStorage.setItem(OPEN_KEY, open ? '1' : '0');
+      } catch {
+        // sans mémoire : tant pis
+      }
+    }
+    this.publish();
+  }
+
+  private publish(): void {
+    this.ctx.bus.emit('ui:logState', { open: this.open, unread: this.unread, level: this.unreadLevel });
   }
 
   private add(entry: LogEntry, fresh: boolean): void {
@@ -44,37 +85,27 @@ export class LogPanel {
     this.list.append(line);
     while (this.list.childElementCount > VISIBLE) this.list.firstElementChild?.remove();
     if (!fresh) return;
-    // Éclat lumineux du panneau ; réduit, il garde la trace des messages non lus
-    this.flash(entry.type);
-    if (this.isCollapsed()) {
-      this.unread++;
-      const rank = { info: 0, good: 1, warn: 2, bad: 3 } as Record<string, number>;
-      if ((rank[entry.type] ?? 0) >= (rank[this.unreadLevel] ?? 0)) this.unreadLevel = entry.type;
-      this.badge.textContent = String(this.unread);
-      this.badge.className = `log-badge ${this.unreadLevel}`;
-      this.root.classList.add('unread');
+    if (this.open) {
+      this.flash(entry.type);
+      return;
     }
+    // Rangé : l'enveloppe du bandeau compte les messages non lus (couleur du plus grave)
+    this.unread++;
+    if ((RANK[entry.type] ?? 0) >= (RANK[this.unreadLevel] ?? 0)) this.unreadLevel = entry.type;
+    this.publish();
   }
 
   private flash(type: LogEntry['type']): void {
     this.root.classList.remove('flash-info', 'flash-good', 'flash-warn', 'flash-bad');
-    // Relance l'animation même si elle était en cours
-    void this.root.offsetWidth;
+    void this.root.offsetWidth; // relance l'animation même si elle était en cours
     this.root.classList.add(`flash-${type}`);
     window.clearTimeout(this.flashTimer);
     this.flashTimer = window.setTimeout(() => this.root.classList.remove(`flash-${type}`), FLASH_MS);
   }
 
-  private clearUnread(): void {
-    this.unread = 0;
-    this.unreadLevel = 'info';
-    this.badge.className = 'log-badge hidden';
-    this.root.classList.remove('unread');
-  }
-
   destroy(): void {
     window.clearTimeout(this.flashTimer);
-    this.unsub();
+    for (const u of this.unsubs) u();
     this.root.remove();
   }
 }

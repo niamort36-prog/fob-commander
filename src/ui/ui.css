@@ -689,3 +689,58 @@
 .needs-summary.good { color: var(--good); }
 .needs-summary.bad { color: var(--bad); }
 .btn.attention { border-color: var(--bad); color: var(--bad); animation: alert-pulse 1.6s infinite; }
+/* ------------------------------------------------------------ Bandeau du bas */
+
+.bottom-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  min-height: 44px;
+}
+.btn.bar-build { font-size: 19px; padding: 4px 12px; white-space: nowrap; }
+.btn.bar-build.active { border-color: var(--accent); color: var(--accent); }
+.bar-chip { display: flex; align-items: center; gap: 8px; padding: 2px 4px 2px 2px; border: 1px solid var(--border-hi); background: rgba(185, 195, 107, 0.08); min-width: 0; }
+.bar-thumb { width: 52px; height: 36px; object-fit: contain; image-rendering: pixelated; }
+.bar-thumb.empty { display: inline-block; }
+.bar-chip-text { display: flex; flex-direction: column; line-height: 1; min-width: 0; }
+.bar-chip-name { font-size: 18px; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-chip-cost { font-size: 16px; color: #d8c47a; }
+.bar-chip-cost.unaffordable { color: var(--bad); }
+.danger-text { color: var(--bad) !important; }
+.btn.bar-cancel { padding: 0 7px; font-size: 18px; }
+.bar-hint { font-size: 16px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1 1 auto; }
+.bar-spacer { flex: 0 0 4px; }
+.btn.bar-mail { position: relative; font-size: 24px; line-height: 24px; padding: 2px 12px; margin-left: auto; flex-shrink: 0; }
+.btn.bar-mail.open { border-color: var(--accent); color: var(--accent); }
+.btn.bar-mail.unread { color: #1b1a14; background: var(--accent); animation: mail-glow 1.4s ease-in-out infinite; }
+.btn.bar-mail.unread[data-level='good'] { background: var(--good); }
+.btn.bar-mail.unread[data-level='warn'] { background: var(--warn); }
+.btn.bar-mail.unread[data-level='bad'] { background: var(--bad); }
+@keyframes mail-glow { 0%, 100% { box-shadow: 0 0 4px rgba(255, 240, 180, 0.4); } 50% { box-shadow: 0 0 16px rgba(255, 240, 180, 0.9); } }
+.mail-badge { position: absolute; top: -7px; right: -7px; min-width: 18px; padding: 0 4px; border-radius: 9px; font-size: 14px; line-height: 18px; background: #1b1a14; color: var(--text); border: 1px solid var(--border-hi); }
+
+/* Panneaux posés au-dessus du bandeau */
+.build-menu { bottom: calc(var(--bar-h, 44px) + 6px); max-height: calc(100% - var(--hud-h, 44px) - var(--bar-h, 44px) - 18px); }
+.log-panel { bottom: calc(var(--bar-h, 44px) + 6px); }
+.tutorial { bottom: calc(var(--bar-h, 44px) + 8px); }
+.info-panel { max-height: calc(100% - var(--hud-h, 44px) - var(--bar-h, 44px) - 24px); }
+.needs-panel, .logistics-panel { max-height: calc(100% - var(--hud-h, 44px) - var(--bar-h, 44px) - 20px); }
+
+/* Vignettes de la liste de construction */
+.build-item { flex-direction: row; align-items: center; gap: 8px; }
+.build-thumb { width: 54px; height: 38px; object-fit: contain; image-rendering: pixelated; flex-shrink: 0; }
+.build-thumb.empty { display: inline-block; }
+.build-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+
+@media (max-width: 700px) {
+  .bar-hint { display: none; }
+  .log-panel:not(.hidden) { display: block; left: 8px; right: 8px; width: auto; }
+}

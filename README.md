@@ -606,11 +606,16 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
 - Le temps libre envoie les soldats vers ces lieux s'il y a de la place ; un nouveau besoin
   « Détente » (une place pour 6 personnes dès 10 personnes) apparaît dans le panneau Besoins.
 
-## Interface : panneaux réductibles
+## Interface : bandeau du bas
 
-Le bandeau de construction et le journal se réduisent à leur barre de titre (bouton « − / + »
-ou clic sur le titre) ; l'état est mémorisé. Le journal s'illumine à chaque nouveau message
-(vert, orange ou rouge selon la gravité) et, réduit, affiche le nombre de messages non lus.
+- **Bandeau du bas** : bouton **Construction** qui ouvre le menu vers le haut (▲) ou le range (▼),
+  vignette, nom et coût du bâtiment choisi (× pour annuler), consigne de pose, et à droite
+  l'**enveloppe du journal**.
+- **Menu de construction** : chaque bâtiment a sa vignette ; le menu se range dans le bandeau.
+- **Journal des opérations** : le bouton ▼ ou l'enveloppe le range dans le bandeau ; l'enveloppe
+  s'allume alors à chaque nouveau message (vert, orange ou rouge selon le plus grave) avec le
+  nombre de messages non lus. Ouvert, le journal s'illumine brièvement à chaque entrée.
+- L'état ouvert / rangé est mémorisé ; sur petit écran, ouvrir l'un range l'autre.
 
 ## Ajouter du contenu (sans toucher au code)
 

@@ -96,6 +96,12 @@ export interface GameEvents {
   'ui:toggleOps': Record<string, never>;
   'ui:toggleCampaign': Record<string, never>;
   'ui:toggleNeeds': Record<string, never>;
+  /** Bandeau du bas : ouvrir / fermer le menu de construction et le journal. */
+  'ui:toggleBuild': Record<string, never>;
+  'ui:toggleLog': Record<string, never>;
+  /** État des panneaux du bas (pour le bandeau). */
+  'ui:buildOpen': { open: boolean };
+  'ui:logState': { open: boolean; unread: number; level: 'info' | 'good' | 'warn' | 'bad' };
   'ui:quitToMenu': Record<string, never>;
   'ui:openOptions': Record<string, never>;
   'ui:openVillage': { id: string };

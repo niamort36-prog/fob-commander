@@ -1,10 +1,16 @@
-/** Menu de construction : outils (sélection, démolition), onglets de catégories, liste des bâtiments. */
+/**
+ * Menu de construction : outils (sélection, démolition), onglets de catégories, liste des bâtiments
+ * avec leur vignette. Il s'ouvre vers le haut depuis le bouton « Construction » du bandeau du bas.
+ */
 import type { BuildingDef } from '../core/ContentTypes';
 import type { GameContext } from '../core/GameContext';
 import type { ToolMode } from '../core/GameEvents';
 import { bagEntries, canAfford } from '../core/resources';
 import { formatNumber, t } from '../utils/i18n';
-import { clear, el, makeCollapsible } from './dom';
+import { buildingThumb } from '../assets/thumbnails';
+import { clear, el } from './dom';
+
+const OPEN_KEY = 'fobcmd.ui.build.open';
 
 interface Entry {
   def: BuildingDef;
@@ -23,6 +29,7 @@ export class BuildMenu {
   private entries: Entry[] = [];
   private category: string;
   private tool: ToolMode = { kind: 'select' };
+  private open = true;
   private readonly unsubs: (() => void)[] = [];
 
   constructor(
@@ -50,17 +57,17 @@ export class BuildMenu {
     this.hint = el('div', { class: 'hint' });
     this.expandBtn = el('button', { class: 'btn wide expand', title: t('build.expandHint'), onClick: () => ctx.commands.push({ type: 'expandZone' }) });
 
-    const title = el('div', { class: 'panel-title' }, [el('span', { class: 'title-text', text: t('build.title') })]);
-    this.root = el('div', { class: 'panel build-menu' }, [
-      title,
-      el('div', { class: 'tools' }, [this.selectBtn, this.demolishBtn]),
-      tabBar,
-      this.list,
-      this.expandBtn,
-      this.hint,
+    const title = el('div', { class: 'panel-title' }, [
+      el('span', { class: 'title-text', text: t('build.title') }),
+      el('button', { class: 'btn collapse-btn', text: '▼', title: t('bar.buildClose'), onClick: () => this.setOpen(false) }),
     ]);
+    this.root = el('div', { class: 'panel build-menu' }, [title, el('div', { class: 'tools' }, [this.selectBtn, this.demolishBtn]), tabBar, this.list, this.expandBtn]);
     parent.append(this.root);
-    makeCollapsible(this.root, title, 'build');
+    try {
+      this.open = localStorage.getItem(OPEN_KEY) !== '0';
+    } catch {
+      // stockage indisponible : menu ouvert
+    }
 
     const firstWithContent = ctx.content.categories.find((c) => ctx.content.buildingsInCategory(c.id).length > 0);
     this.category = firstWithContent?.id ?? ctx.content.categories[0].id;
@@ -71,7 +78,25 @@ export class BuildMenu {
         this.tool = tool;
         this.refreshTool();
       }),
+      ctx.bus.on('ui:toggleBuild', () => this.setOpen(!this.open)),
+      // Petit écran : ouvrir le journal range le menu (ils se superposeraient)
+      ctx.bus.on('ui:logState', ({ open }) => {
+        if (open && this.open && window.innerWidth < 700) this.setOpen(false);
+      }),
     );
+    this.setOpen(this.open);
+  }
+
+  /** Ouvre ou range le menu dans le bandeau du bas (état mémorisé). */
+  private setOpen(open: boolean): void {
+    this.open = open;
+    this.root.classList.toggle('hidden', !open);
+    try {
+      localStorage.setItem(OPEN_KEY, open ? '1' : '0');
+    } catch {
+      // sans mémoire : tant pis
+    }
+    this.ctx.bus.emit('ui:buildOpen', { open });
   }
 
   private showCategory(id: string): void {
@@ -106,10 +131,10 @@ export class BuildMenu {
           },
         },
         [
-          el('span', { class: 'build-name', text: def.name }),
-          el('span', { class: 'build-meta' }, [
-            el('span', { class: 'build-cost', text: cost }),
-            size,
+          buildingThumb(def) ? el('img', { class: 'build-thumb', attrs: { src: buildingThumb(def), alt: '' } }) : el('span', { class: 'build-thumb empty' }),
+          el('span', { class: 'build-text' }, [
+            el('span', { class: 'build-name', text: def.name }),
+            el('span', { class: 'build-meta' }, [el('span', { class: 'build-cost', text: cost }), size]),
           ]),
         ],
       );

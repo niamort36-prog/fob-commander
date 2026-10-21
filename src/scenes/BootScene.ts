@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import { AssetLoader } from '../assets/AssetLoader';
 import { AudioManager, setAudio } from '../audio/AudioManager';
 import { PlaceholderFactory } from '../assets/PlaceholderFactory';
+import { setThumbnailTextures } from '../assets/thumbnails';
 import { ContentError, loadDefaultContent, type ContentRegistry } from '../core/ContentRegistry';
 import { GameContext, setGame } from '../core/GameContext';
 import { el, uiRoot } from '../ui/dom';
@@ -37,6 +38,7 @@ export class BootScene extends Phaser.Scene {
 
     AssetLoader.indexAtlases(this);
     const generated = PlaceholderFactory.ensureAll(this, content);
+    setThumbnailTextures(this.textures);
     console.info(`[Boot] contenu validé, ${generated} texture(s) de remplacement générée(s)`);
 
     // Attend la police pixel (sans bloquer si elle est indisponible hors ligne).

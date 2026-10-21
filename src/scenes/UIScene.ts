@@ -18,6 +18,7 @@ import { MissionPlanner } from '../ui/MissionPlanner';
 import { OpsPanel } from '../ui/OpsPanel';
 import { RadioPanel } from '../ui/RadioPanel';
 import { VillagePanel } from '../ui/VillagePanel';
+import { BottomBar } from '../ui/BottomBar';
 import { NeedsPanel } from '../ui/NeedsPanel';
 import { CampaignPanel } from '../ui/CampaignPanel';
 import { VehiclePanel } from '../ui/VehiclePanel';
@@ -57,6 +58,7 @@ export class UIScene extends Phaser.Scene {
     });
     this.parts = [
       hud,
+      new BottomBar(this.layer, ctx), // avant le menu et le journal : il reçoit leur état initial
       new BuildMenu(this.layer, ctx),
       new InfoPanel(this.layer, ctx),
       new AgentPanel(this.layer, ctx),
