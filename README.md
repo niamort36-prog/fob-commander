@@ -622,7 +622,7 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
 ## Écran Personnel : organigramme
 
 Plein écran (bouton Personnel ou touche P, Échap pour fermer), dans le style d'un organigramme
-militaire : le commandement de la FOB en haut (drapeau), puis les groupes reliés par des traits,
+militaire : le commandement de la FOB en haut, puis les groupes reliés par des traits,
 chacun avec son bandeau de couleur, son **symbole OTAN** (infanterie, logistique, croix médicale,
 QG, forces spéciales, PMC), son échelon, son effectif et son moral moyen. Sous chaque groupe, ses
 hommes : **insigne de grade** (chevrons, galons), abréviation du grade, nom, rôle, activité, moral

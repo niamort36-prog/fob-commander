@@ -205,10 +205,7 @@ export class RosterPanel {
     const others = groups.filter((g) => g !== hq);
     const ungrouped = agents.filter((a) => !a.groupId || !state.groups[a.groupId]);
     // Sommet : commandement de la FOB
-    const top = el('div', { class: 'org-top' }, [
-      el('div', { class: 'org-flag' }, [el('span', { attrs: { style: 'background:#2a3f8a' } }), el('span', { attrs: { style: 'background:#f0ece0' } }), el('span', { attrs: { style: 'background:#c0302a' } })]),
-      el('div', { class: 'org-top-title', text: t('org.fob', { site: this.ctx.site.name }) }),
-    ]);
+    const top = el('div', { class: 'org-top' }, [el('div', { class: 'org-top-title', text: t('org.fob', { site: this.ctx.site.name }) })]);
     const root = el('div', { class: 'org-root' }, [top]);
     if (hq) root.append(this.groupNode(hq));
     const children = el('div', { class: 'org-children' });

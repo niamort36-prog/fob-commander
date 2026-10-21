@@ -867,8 +867,6 @@
 .org-top { display: flex; align-items: center; gap: 8px; padding: 4px 12px; border: 2px solid #1b1a14; background: #fffdf2; margin-bottom: 14px; position: relative; }
 .org-top::after, .org-root > .org-node::after { content: ''; position: absolute; left: 50%; bottom: -16px; height: 14px; border-left: 2px solid #1b1a14; }
 .org-root > .org-node { position: relative; margin-bottom: 18px; }
-.org-flag { display: flex; width: 30px; height: 20px; border: 1px solid #1b1a14; }
-.org-flag span { flex: 1; }
 .org-top-title { font-size: 22px; letter-spacing: 1px; }
 .org-children { display: flex; align-items: flex-start; gap: 14px; position: relative; padding-top: 16px; }
 .org-children::before { content: ''; position: absolute; top: 0; left: 120px; right: 120px; border-top: 2px solid #1b1a14; }
