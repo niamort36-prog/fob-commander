@@ -12,6 +12,7 @@ export type Command =
   | { type: 'upgradeBuilding'; buildingId: Id }
   | { type: 'unlockBuilding'; defId: string }
   | { type: 'renameGroup'; groupId: Id; name: string }
+  | { type: 'renameAgent'; agentId: Id; firstName: string; lastName: string }
   | { type: 'createGroup'; name?: string; memberIds?: Id[] }
   | { type: 'moveAgent'; agentId: Id; groupId: Id | null }
   | { type: 'disbandGroup'; groupId: Id }

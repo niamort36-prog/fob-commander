@@ -13,6 +13,20 @@ describe('Organisation des groupes', () => {
     expect(g.name).toBe('Équipe Alpha'); // nom vide refusé
   });
 
+  it('renomme un soldat (nom nettoyé, champ vide ignoré)', () => {
+    const ctx = makeGame(undefined, { agents: true });
+    const a = Object.values(ctx.state.agents)[0];
+    const first = a.firstName;
+    ctx.commands.push({ type: 'renameAgent', agentId: a.id, firstName: '   ', lastName: '  Du   Breuil ' });
+    ctx.sim.step();
+    expect(a.firstName).toBe(first);
+    expect(a.lastName).toBe('Du Breuil');
+    ctx.commands.push({ type: 'renameAgent', agentId: a.id, firstName: 'Marc', lastName: 'x'.repeat(40) });
+    ctx.sim.step();
+    expect(a.firstName).toBe('Marc');
+    expect(a.lastName.length).toBeLessThanOrEqual(20);
+  });
+
   it('change un soldat de groupe ; un groupe vidé disparaît', () => {
     const ctx = makeGame(undefined, { agents: true });
     const [hq, squad] = Object.values(ctx.state.groups);

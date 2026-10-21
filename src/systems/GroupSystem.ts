@@ -12,6 +12,7 @@ import { newId } from '../utils/ids';
 import type { System } from './System';
 
 export const GROUP_NAME_MAX = 32;
+export const AGENT_NAME_MAX = 20;
 
 export class GroupSystem implements System {
   readonly id = 'groups';
@@ -78,10 +79,23 @@ export class GroupSystem implements System {
     return true;
   }
 
+  /** Renomme un soldat (prénom et nom, nettoyés et limités) ; un champ vide garde l'ancien nom. */
+  renameAgent(agentId: Id, firstName: string, lastName: string): void {
+    const a = this.ctx.state.agents[agentId];
+    if (!a) return;
+    const clean = (s: string): string => s.replace(/\s+/g, ' ').trim().slice(0, AGENT_NAME_MAX);
+    a.firstName = clean(firstName) || a.firstName;
+    a.lastName = clean(lastName) || a.lastName;
+    this.ctx.bus.emit('group:changed', { groupId: a.groupId ?? '' });
+  }
+
   handleCommand(cmd: Command): boolean {
     switch (cmd.type) {
       case 'renameGroup':
         this.rename(cmd.groupId, cmd.name);
+        return true;
+      case 'renameAgent':
+        this.renameAgent(cmd.agentId, cmd.firstName, cmd.lastName);
         return true;
       case 'createGroup':
         this.create(cmd.name, cmd.memberIds ?? []);

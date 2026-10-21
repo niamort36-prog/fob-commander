@@ -619,6 +619,20 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
 - Le bandeau porte aussi les boutons **Logistique**, **Personnel** et **Besoins** (qui clignote
   et compte les besoins non couverts). Une partie reprise (chargement, continuer) démarre en pause.
 
+## Écran Personnel : organigramme
+
+Plein écran (bouton Personnel ou touche P, Échap pour fermer), dans le style d'un organigramme
+militaire : le commandement de la FOB en haut (drapeau), puis les groupes reliés par des traits,
+chacun avec son bandeau de couleur, son **symbole OTAN** (infanterie, logistique, croix médicale,
+QG, forces spéciales, PMC), son échelon, son effectif et son moral moyen. Sous chaque groupe, ses
+hommes : **insigne de grade** (chevrons, galons), abréviation du grade, nom, rôle, activité, moral
+et alerte de besoin urgent.
+- **Glisser-déposer** un soldat sur un groupe pour le muter, ou sur la case « + » pour créer un
+  groupe ; ✎ renomme un groupe, ✕ le dissout.
+- **Clic sur un soldat** : sa fiche (besoins, santé, grade et XP, compétences, traits, équipement,
+  munitions, logement, activité), avec ✎ pour **le renommer**, la liste de son groupe et un bouton
+  pour le retrouver sur la carte.
+
 ## Écran logistique
 
 Plein écran (bouton Logistique ou touche L, Échap pour fermer), en quatre onglets :

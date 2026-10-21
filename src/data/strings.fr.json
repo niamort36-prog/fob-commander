@@ -821,5 +821,13 @@
   "logi.stepName.unloading": "Déchargement",
   "logi.stepName.delivered": "Livrée",
   "logi.locate": "Voir sur la carte",
-  "logi.owned": "À la base : {n}"
+  "logi.owned": "À la base : {n}",
+  "org.hint": "Glissez un soldat sur un groupe pour le muter · ✎ renomme un groupe · cliquez sur un soldat pour ouvrir sa fiche",
+  "org.fob": "FOB {site} — Commandement",
+  "org.dropNew": "+ Déposer ici pour créer un groupe",
+  "org.morale": "moral {n}",
+  "org.empty": "Aucun soldat",
+  "org.open": "Ouvrir la fiche",
+  "org.renameSoldier": "Renommer le soldat",
+  "org.close": "Fermer"
 }

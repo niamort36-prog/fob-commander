@@ -838,3 +838,82 @@
   .logi-order { grid-template-columns: 1fr; }
   .btn.bar-btn { font-size: 16px; padding: 3px 6px; }
 }
+/* ------------------------------------------------------------ Personnel : organigramme */
+
+.personnel-screen {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--hud-h, 44px);
+  bottom: var(--bar-h, 44px);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  background: #e9e6da;
+  color: #1b1a14;
+  border-left: none;
+  border-right: none;
+  padding: 8px 12px;
+}
+.personnel-screen .logi-head { border-bottom-color: #9a9686; }
+.personnel-screen .logi-title { color: #1b1a14; }
+.org-summary { flex: 1; font-size: 17px; color: #4a4a40; }
+.org-hint { color: #5a5a50 !important; margin-bottom: 6px; }
+.personnel-screen .btn { background: #f5f3ea; color: #1b1a14; border-color: #7a7666; }
+.personnel-screen .btn:hover { background: #fffdf2; }
+.org-scroll { flex: 1; overflow: auto; min-height: 0; padding-bottom: 20px; }
+.org-chart { display: flex; flex-direction: column; align-items: center; min-width: max-content; padding: 0 10px; }
+.org-root { display: flex; flex-direction: column; align-items: center; gap: 0; position: relative; }
+.org-top { display: flex; align-items: center; gap: 8px; padding: 4px 12px; border: 2px solid #1b1a14; background: #fffdf2; margin-bottom: 14px; position: relative; }
+.org-top::after, .org-root > .org-node::after { content: ''; position: absolute; left: 50%; bottom: -16px; height: 14px; border-left: 2px solid #1b1a14; }
+.org-root > .org-node { position: relative; margin-bottom: 18px; }
+.org-flag { display: flex; width: 30px; height: 20px; border: 1px solid #1b1a14; }
+.org-flag span { flex: 1; }
+.org-top-title { font-size: 22px; letter-spacing: 1px; }
+.org-children { display: flex; align-items: flex-start; gap: 14px; position: relative; padding-top: 16px; }
+.org-children::before { content: ''; position: absolute; top: 0; left: 120px; right: 120px; border-top: 2px solid #1b1a14; }
+.org-branch { position: relative; display: flex; flex-direction: column; align-items: center; }
+.org-branch::before { content: ''; position: absolute; top: -16px; left: 50%; height: 16px; border-left: 2px solid #1b1a14; }
+.org-node { width: 240px; border: 2px solid #1b1a14; background: #fffdf2; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15); }
+.org-node.drop-over, .org-new.drop-over { outline: 3px dashed #c0302a; outline-offset: 2px; }
+.org-head { display: flex; align-items: center; gap: 6px; padding: 3px 6px; color: #fffdf2; }
+.org-name { flex: 1; font-size: 19px; letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.org-count { font-size: 16px; background: rgba(0, 0, 0, 0.3); padding: 0 6px; }
+.org-actions { display: flex; gap: 2px; }
+.org-head .btn.small-btn { padding: 0 5px; font-size: 14px; background: rgba(255, 255, 255, 0.85); }
+.org-head .rg-input { flex: 1; min-width: 0; font-size: 17px; }
+.org-symbol-row { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 4px; border-bottom: 1px solid #b8b4a4; }
+.org-echelon { font-size: 18px; letter-spacing: 1px; min-width: 22px; text-align: right; }
+.org-morale { font-size: 15px; color: #4a4a40; min-width: 60px; }
+.svg-wrap { display: inline-flex; line-height: 0; }
+.org-members { display: flex; flex-direction: column; gap: 2px; padding: 4px; max-height: 420px; overflow-y: auto; }
+.org-member { display: flex; align-items: center; gap: 6px; padding: 2px 4px; border: 1px solid #c8c4b4; background: #f5f3ea; cursor: pointer; }
+.org-member:hover { background: #fff6d0; border-color: #7a7666; }
+.org-member.away { opacity: 0.6; }
+.org-member.dragging { opacity: 0.35; }
+.org-member-text { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.05; }
+.org-member-name { font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; }
+.org-member-status { font-size: 13px; color: #5a5a50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.org-member-morale { font-size: 16px; min-width: 30px; text-align: right; }
+.org-member-morale.good { color: #3f7a2a; }
+.org-member-morale.warn { color: #b07a10; }
+.org-member-morale.bad { color: #b03a2e; }
+.org-empty { padding: 6px; color: #7a7666 !important; }
+.org-new { width: 200px; padding: 26px 10px; border: 2px dashed #7a7666; color: #5a5a50; text-align: center; font-size: 17px; background: rgba(255, 255, 255, 0.4); }
+.org-modal-backdrop { position: absolute; inset: 0; background: rgba(20, 20, 16, 0.55); display: flex; align-items: center; justify-content: center; z-index: 10; }
+.org-file { position: relative; width: min(720px, calc(100% - 24px)); max-height: calc(100% - 24px); overflow-y: auto; color: var(--text); background: var(--bg-solid); }
+.file-head { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 6px; }
+.file-id { flex: 1; min-width: 0; }
+.file-title { display: flex; align-items: center; gap: 6px; }
+.file-name { font-size: 24px; color: var(--accent); }
+.file-rename { display: flex; gap: 4px; flex-wrap: wrap; }
+.file-rename .rg-input { width: 140px; font-size: 18px; }
+.file-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.file-actions { display: flex; gap: 6px; justify-content: flex-end; margin-top: 8px; }
+@media (max-width: 700px) {
+  .file-cols { grid-template-columns: 1fr; }
+  .org-node { width: 210px; }
+}
+.org-rank { font-size: 13px; padding: 0 3px; border: 1px solid #7a7666; color: #3a3a30; background: #e9e6da; }
+.personnel-screen .org-file .btn { background: rgba(255, 255, 255, 0.05); color: var(--text); border-color: var(--border-hi); }
+.personnel-screen .org-file .btn:hover { background: rgba(255, 255, 255, 0.12); }
