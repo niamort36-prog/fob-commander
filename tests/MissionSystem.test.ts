@@ -212,6 +212,33 @@ describe('Véhicules et escorte', () => {
     stepUntil(ctx, () => mrap.state === 'idle', 600);
   });
 
+  it('les soldats montent dans le véhicule, puis le convoi part ; au retour ils descendent au parc', () => {
+    const ctx = makeGame(undefined, { agents: true });
+    buildNow(ctx, 'vehicle_park', { x: CENTER.x + 6, y: CENTER.y - 8 });
+    ctx.state.resources.stock.funds += 50000;
+    const mrap = ctx.sim.supply.buyVehicle('mrap')!;
+    const m = launchQuiet(ctx, plan(ctx, 'patrol', villageTarget(ctx, 'sangar'), 4, { vehicleIds: [mrap.id] }));
+    const members = m.memberIds.map((id) => ctx.state.agents[id]);
+    // Le véhicule attend au parc tant que tout le monde n'est pas à bord
+    expect(mrap.state).toBe('idle');
+    stepUntil(ctx, () => members.some((a) => a.status === 'on_mission'), 300);
+    expect(mrap.state).toBe('idle');
+    const boardedNear = members.filter((a) => a.status === 'on_mission');
+    for (const a of boardedNear) expect(Math.hypot(a.pos.x - mrap.pos.x, a.pos.y - mrap.pos.y)).toBeLessThan(3);
+    // Tout le monde à bord : départ du convoi
+    stepUntil(ctx, () => mrap.state === 'mission_out', 400);
+    expect(members.every((a) => a.status === 'on_mission')).toBe(true);
+    expect(m.phase).toBe('outbound');
+    // Retour : les soldats restent à bord jusqu'au parc, puis descendent près du véhicule
+    ctx.random = () => 0.01;
+    stepUntil(ctx, () => m.phase === 'done', 3000);
+    expect(members.every((a) => a.status === 'on_mission')).toBe(true);
+    stepUntil(ctx, () => mrap.state === 'idle', 600);
+    ctx.sim.step();
+    expect(members.every((a) => a.status === 'on_base' && a.missionId === null)).toBe(true);
+    for (const a of members) expect(Math.hypot(a.pos.x - mrap.pos.x, a.pos.y - mrap.pos.y)).toBeLessThan(4);
+  });
+
   it('une escorte réussie réduit le risque des convois', () => {
     const ctx = makeGame(undefined, { agents: true });
     const m = launchQuiet(ctx, plan(ctx, 'convoy_escort', ctx.sim.missions.targetFrom({ kind: 'fob' })!, 4));

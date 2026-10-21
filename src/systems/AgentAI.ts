@@ -589,6 +589,9 @@ export class AgentAI implements System {
     if (def.work === 'deploy') {
       const now = this.ctx.state.time.tick;
       a.activity = { id: actId, targetId: null, stage: 'moving', urgent, startTick: now, endTick: now };
+      // Mission motorisée : on rejoint son véhicule ; sinon le point de départ des missions
+      const toVehicle = this.ctx.sim.missions.deployGoals(a);
+      if (toVehicle) return this.goTo(a, toVehicle);
       const spot = this.ctx.sim.missions.departurePoint();
       const goals = [spot, { x: spot.x + 1, y: spot.y }, { x: spot.x, y: spot.y + 1 }, { x: spot.x - 1, y: spot.y }, { x: spot.x, y: spot.y - 1 }].filter((c) => this.nav.walkable(c.x, c.y));
       return this.goTo(a, goals.length ? goals : [spot]);

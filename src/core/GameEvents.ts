@@ -63,6 +63,8 @@ export interface GameEvents {
   'zone:rejected': { reason: 'max' | 'funds' };
 
   'agent:spawned': { id: Id };
+  /** Un soldat monte dans son véhicule avant une mission. */
+  'mission:boarded': { missionId: Id; agentId: Id };
   /** Promotion au grade supérieur (CareerSystem). */
   'agent:promoted': { id: Id; rank: string };
   'agent:removed': { id: Id };

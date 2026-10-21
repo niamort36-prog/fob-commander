@@ -384,13 +384,22 @@ export class MissionSystem implements System {
     s.missions[m.id] = m;
     const sup = this.supportDef(m.support);
     if (sup?.cooldownHours) s.progression.flags[`support_${sup.id}`] = this.now + this.hoursToTicks(sup.cooldownHours);
+    // Mission motorisée : chaque soldat rejoint le véhicule qui lui est attribué et y monte ;
+    // le convoi ne part qu'une fois tout le monde à bord (cf. depart)
+    if (this.byVehicle(m)) {
+      m.riders = {};
+      m.boarded = [];
+      m.memberIds.forEach((id, i) => {
+        const vid = m.vehicleIds[i % m.vehicleIds.length];
+        (m.riders![vid] ??= []).push(id);
+      });
+    }
     for (const id of m.memberIds) {
       const a = s.agents[id];
       a.missionId = m.id;
       this.ctx.sim.agents.recall(a);
     }
-    // Les véhicules prennent la piste jusqu'au bord de la carte
-    for (const id of m.vehicleIds) this.ctx.sim.supply.sendPatrolVehicle(s.vehicles[id], 'out');
+
     this.ctx.sim.radio.schedule(m);
     this.log(m, t('mission.logDeparture', { n: m.memberIds.length, v: m.vehicleIds.length }));
     pushLog(this.ctx, 'info', 'log.missionLaunched', { callsign, name: def.name, target: m.target.name });
@@ -433,6 +442,10 @@ export class MissionSystem implements System {
   }
 
   onTick(): void {
+    // Retour des missions motorisées : débarquement dès que le véhicule est garé (au plus tard 6 h après)
+    for (const m of Object.values(this.ctx.state.missions)) {
+      if (m.disembarkPending) this.disembark(m, this.now - m.phaseStartTick > this.hoursToTicks(6));
+    }
     // Relevé horaire du suivi des missions depuis le TOC
     if (this.now % this.hoursToTicks(1) === 0) {
       const present = this.officersAtToc();
@@ -446,6 +459,11 @@ export class MissionSystem implements System {
     for (const m of this.active()) {
       switch (m.phase) {
         case 'assembling': {
+          if (this.byVehicle(m)) {
+            // Tout le monde à bord : le convoi démarre
+            if (this.boardArrivals(m) || this.now >= m.phaseEndTick) this.depart(m);
+            break;
+          }
           const members = m.memberIds.map((id) => this.ctx.state.agents[id]).filter(Boolean);
           const ready = members.every((a) => a.activity?.id === 'deploy' && a.activity.stage === 'acting');
           if (ready || this.now >= m.phaseEndTick) this.depart(m);
@@ -486,6 +504,96 @@ export class MissionSystem implements System {
     this.ctx.bus.emit('mission:phase', { id: m.id, phase });
   }
 
+  /** Mission en véhicules terrestres (sans hélicoptère) : embarquement à bord des véhicules garés. */
+  private byVehicle(m: MissionInstance): boolean {
+    return !m.heliId && m.vehicleIds.length > 0;
+  }
+
+  /** Véhicule attribué à un soldat d'une mission motorisée. */
+  private vehicleOf(m: MissionInstance, agentId: Id): Id | null {
+    for (const [vid, ids] of Object.entries(m.riders ?? {})) if (ids.includes(agentId)) return vid;
+    return null;
+  }
+
+  /**
+   * Cases où un soldat doit se rendre avant le départ : autour de son véhicule (mission motorisée),
+   * sinon null (point de départ des missions).
+   */
+  deployGoals(a: Agent): GridPos[] | null {
+    const m = a.missionId ? this.ctx.state.missions[a.missionId] : undefined;
+    if (!m || m.phase !== 'assembling' || !this.byVehicle(m)) return null;
+    const vid = this.vehicleOf(m, a.id);
+    const v = vid ? this.ctx.state.vehicles[vid] : undefined;
+    if (!v) return null;
+    const nav = this.ctx.sim.agents.nav;
+    const cx = Math.floor(v.pos.x);
+    const cy = Math.floor(v.pos.y);
+    const out: GridPos[] = [];
+    for (let r = 1; r <= 2 && out.length < 4; r++) {
+      for (let dx = -r; dx <= r; dx++) {
+        for (let dy = -r; dy <= r; dy++) {
+          if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+          if (nav.walkable(cx + dx, cy + dy)) out.push({ x: cx + dx, y: cy + dy });
+        }
+      }
+    }
+    return out.length ? out : null;
+  }
+
+  /** Le soldat monte dans son véhicule : il disparaît de la base jusqu'au retour. */
+  private board(m: MissionInstance, a: Agent): void {
+    a.status = 'on_mission';
+    a.activity = null;
+    a.path = [];
+    if (!m.boarded!.includes(a.id)) m.boarded!.push(a.id);
+    this.ctx.bus.emit('mission:boarded', { missionId: m.id, agentId: a.id });
+  }
+
+  /** Embarquement : les soldats arrivés près de leur véhicule montent à bord. */
+  private boardArrivals(m: MissionInstance): boolean {
+    const s = this.ctx.state;
+    for (const id of m.memberIds) {
+      const a = s.agents[id];
+      if (!a || a.status !== 'on_base' || m.boarded!.includes(id)) continue;
+      const vid = this.vehicleOf(m, id);
+      const v = vid ? s.vehicles[vid] : undefined;
+      if (!v) continue;
+      if (a.activity?.id === 'deploy' && Math.hypot(a.pos.x - v.pos.x, a.pos.y - v.pos.y) <= 2.6) this.board(m, a);
+    }
+    return m.memberIds.every((id) => !s.agents[id] || m.boarded!.includes(id));
+  }
+
+  /** Retour : les soldats descendent de leur véhicule une fois celui-ci garé au parc. */
+  private disembark(m: MissionInstance, force = false): void {
+    const s = this.ctx.state;
+    const nav = this.ctx.sim.agents.nav;
+    let waiting = 0;
+    for (const [vid, ids] of Object.entries(m.riders ?? {})) {
+      const v = s.vehicles[vid];
+      const parked = !v || v.state === 'idle';
+      if (!parked && !force) {
+        waiting += ids.filter((id) => s.agents[id]?.status === 'on_mission').length;
+        continue;
+      }
+      const at = v ? { x: Math.floor(v.pos.x), y: Math.floor(v.pos.y) } : this.departurePoint();
+      for (const id of ids) {
+        const a = s.agents[id];
+        if (!a || a.status !== 'on_mission') continue;
+        const cell = nav.randomWalkableNear(at, 2, () => this.ctx.random()) ?? at;
+        a.pos = { x: cell.x + 0.5, y: cell.y + 0.5 };
+        a.prevPos = { ...a.pos };
+        a.status = 'on_base';
+        a.missionId = null;
+        a.activity = null;
+        a.path = [];
+      }
+    }
+    if (waiting === 0) {
+      m.disembarkPending = false;
+      this.ctx.sim.agents.markHomesDirty();
+    }
+  }
+
   /** Mission à pied : ni hélicoptère ni véhicule, l'unité sort de la carte en marchant. */
   private onFoot(m: MissionInstance): boolean {
     return !m.heliId && m.vehicleIds.length === 0;
@@ -496,6 +604,18 @@ export class MissionSystem implements System {
    * disparaître ; en véhicule ou héliportés, ils embarquent au point de départ.
    */
   private depart(m: MissionInstance): void {
+    if (this.byVehicle(m)) {
+      // Retardataires (délai de rassemblement écoulé) : ils sautent à bord ; puis le convoi démarre
+      for (const id of m.memberIds) {
+        const a = this.ctx.state.agents[id];
+        if (a && a.status === 'on_base') this.board(m, a);
+      }
+      for (const id of m.vehicleIds) {
+        const v = this.ctx.state.vehicles[id];
+        if (v) this.ctx.sim.supply.sendPatrolVehicle(v, 'out');
+      }
+      this.log(m, t('mission.logConvoy', { v: m.vehicleIds.length }));
+    }
     for (const id of m.memberIds) {
       const a = this.ctx.state.agents[id];
       if (!a) continue;
@@ -732,6 +852,12 @@ export class MissionSystem implements System {
       if (!a) continue;
       // Un soldat encore en route vers la sortie (mission écourtée) rentre directement
       const stillOnMap = a.status === 'on_base' && a.activity?.id === 'march_out';
+      // Mission motorisée : ils restent à bord jusqu'au parc (voir disembark)
+      if (this.byVehicle(m) && a.status === 'on_mission') {
+        const cap0 = this.ctx.content.personnel(a.defId).ammoCapacity ?? 0;
+        if (cap0 > 0) a.ammo = Math.max(0, (a.ammo ?? cap0) - cap0 * (0.3 + 0.5 * this.ctx.random()));
+        continue;
+      }
       a.missionId = null;
       if (this.onFoot(m) && a.status !== 'kia') {
         a.activity = null;
@@ -753,6 +879,7 @@ export class MissionSystem implements System {
       const v = s.vehicles[id];
       if (v) this.ctx.sim.supply.sendPatrolVehicle(v, 'back');
     }
+    if (this.byVehicle(m)) m.disembarkPending = true;
     m.phase = 'done';
     m.phaseStartTick = this.now;
     this.log(m, t('mission.logBack'));

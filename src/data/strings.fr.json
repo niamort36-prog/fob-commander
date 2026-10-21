@@ -829,5 +829,6 @@
   "org.empty": "Aucun soldat",
   "org.open": "Ouvrir la fiche",
   "org.renameSoldier": "Renommer le soldat",
-  "org.close": "Fermer"
+  "org.close": "Fermer",
+  "mission.logConvoy": "Tout le monde est à bord : le convoi de {v} véhicule(s) quitte la base."
 }

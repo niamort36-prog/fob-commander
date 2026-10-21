@@ -639,6 +639,12 @@ export interface MissionInstance {
   /** Hélicoptère de transport de la base (héliportage) et appareil d'appui engagé. */
   heliId?: string | null;
   supportVehicleId?: string | null;
+  /** Mission motorisée : soldats attribués à chaque véhicule (id véhicule → soldats). */
+  riders?: Record<Id, Id[]>;
+  /** Soldats déjà montés à bord (avant le départ du convoi). */
+  boarded?: Id[];
+  /** Retour : soldats encore à bord, qui descendent quand leur véhicule est garé. */
+  disembarkPending?: boolean;
 }
 
 export interface MissionReport {

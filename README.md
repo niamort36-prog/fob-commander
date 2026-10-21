@@ -619,6 +619,14 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
 - Le bandeau porte aussi les boutons **Logistique**, **Personnel** et **Besoins** (qui clignote
   et compte les besoins non couverts). Une partie reprise (chargement, continuer) démarre en pause.
 
+## Missions motorisées : embarquement
+
+Quand une mission part en véhicules terrestres, chaque soldat est attribué à un véhicule : il
+marche jusqu'à lui au parc et monte à bord (il disparaît dans le véhicule). Le convoi attend
+que tout le monde soit embarqué, puis quitte la base (au-delà du délai de rassemblement, les
+retardataires sautent à bord). Au retour, les soldats restent dans les véhicules jusqu'au parc
+et en descendent une fois garés. Les missions à pied et héliportées gardent leur fonctionnement.
+
 ## Écran Personnel : organigramme
 
 Plein écran (bouton Personnel ou touche P, Échap pour fermer), dans le style d'un organigramme
