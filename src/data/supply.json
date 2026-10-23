@@ -1,9 +1,9 @@
 {
   "unitPrices": {
-    "food": 2,
-    "ammo": 4,
-    "parts": 10,
-    "medical": 8
+    "food": 1.5,
+    "ammo": 3,
+    "parts": 8,
+    "medical": 6
   },
   "cargoStep": 50,
   "maxActiveOrders": 4,
@@ -13,7 +13,7 @@
       "name": "Convoi logistique",
       "desc": "Camion de palettes par la route. Il se gare sur une zone de déchargement ; le personnel (ou un chariot élévateur) porte la cargaison jusqu'au stockage. Peut amener des renforts.",
       "vehicle": "cargo_truck",
-      "fee": 900,
+      "fee": 600,
       "delayHours": [
         8,
         14
@@ -33,7 +33,7 @@
       "name": "Camion-citerne d'eau",
       "desc": "3 000 unités d'eau pompées directement dans une citerne d'eau. Le camion doit pouvoir rouler jusqu'à la cuve et se garer à côté.",
       "vehicle": "water_tanker",
-      "fee": 600,
+      "fee": 400,
       "delayHours": [
         5,
         9
@@ -43,14 +43,14 @@
       "fixed": {
         "water": 3000
       },
-      "fixedPrice": 900
+      "fixedPrice": 600
     },
     {
       "id": "fuel",
       "name": "Camion-citerne de carburant",
       "desc": "2 000 unités de carburant pompées dans un réservoir. Le camion doit pouvoir se garer à côté du réservoir.",
       "vehicle": "fuel_tanker",
-      "fee": 800,
+      "fee": 500,
       "delayHours": [
         6,
         10
@@ -60,14 +60,14 @@
       "fixed": {
         "fuel": 2000
       },
-      "fixedPrice": 2000
+      "fixedPrice": 1400
     },
     {
       "id": "helo",
       "name": "Rotation d'hélicoptère",
       "desc": "Rapide et peu exposé, mais coûteux et de faible capacité. Se pose sur une hélisurface.",
       "vehicle": "helicopter",
-      "fee": 4000,
+      "fee": 3000,
       "delayHours": [
         2,
         4
@@ -87,7 +87,7 @@
       "name": "Rotation de C-130",
       "desc": "Avion de transport tactique : 3 000 unités de fret, jusqu'à 40 renforts et 2 véhicules. Il se pose sur la piste ; le personnel décharge les palettes au pied de l'appareil.",
       "vehicle": "c130",
-      "fee": 9000,
+      "fee": 7000,
       "delayHours": [
         6,
         12

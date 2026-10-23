@@ -49,16 +49,41 @@ export class VisitSystem implements System {
 
   // ------------------------------------------------------------ Lieux
 
-  /** Point de rencontre : devant l'entrée du TOC, sinon à l'entrée de la base. */
+  /**
+   * Point de rencontre : devant l'entrée du TOC s'il est dans une zone autorisée aux civils,
+   * sinon à l'entrée de la base.
+   */
   meetPoint(): GridPos {
     const s = this.ctx.state;
+    this.nav.ensure();
     const toc = Object.values(s.fob.buildings).find((b) => b.defId === this.cfg.meetBuilding && (b.state === 'active' || b.state === 'damaged'));
     if (toc) {
       const def = this.ctx.content.building(toc.defId);
-      const door = (def.entrance ? BuildSystem.entranceCells(def, toc.pos, toc.rot) : this.nav.accessCells(toc)).filter((c) => this.nav.walkable(c.x, c.y));
+      const door = (def.entrance ? BuildSystem.entranceCells(def, toc.pos, toc.rot) : this.nav.accessCells(toc)).filter((c) => this.nav.walkable(c.x, c.y) && this.nav.civilAllowed(c.x, c.y));
       if (door.length) return door[Math.floor(door.length / 2)];
     }
     return this.ctx.sim.missions.departurePoint();
+  }
+
+  /**
+   * Places libres de la zone de livraison (aire de déchargement), où se garent par défaut les
+   * véhicules des visiteurs et des civils, si elle est accessible aux civils.
+   */
+  deliveryParking(): GridPos[] {
+    const s = this.ctx.state;
+    this.nav.ensure();
+    const out: GridPos[] = [];
+    for (const b of Object.values(s.fob.buildings)) {
+      if (b.defId !== 'unloading_zone' || (b.state !== 'active' && b.state !== 'damaged')) continue;
+      const slots = this.ctx.content.building(b.defId).services?.parking?.slots ?? 1;
+      for (let i = 0; i < slots; i++) {
+        const c = this.nav.parkingCell(b, i);
+        if (!this.nav.drivable(c.x, c.y) || !this.nav.civilAllowed(c.x, c.y)) continue;
+        const taken = Object.values(s.vehicles).some((v) => v.altitude <= 0 && Math.hypot(v.pos.x - (c.x + 0.5), v.pos.y - (c.y + 0.5)) < 1.2);
+        if (!taken) out.push(c);
+      }
+    }
+    return out;
   }
 
   /** Cases libres autour d'un point (anneaux successifs), pour l'escorte ou un véhicule. */
@@ -116,8 +141,10 @@ export class VisitSystem implements System {
     for (const e of visit.escort) for (let i = 0; i < e.count; i++) visitors.push(this.makeVisitor(e.visual, null, entry, false));
 
     if (mode === 'cart' || mode === 'vehicle') {
-      const goals = this.around(meet, (x, y) => this.nav.drivable(x, y), 1, 5);
-      const path = goals.length ? this.nav.findVehiclePath(entry, goals) : null;
+      // Stationnement : zone de livraison, sinon près du point de rencontre (zones autorisées)
+      const parking = this.deliveryParking();
+      const goals = parking.length ? parking : this.around(meet, (x, y) => this.nav.drivable(x, y) && this.nav.civilAllowed(x, y), 1, 5);
+      const path = goals.length ? this.nav.findCivilPath(entry, goals, true) : null;
       if (path) {
         const v = this.ctx.sim.supply.spawnVisitVehicle(visit.vehicle ?? 'cart', entry);
         v.path = path;
@@ -161,13 +188,14 @@ export class VisitSystem implements System {
   }
 
   private escortGoals(meet: GridPos): GridPos[] {
-    const cells = this.around(meet, (x, y) => this.nav.walkable(x, y), 1, 3);
+    const cells = this.around(meet, (x, y) => this.nav.walkable(x, y) && this.nav.civilAllowed(x, y), 1, 3);
     return cells.length ? cells : [meet];
   }
 
   private walkTo(p: Visitor, goals: GridPos[]): void {
     const start = { x: Math.floor(p.pos.x), y: Math.floor(p.pos.y) };
-    const path = this.nav.findPath(start, goals);
+    // Les visiteurs ne passent pas les portes interdites aux civils
+    const path = this.nav.findCivilPath(start, goals) ?? this.nav.findPath(start, goals);
     if (path) p.path = path;
     else {
       // Inaccessible : le visiteur apparaît sur place (base entièrement close)
@@ -269,13 +297,13 @@ export class VisitSystem implements System {
     if (this.ctx.state.combat.active) this.leave(v);
   }
 
-  /** Pendant le séjour, l'escorte fait quelques pas autour du point de rencontre. */
+  /** Pendant le séjour, les visiteurs se promènent dans les zones de la base qui leur sont autorisées. */
   private wander(v: VisitState): void {
     for (const p of v.visitors) {
-      if (p.leader || p.path.length > 0 || this.now < p.nextWander) continue;
+      if (p.riding || p.gone || p.path.length > 0 || this.now < p.nextWander) continue;
       p.nextWander = this.now + this.minutesToTicks(this.cfg.wanderEveryMin * (0.6 + this.ctx.random() * 0.8));
-      const cells = this.around(v.meet, (x, y) => this.nav.walkable(x, y), 1, this.cfg.wanderRadius);
-      if (cells.length) this.walkTo(p, [cells[Math.floor(this.ctx.random() * cells.length)]]);
+      const cell = this.nav.randomCivilCellNear(v.meet, this.cfg.wanderRadius, () => this.ctx.random());
+      if (cell) this.walkTo(p, [cell]);
     }
   }
 

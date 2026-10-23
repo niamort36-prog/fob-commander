@@ -28,6 +28,7 @@ import type {
 } from '../core/GameState';
 import { pushLog } from '../core/Log';
 import { bagEntries, gain, spend } from '../core/resources';
+import { t } from '../utils/i18n';
 import { newId } from '../utils/ids';
 import type { Command } from '../core/Commands';
 import type { System } from './System';
@@ -289,7 +290,36 @@ export class SupplySystem implements System {
 
   // ------------------------------------------------------------ Simulation
 
+  /**
+   * Commandes automatiques (vérifiées chaque heure) : relancées quand une ressource transportée
+   * passe sous le seuil d'autonomie et qu'aucune commande du même type n'est déjà en cours.
+   */
+  private standingOrders(): void {
+    const standing = this.ctx.state.supply.standing;
+    if (!standing || this.now % this.hoursToTicks(1) !== 0) return;
+    const proj = this.ctx.sim.economy.projections();
+    for (const so of Object.values(standing)) {
+      const def = this.ctx.content.supplyOrder(so.orderId);
+      const busy = Object.values(this.ctx.state.supply.orders).some((o) => o.orderId === so.orderId && (o.status === 'pending' || o.status === 'en_route' || o.status === 'unloading'));
+      if (busy) continue;
+      const watched = Object.keys(def.fixed ?? so.cargo) as ResourceId[];
+      const low = watched.some((r) => {
+        const d = proj[r]?.daysLeft;
+        return d !== null && d !== undefined && d < so.belowDays;
+      });
+      if (!low) continue;
+      const reason = this.check(so.orderId, so.cargo, []);
+      if (reason) {
+        // Faute de fonds (ou de bâtiment), on réessaiera plus tard ; on prévient une fois par jour
+        if (this.now % this.hoursToTicks(24) === 0) pushLog(this.ctx, 'warn', 'log.standingBlocked', { name: def.name, reason: t(`supply.${reason}`) });
+        continue;
+      }
+      if (this.placeOrder(so.orderId, so.cargo, [])) pushLog(this.ctx, 'info', 'log.standingPlaced', { name: def.name });
+    }
+  }
+
   onTick(): void {
+    this.standingOrders();
     for (const o of Object.values(this.ctx.state.supply.orders)) {
       if (o.status === 'pending' && this.now >= o.etaTick) this.arrive(o);
     }
@@ -303,6 +333,13 @@ export class SupplySystem implements System {
         return true;
       case 'buyVehicle':
         this.buyVehicle(cmd.defId);
+        return true;
+      case 'setStandingOrder':
+        (this.ctx.state.supply.standing ??= {})[cmd.orderId] = { orderId: cmd.orderId, cargo: { ...cmd.cargo }, belowDays: Math.max(1, cmd.belowDays) };
+        pushLog(this.ctx, 'info', 'log.standingSet', { name: this.ctx.content.supplyOrder(cmd.orderId).name, days: cmd.belowDays });
+        return true;
+      case 'clearStandingOrder':
+        if (this.ctx.state.supply.standing) delete this.ctx.state.supply.standing[cmd.orderId];
         return true;
       case 'buyGear':
         this.buyGear(cmd.itemId, cmd.count);

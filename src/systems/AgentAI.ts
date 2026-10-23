@@ -391,6 +391,16 @@ export class AgentAI implements System {
       return;
     }
     if (act.id === 'queue') return this.queueStep(a, act);
+    // Briefing au TOC terminé : on part rejoindre son véhicule ou le point de départ
+    if (act.id === 'deploy' && act.briefing) {
+      const minutes = (this.ctx.state.time.tick - act.startTick) * this.ctx.content.balance.time.minutesPerTick;
+      if (minutes >= (this.ctx.content.missions.config.briefingMin ?? 10)) {
+        this.ctx.sim.missions.markBriefed(a);
+        a.activity = null;
+        return this.start(a, 'deploy', true, 1);
+      }
+      return;
+    }
     // Défenseur à court de munitions : il quitte sa position pour aller se rééquiper
     if (act.id === 'defend' && this.lowAmmo(a, true)) return this.endActivity(a);
     if (act.id === 'clean' && act.targetId) {
@@ -589,6 +599,14 @@ export class AgentAI implements System {
     if (def.work === 'deploy') {
       const now = this.ctx.state.time.tick;
       a.activity = { id: actId, targetId: null, stage: 'moving', urgent, startTick: now, endTick: now };
+      // D'abord le TOC pour recevoir les ordres, s'il y en a un
+      const toc = this.ctx.sim.missions.briefingSite(a);
+      const tocCells = toc ? this.nav.accessCells(toc).filter((c) => this.nav.walkable(c.x, c.y)) : [];
+      if (toc && tocCells.length) {
+        a.activity.briefing = true;
+        a.activity.targetId = null;
+        return this.goTo(a, tocCells);
+      }
       // Mission motorisée : on rejoint son véhicule ; sinon le point de départ des missions
       const toVehicle = this.ctx.sim.missions.deployGoals(a);
       if (toVehicle) return this.goTo(a, toVehicle);

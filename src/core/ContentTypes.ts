@@ -897,6 +897,8 @@ export interface MissionsConfig {
     vehicleCapacity: number;
     minHealth: number;
     assemblyTimeoutMin: number;
+  /** Durée du briefing au TOC avant le départ (minutes). */
+  briefingMin?: number;
     fuelPerKmPerVehicle: number;
     vehicleProtection: number;
     vehicleSuccessBonus: number;

@@ -48,8 +48,10 @@ export class CheckpointRenderer {
       const x = e.prevPos.x + (e.pos.x - e.prevPos.x) * alpha;
       const y = e.prevPos.y + (e.pos.y - e.prevPos.y) * alpha;
       const s = this.iso.toScreen(x, y);
+      // À pied (ou descendu de son véhicule pour se promener)
+      const onFoot = !e.vehicleId || e.walking === true;
       // Petit décalage propre à chacun : la file d'attente au poste ne se superpose pas
-      if (!e.vehicleId) {
+      if (onFoot) {
         let h = 0;
         for (const c of e.id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
         s.x += ((h % 11) - 5) * 1.6;
@@ -57,7 +59,8 @@ export class CheckpointRenderer {
       }
       // À pied : silhouette ; en véhicule : le conducteur reste à bord
       let topY = s.y - 26;
-      if (!e.vehicleId) {
+      this.sprites.get(e.id)?.setVisible(onFoot);
+      if (onFoot) {
         let sprite = this.sprites.get(e.id);
         if (!sprite) {
           const ref = AssetLoader.resolve(`visitor.${e.visual}`);

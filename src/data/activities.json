@@ -384,7 +384,7 @@
       "sleep": -1
     },
     "consumesPerHour": {
-      "ammo": 3
+      "ammo": 2
     },
     "skillsPerHour": {
       "shooting": 0.8

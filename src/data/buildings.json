@@ -1805,7 +1805,7 @@
       2,
       2
     ],
-    "rotatable": false,
+    "rotatable": true,
     "placement": {
       "line": false,
       "allowedTerrain": [
@@ -2116,7 +2116,7 @@
       4,
       4
     ],
-    "rotatable": false,
+    "rotatable": true,
     "placement": {
       "line": false,
       "allowedTerrain": [

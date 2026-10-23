@@ -465,7 +465,7 @@ export class MissionSystem implements System {
             break;
           }
           const members = m.memberIds.map((id) => this.ctx.state.agents[id]).filter(Boolean);
-          const ready = members.every((a) => a.activity?.id === 'deploy' && a.activity.stage === 'acting');
+          const ready = members.every((a) => a.activity?.id === 'deploy' && a.activity.stage === 'acting' && this.readyToLeave(m, a));
           if (ready || this.now >= m.phaseEndTick) this.depart(m);
           break;
         }
@@ -502,6 +502,38 @@ export class MissionSystem implements System {
     m.phaseEndTick = this.now + ticks;
     this.log(m, logText);
     this.ctx.bus.emit('mission:phase', { id: m.id, phase });
+  }
+
+  /** TOC où un soldat désigné doit recevoir ses ordres avant de partir (null : déjà fait, ou pas de TOC). */
+  briefingSite(a: Agent): BuildingInstance | null {
+    const m = a.missionId ? this.ctx.state.missions[a.missionId] : undefined;
+    if (!m || m.phase !== 'assembling' || m.briefed?.includes(a.id)) return null;
+    let best: BuildingInstance | null = null;
+    let bestD = Infinity;
+    for (const b of Object.values(this.ctx.state.fob.buildings)) {
+      if (b.defId !== 'toc' || (b.state !== 'active' && b.state !== 'damaged')) continue;
+      const c = this.ctx.sim.agents.buildingCenter(b);
+      const d = Math.hypot(c.x - a.pos.x, c.y - a.pos.y);
+      if (d < bestD) {
+        bestD = d;
+        best = b;
+      }
+    }
+    return best;
+  }
+
+  /** Le soldat a reçu ses ordres ; quand toute l'unité est briefée, on le note au journal de mission. */
+  markBriefed(a: Agent): void {
+    const m = a.missionId ? this.ctx.state.missions[a.missionId] : undefined;
+    if (!m) return;
+    m.briefed ??= [];
+    if (!m.briefed.includes(a.id)) m.briefed.push(a.id);
+    if (m.memberIds.every((id) => !this.ctx.state.agents[id] || m.briefed!.includes(id))) this.log(m, t('mission.logBriefed'));
+  }
+
+  /** Le soldat est prêt à partir : ordres reçus (ou pas de TOC) et plus en train d'être briefé. */
+  private readyToLeave(m: MissionInstance, a: Agent): boolean {
+    return !a.activity?.briefing && (m.briefed?.includes(a.id) || this.briefingSite(a) === null);
   }
 
   /** Mission en véhicules terrestres (sans hélicoptère) : embarquement à bord des véhicules garés. */
@@ -558,7 +590,7 @@ export class MissionSystem implements System {
       const vid = this.vehicleOf(m, id);
       const v = vid ? s.vehicles[vid] : undefined;
       if (!v) continue;
-      if (a.activity?.id === 'deploy' && Math.hypot(a.pos.x - v.pos.x, a.pos.y - v.pos.y) <= 2.6) this.board(m, a);
+      if (a.activity?.id === 'deploy' && this.readyToLeave(m, a) && Math.hypot(a.pos.x - v.pos.x, a.pos.y - v.pos.y) <= 2.6) this.board(m, a);
     }
     return m.memberIds.every((id) => !s.agents[id] || m.boarded!.includes(id));
   }

@@ -540,6 +540,15 @@ export class BuildSystem implements System {
       case 'demolish':
         this.demolish(cmd.buildingId);
         return true;
+      case 'setCivilAccess': {
+        // Porte ouverte ou fermée aux civils : les zones autorisées se recalculent
+        const b = this.ctx.state.fob.buildings[cmd.buildingId];
+        if (!b || !this.ctx.content.building(b.defId).gate) return true;
+        b.civilAccess = cmd.allowed;
+        this.ctx.sim.agents.nav.markDirty();
+        pushLog(this.ctx, 'info', cmd.allowed ? 'log.gateCivilOpen' : 'log.gateCivilClosed', { name: this.ctx.content.building(b.defId).name });
+        return true;
+      }
       case 'expandZone':
         this.expandZone();
         return true;

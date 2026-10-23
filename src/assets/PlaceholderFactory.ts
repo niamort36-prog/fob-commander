@@ -23,6 +23,7 @@ import {
   figureKey,
   buildingGeometry,
   buildingKey,
+  buildingRotations,
   MODULE_ART,
   moduleKey,
   sandbagGeometry,
@@ -69,7 +70,7 @@ function outline(g: G, pts: Pt[], color: number, alpha = 0.9): void {
 }
 
 /** Pavé isométrique de (x0, y0) à (x1, y1) en grille, de l'altitude z0 à z1. */
-function prism(g: G, P: Proj, x0: number, y0: number, x1: number, y1: number, z0: number, z1: number, color: number): void {
+export function prism(g: G, P: Proj, x0: number, y0: number, x1: number, y1: number, z0: number, z1: number, color: number): void {
   const left = [P(x0, y1, z1), P(x1, y1, z1), P(x1, y1, z0), P(x0, y1, z0)];
   const right = [P(x1, y0, z1), P(x1, y1, z1), P(x1, y1, z0), P(x1, y0, z0)];
   const top = [P(x0, y0, z1), P(x1, y0, z1), P(x1, y1, z1), P(x0, y1, z1)];
@@ -81,6 +82,46 @@ function prism(g: G, P: Proj, x0: number, y0: number, x1: number, y1: number, z0
   g.lineStyle(1, shade(color, 1.3), 0.6);
   g.lineBetween(P(x0, y1, z1).x, P(x0, y1, z1).y, P(x1, y1, z1).x, P(x1, y1, z1).y);
   g.lineBetween(P(x1, y1, z1).x, P(x1, y1, z1).y, P(x1, y0, z1).x, P(x1, y0, z1).y);
+}
+
+/** Rotation de « rot » quarts de tour d'un point d'une emprise carrée s × s (sens de la grille). */
+function rotXY(rot: number, s: number, x: number, y: number): [number, number] {
+  switch (rot & 3) {
+    case 1:
+      return [s - y, x];
+    case 2:
+      return [s - x, s - y];
+    case 3:
+      return [y, s - x];
+    default:
+      return [x, y];
+  }
+}
+
+/**
+ * Repère d'un bâtiment carré tourné : projection des points, pavés (restés alignés sur la grille,
+ * donc toujours dessinés avec leurs faces visibles) et profondeur pour l'ordre de dessin.
+ */
+function rotatedFrame(g: G, P: Proj, s: number, rot: number): { Pr: Proj; box: (x0: number, y0: number, x1: number, y1: number, z0: number, z1: number, c: number) => void; depth: (x: number, y: number) => number } {
+  const Pr: Proj = (x, y, z) => {
+    const [a, b] = rotXY(rot, s, x, y);
+    return P(a, b, z);
+  };
+  const box = (x0: number, y0: number, x1: number, y1: number, z0: number, z1: number, c: number): void => {
+    const [a0, b0] = rotXY(rot, s, x0, y0);
+    const [a1, b1] = rotXY(rot, s, x1, y1);
+    prism(g, P, Math.min(a0, a1), Math.min(b0, b1), Math.max(a0, a1), Math.max(b0, b1), z0, z1, c);
+  };
+  const depth = (x: number, y: number): number => {
+    const [a, b] = rotXY(rot, s, x, y);
+    return a + b;
+  };
+  return { Pr, box, depth };
+}
+
+/** Éléments dessinés du fond vers l'avant (profondeur croissante dans le repère tourné). */
+function drawSorted(parts: { d: number; draw: () => void }[]): void {
+  for (const p of [...parts].sort((a, b) => a.d - b.d)) p.draw();
 }
 
 // ---------------------------------------------------------------- Terrain
@@ -461,23 +502,27 @@ function drawWorkout(g: G, P: Proj, geo: BuildingGeometry, _color: number, accen
 }
 
 /** Batterie d'obusiers : merlons de sacs de sable, deux pièces de 155 mm, caisses d'obus. */
-function drawHowitzer(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number): void {
+function drawHowitzer(g: G, P0: Proj, geo: BuildingGeometry, color: number, accent: number, height: number, rot: Rotation = 0): void {
   const { w, h } = geo;
+  // Repère tourné : les tubes pointent vers l'avant choisi à la pose (R)
+  const { Pr: P, box, depth } = rotatedFrame(g, P0, w, rot);
   // Sol de la position
   poly(g, [P(0, 0, 0), P(w, 0, 0), P(w, h, 0), P(0, h, 0)], shade(accent, 0.7));
-  // Merlon périphérique (sacs de sable)
+  // Merlon périphérique (sacs de sable), muret central, caisses : du fond vers l'avant
   const t = 0.35;
   const berm = 6;
-  prism(g, P, 0, 0, w, t, 0, berm, accent);
-  prism(g, P, 0, 0, t, h, 0, berm, accent);
-  prism(g, P, 0, h - t, w * 0.42, h, 0, berm, accent);
-  prism(g, P, w * 0.62, h - t, w, h, 0, berm, accent);
-  prism(g, P, w - t, 0, w, h, 0, berm, accent);
-  // Muret central séparant les deux alvéoles
-  prism(g, P, t, h / 2 - 0.12, w - t, h / 2 + 0.12, 0, 4, shade(accent, 0.9));
-  // Caisses d'obus
-  prism(g, P, 0.5, 0.5, 0.9, 0.8, 0, 4, 0x6b5434);
-  prism(g, P, 0.5, h / 2 + 0.4, 0.9, h / 2 + 0.7, 0, 4, 0x6b5434);
+  const parts: { d: number; draw: () => void }[] = [
+    [0, 0, w, t, berm, accent],
+    [0, 0, t, h, berm, accent],
+    [0, h - t, w * 0.42, h, berm, accent],
+    [w * 0.62, h - t, w, h, berm, accent],
+    [w - t, 0, w, h, berm, accent],
+    [t, h / 2 - 0.12, w - t, h / 2 + 0.12, 4, shade(accent, 0.9)],
+    [0.5, 0.5, 0.9, 0.8, 4, 0x6b5434],
+    [0.5, h / 2 + 0.4, 0.9, h / 2 + 0.7, 4, 0x6b5434],
+  ].map(([x0, y0, x1, y1, z, c]) => ({ d: depth((x0 + x1) / 2, (y0 + y1) / 2), draw: () => box(x0, y0, x1, y1, 0, z, c) }));
+  drawSorted(parts);
+  const prismR = (_g: G, _P: Proj, x0: number, y0: number, x1: number, y1: number, z0: number, z1: number, c: number): void => box(x0, y0, x1, y1, z0, z1, c);
   const gun = (cy: number): void => {
     // Affût en flèches ouvertes
     g.lineStyle(3, shade(color, 0.7), 1);
@@ -487,8 +532,8 @@ function drawHowitzer(g: G, P: Proj, geo: BuildingGeometry, color: number, accen
     g.lineBetween(pivot.x, pivot.y, l1.x, l1.y);
     g.lineBetween(pivot.x, pivot.y, l2.x, l2.y);
     // Berceau et bouclier
-    prism(g, P, w * 0.42, cy - 0.28, w * 0.6, cy + 0.28, 3, 10, color);
-    prism(g, P, w * 0.58, cy - 0.34, w * 0.62, cy + 0.34, 6, 13, shade(color, 0.85));
+    prismR(g, P, w * 0.42, cy - 0.28, w * 0.6, cy + 0.28, 3, 10, color);
+    prismR(g, P, w * 0.58, cy - 0.34, w * 0.62, cy + 0.34, 6, 13, shade(color, 0.85));
     // Tube long, élevé vers l'avant (+x)
     g.lineStyle(4, shade(color, 0.55), 1);
     const breech = P(w * 0.45, cy, 10);
@@ -506,8 +551,9 @@ function drawHowitzer(g: G, P: Proj, geo: BuildingGeometry, color: number, accen
       g.fillEllipse(c.x, c.y, 7, 6);
     }
   };
-  gun(h * 0.27);
-  gun(h * 0.73);
+  // La pièce la plus en arrière d'abord
+  const guns = [h * 0.27, h * 0.73].sort((a, b) => depth(w * 0.5, a) - depth(w * 0.5, b));
+  for (const cy of guns) gun(cy);
 }
 
 function drawHesco(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number): void {
@@ -707,25 +753,35 @@ function drawBar(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: nu
 }
 
 /** Coin barbecue : demi-fût sur pieds avec braises, table et bancs en palettes. */
-function drawBbq(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number): void {
+function drawBbq(g: G, P0: Proj, geo: BuildingGeometry, color: number, accent: number, rot: Rotation = 0): void {
   const { w, h } = geo;
+  const { Pr: P, box, depth } = rotatedFrame(g, P0, w, rot);
   // Sol de gravier tassé
   poly(g, [P(0.1, 0.1, 0), P(w - 0.1, 0.1, 0), P(w - 0.1, h - 0.1, 0), P(0.1, h - 0.1, 0)], 0x9a8a68, 0.7);
-  // Banc du fond
-  prism(g, P, 0.25, 0.2, w - 0.3, 0.4, 0, 6, shade(color, 0.85));
-  // Table en palettes
-  prism(g, P, 0.5, 0.65, w - 0.6, 1.05, 0, 9, color);
-  prism(g, P, 0.45, 0.6, w - 0.55, 1.1, 9, 10.5, shade(color, 1.2));
-  // Grill : demi-fût noir sur pieds, braises rougeoyantes et fumée
   const gx = w - 0.55;
   const gy = h - 0.55;
+  // Bancs, table et grill : du fond vers l'avant selon l'orientation
+  drawSorted([
+    { d: depth(w / 2, 0.3), draw: () => box(0.25, 0.2, w - 0.3, 0.4, 0, 6, shade(color, 0.85)) },
+    {
+      d: depth(w / 2, 0.85),
+      draw: () => {
+        box(0.5, 0.65, w - 0.6, 1.05, 0, 9, color);
+        box(0.45, 0.6, w - 0.55, 1.1, 9, 10.5, shade(color, 1.2));
+      },
+    },
+    { d: depth(gx, gy), draw: () => grill() },
+    { d: depth(w / 2 - 0.4, h - 0.32), draw: () => box(0.25, h - 0.42, w - 1, h - 0.22, 0, 6, shade(color, 0.85)) },
+  ]);
+  // Grill : demi-fût noir sur pieds, braises rougeoyantes et fumée
+  function grill(): void {
   for (const [dx, dy] of [[-0.18, -0.1], [0.18, -0.1], [-0.18, 0.1], [0.18, 0.1]]) {
     const a = P(gx + dx, gy + dy, 0);
     const b = P(gx + dx, gy + dy, 7);
     g.lineStyle(1, 0x2a2a26, 1);
     g.lineBetween(a.x, a.y, b.x, b.y);
   }
-  prism(g, P, gx - 0.25, gy - 0.14, gx + 0.25, gy + 0.14, 7, 11, accent);
+  box(gx - 0.25, gy - 0.14, gx + 0.25, gy + 0.14, 7, 11, accent);
   poly(g, [P(gx - 0.22, gy - 0.11, 11), P(gx + 0.22, gy - 0.11, 11), P(gx + 0.22, gy + 0.11, 11), P(gx - 0.22, gy + 0.11, 11)], 0xd8582a);
   g.fillStyle(0xffb050, 1);
   for (const [dx, dy] of [[-0.1, 0], [0.05, -0.04], [0.12, 0.05]]) {
@@ -735,13 +791,14 @@ function drawBbq(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: nu
   g.lineStyle(1, 0x8a8a84, 0.6);
   const s = P(gx, gy, 12);
   for (let i = 0; i < 3; i++) g.lineBetween(s.x + i * 2 - 2, s.y - i * 4, s.x + i * 2, s.y - i * 4 - 4);
-  // Banc de devant
-  prism(g, P, 0.25, h - 0.42, w - 1, h - 0.22, 0, 6, shade(color, 0.85));
+  }
 }
 
 /** Poste de garde : guérite en bois à toit de tôle, ceinturée de sacs de sable. */
-function drawBooth(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number): void {
+function drawBooth(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: number, height: number, rot: Rotation = 0): void {
   const { w, h } = geo;
+  // Orientation : le passage dans les sacs de sable tourne avec la guérite (R)
+  const R = (x: number, y: number): [number, number] => rotXY(rot, w, x, y);
   const bag = 0xa8946a;
   const bagH = 8;
   /** Muret de sacs de sable : rangées décalées sur les faces visibles (+x, +y). */
@@ -773,32 +830,40 @@ function drawBooth(g: G, P: Proj, geo: BuildingGeometry, color: number, accent: 
       }
     }
   };
-  // Sacs du fond (derrière la guérite) : dessinés en premier
-  bags(0.04, 0.04, w - 0.04, 0.18);
-  bags(0.04, 0.18, 0.18, h - 0.2);
-  // Guérite et toit
-  prism(g, P, 0.26, 0.24, w - 0.26, h - 0.3, 0, height - 6, color);
-  const win = [P(0.34, h - 0.3, height - 10), P(w - 0.34, h - 0.3, height - 10), P(w - 0.34, h - 0.3, height - 15), P(0.34, h - 0.3, height - 15)];
-  poly(g, win, 0x2b3a46);
-  // Planches verticales sur la face droite
-  g.lineStyle(1, shade(color, 0.7), 0.6);
-  for (const v of [0.45, 0.6]) {
-    const a = P(w - 0.26, v, 0);
-    const b = P(w - 0.26, v, height - 6);
-    g.lineBetween(a.x, a.y, b.x, b.y);
-  }
-  prism(g, P, 0.18, 0.14, w - 0.16, h - 0.22, height - 6, height - 4, accent);
-  // Sacs de devant (face gauche visible, passage laissé ouvert côté droit) : par-dessus la guérite
-  bags(0.04, h - 0.2, w - 0.34, h - 0.04);
-  bags(w - 0.18, 0.04, w - 0.04, 0.34);
-  // Lampe et panneau « STOP »
-  const lamp = P(w - 0.2, h - 0.25, height - 7);
+  /** Muret dans le repère de la guérite, tourné puis dessiné dans la grille. */
+  const wall = (x0: number, y0: number, x1: number, y1: number): { d: number; draw: () => void } => {
+    const [a0, b0] = R(x0, y0);
+    const [a1, b1] = R(x1, y1);
+    return { d: (a0 + a1 + b0 + b1) / 2, draw: () => bags(Math.min(a0, a1), Math.min(b0, b1), Math.max(a0, a1), Math.max(b0, b1)) };
+  };
+  const hut = {
+    d: w,
+    draw: (): void => {
+      // Guérite (symétrique) et toit ; fenêtre sur la face visible
+      prism(g, P, 0.26, 0.26, w - 0.26, h - 0.26, 0, height - 6, color);
+      const win = [P(0.34, h - 0.26, height - 10), P(w - 0.34, h - 0.26, height - 10), P(w - 0.34, h - 0.26, height - 15), P(0.34, h - 0.26, height - 15)];
+      poly(g, win, 0x2b3a46);
+      g.lineStyle(1, shade(color, 0.7), 0.6);
+      for (const v of [0.45, 0.6]) {
+        const a = P(w - 0.26, v, 0);
+        const b = P(w - 0.26, v, height - 6);
+        g.lineBetween(a.x, a.y, b.x, b.y);
+      }
+      prism(g, P, 0.17, 0.17, w - 0.17, h - 0.17, height - 6, height - 4, accent);
+    },
+  };
+  // Sacs du fond, guérite, sacs de devant (passage laissé ouvert dans un coin) : du fond vers l'avant
+  drawSorted([wall(0.04, 0.04, w - 0.04, 0.18), wall(0.04, 0.18, 0.18, h - 0.2), hut, wall(0.04, h - 0.2, w - 0.34, h - 0.04), wall(w - 0.18, 0.04, w - 0.04, 0.34)]);
+  // Lampe et panneau « STOP » au coin du passage
+  const [lx, ly] = R(w - 0.2, h - 0.25);
+  const lamp = P(lx, ly, height - 7);
   g.fillStyle(0xffe08a, 1);
   g.fillRect(Math.round(lamp.x) - 1, Math.round(lamp.y) - 1, 2, 2);
-  const sign = P(w - 0.12, h - 0.12, 14);
+  const [sx, sy] = R(w - 0.12, h - 0.12);
+  const sign = P(sx, sy, 14);
   g.fillStyle(0xc0302a, 1);
   g.fillRect(Math.round(sign.x) - 2, Math.round(sign.y) - 2, 5, 4);
-  const pole0 = P(w - 0.12, h - 0.12, 0);
+  const pole0 = P(sx, sy, 0);
   g.lineStyle(1, 0x3a3a34, 1);
   g.lineBetween(pole0.x, pole0.y, sign.x, sign.y + 2);
 }
@@ -1076,13 +1141,13 @@ function drawBuilding(g: G, def: BuildingDef, geo: BuildingGeometry, tw: number,
     case 'gate':
       return drawGate(g, P, geo, color, accent, height, gateAlongX(def, rot), def.gate?.leaves === 2);
     case 'booth':
-      return drawBooth(g, P, geo, color, accent, height);
+      return drawBooth(g, P, geo, color, accent, height, rot);
     case 'latrine':
       return drawLatrine(g, P, geo, color, accent, height);
     case 'bar':
       return drawBar(g, P, geo, color, accent, height);
     case 'bbq':
-      return drawBbq(g, P, geo, color, accent);
+      return drawBbq(g, P, geo, color, accent, rot);
     case 'tent':
       return drawTent(g, P, geo, color, height, door);
     case 'tank':
@@ -1098,7 +1163,7 @@ function drawBuilding(g: G, def: BuildingDef, geo: BuildingGeometry, tw: number,
     case 'pole':
       return drawPole(g, P, color, accent, height);
     case 'howitzer':
-      return drawHowitzer(g, P, geo, color, accent, height);
+      return drawHowitzer(g, P, geo, color, accent, height, rot);
     case 'range':
       return drawRange(g, P, geo, color, accent, height);
     case 'course':
@@ -1367,7 +1432,7 @@ export const PlaceholderFactory = {
     }
 
     for (const def of content.buildingList) {
-      const rotations: Rotation[] = def.entrance ? [0, 1, 2, 3] : def.footprint[0] === def.footprint[1] ? [0] : [0, 1];
+      const rotations: Rotation[] = buildingRotations(def);
       for (const rot of rotations) {
         const key = buildingKey(def, rot);
         if (AssetLoader.has(scene, key)) continue;

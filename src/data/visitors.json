@@ -3,53 +3,136 @@
   "config": {
     "walkSpeed": 0.5,
     "meetBuilding": "toc",
-    "wanderEveryMin": 25,
-    "wanderRadius": 2,
+    "wanderEveryMin": 18,
+    "wanderRadius": 8,
     "heliVehicle": "helicopter",
     "maxWaitHours": 6
   },
   "traffic": {
     "_doc": "Civils venant à la base de jour : fouille au poste de garde le plus proche de l'entrée (chance de détection : buildings.json → guard_post → checkpoint, selon le niveau). detectNoPost : chance qu'un soldat remarque seul la menace sans poste ; unmannedMult : poste sans sentinelle ; caughtBlastMult : puissance d'un engin qui explose au poste quand il est démasqué ; approachCells : distance de la base où ils apparaissent sur la piste.",
-    "approachCells": { "foot": 28, "vehicle": 40 },
+    "approachCells": {
+      "foot": 28,
+      "vehicle": 40
+    },
     "detainMin": 90,
-    "hours": [6, 18],
-    "intervalMin": [45, 130],
+    "hours": [
+      6,
+      18
+    ],
+    "intervalMin": [
+      45,
+      130
+    ],
     "maxEntrants": 3,
     "graceDays": 4,
     "threatChance": 0.015,
-    "searchMin": { "foot": 3, "vehicle": 6 },
-    "stayMin": [20, 50],
+    "searchMin": {
+      "foot": 3,
+      "vehicle": 6
+    },
+    "stayMin": [
+      20,
+      50
+    ],
     "detectNoPost": 0.1,
     "unmannedMult": 0.35,
     "vehicleChance": 0.35,
-    "vehicles": ["civ_pickup", "civ_truck"],
-    "walkers": ["laborer", "merchant", "villager", "informant", "farmer"],
+    "vehicles": [
+      "civ_pickup",
+      "civ_truck"
+    ],
+    "walkers": [
+      "laborer",
+      "merchant",
+      "villager",
+      "informant",
+      "farmer"
+    ],
     "threats": {
-      "gunman": { "weight": 5, "foot": true },
-      "vest": { "weight": 3, "foot": true },
-      "vbied": { "weight": 2, "foot": false }
+      "gunman": {
+        "weight": 5,
+        "foot": true
+      },
+      "vest": {
+        "weight": 3,
+        "foot": true
+      },
+      "vbied": {
+        "weight": 2,
+        "foot": false
+      }
     },
-    "vest": { "radius": 2.6, "agentDamage": [45, 95], "buildingDamage": [0.15, 0.4], "triggerAgents": 2, "waitMin": 15 },
-    "vbied": { "radius": 4.5, "agentDamage": [55, 110], "buildingDamage": [0.3, 0.7] },
+    "vest": {
+      "radius": 2.6,
+      "agentDamage": [
+        45,
+        95
+      ],
+      "buildingDamage": [
+        0.15,
+        0.4
+      ],
+      "triggerAgents": 2,
+      "waitMin": 15
+    },
+    "vbied": {
+      "radius": 4.5,
+      "agentDamage": [
+        55,
+        110
+      ],
+      "buildingDamage": [
+        0.3,
+        0.7
+      ]
+    },
     "caughtBlastMult": 0.6,
     "reward": {
-      "gunman": { "funds": 150, "morale": 3 },
-      "vest": { "funds": 250, "morale": 5 },
-      "vbied": { "funds": 400, "morale": 6 }
+      "gunman": {
+        "funds": 150,
+        "morale": 3
+      },
+      "vest": {
+        "funds": 250,
+        "morale": 5
+      },
+      "vbied": {
+        "funds": 400,
+        "morale": 6
+      }
     },
     "missedMorale": -6,
     "pressure": {
       "_doc": "Pression ennemie autour de la FOB (0..1) : emprise insurgée moyenne des villages à moins de nearKm, et groupes ennemis à moins de contactKm (pondérés par type, effectifs et proximité ; contactsFull groupes = maximum). Elle module la fréquence des infiltrations (freqMult), la puissance des engins (powerMult), leur discrétion à la fouille (stealth : multiplicateur de la chance de détection) et le nombre de tireurs (gunmen).",
       "nearKm": 18,
       "contactKm": 22,
-      "contactWeights": { "cell": 1, "ied": 0.6, "mortar": 0.5 },
+      "contactWeights": {
+        "cell": 1,
+        "ied": 0.6,
+        "mortar": 0.5
+      },
       "contactsFull": 3,
       "influenceShare": 0.5,
-      "freqMult": [0.35, 2.2],
-      "powerMult": [0.7, 1.45],
-      "stealth": [1.05, 0.8],
-      "gunmen": [1, 3],
-      "levels": [0.33, 0.66]
+      "freqMult": [
+        0.35,
+        2.2
+      ],
+      "powerMult": [
+        0.7,
+        1.45
+      ],
+      "stealth": [
+        1.05,
+        0.8
+      ],
+      "gunmen": [
+        1,
+        3
+      ],
+      "levels": [
+        0.33,
+        0.66
+      ]
     }
   },
   "visuals": {

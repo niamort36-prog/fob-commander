@@ -22,6 +22,9 @@ export type Command =
   | { type: 'recoverGear'; itemId: string }
   | { type: 'orderSupply'; orderId: string; cargo: ResourceBag; passengers: PassengerRequest[]; vehicles?: string[] }
   | { type: 'buyVehicle'; defId: string }
+  | { type: 'setCivilAccess'; buildingId: Id; allowed: boolean }
+  | { type: 'setStandingOrder'; orderId: string; cargo: ResourceBag; belowDays: number }
+  | { type: 'clearStandingOrder'; orderId: string }
   | { type: 'chooseEvent'; choiceId: string }
   | { type: 'closeEvent' }
   | { type: 'launchMission'; typeId: string; target: MissionTarget; memberIds: Id[]; vehicleIds: Id[]; loadout: string; support?: string; heliId?: string }

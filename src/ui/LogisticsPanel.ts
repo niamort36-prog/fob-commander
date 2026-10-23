@@ -38,6 +38,10 @@ export class LogisticsPanel {
   private receipt: HTMLElement | null = null;
   private submit: HTMLButtonElement | null = null;
   private reason: HTMLElement | null = null;
+  /** Réglage de la commande automatique du transport choisi. */
+  private autoBox: HTMLElement | null = null;
+  private autoSig = '';
+  private autoDays = 4;
   private readonly unsubs: (() => void)[] = [];
   private readonly onKey = (e: KeyboardEvent): void => {
     if (this.visible && e.key === 'Escape') {
@@ -223,9 +227,12 @@ export class LogisticsPanel {
         this.select(this.selected);
       },
     });
+    this.autoBox = el('div', { class: 'auto-box' });
+    this.autoSig = '';
     const receipt = el('div', { class: 'logi-col logi-receipt' }, [
       el('div', { class: 'logi-col-title', text: t('logi.step3') }),
       el('div', { class: 'receipt' }, [this.receipt, this.reason, this.submit]),
+      this.autoBox,
     ]);
     this.body.append(el('div', { class: 'logi-order' }, [transports, compose, receipt]));
     this.refresh();
@@ -328,6 +335,47 @@ export class LogisticsPanel {
     const reason = this.ctx.sim.supply.check(this.selected, this.cargo, pax, vehs);
     this.submit.disabled = reason !== null;
     setText(this.reason, reason ? this.reasonText(reason, def) : '');
+    this.renderAuto(def);
+  }
+
+  /** Commande automatique : active (résumé, arrêt) ou à activer avec le chargement en cours. */
+  private renderAuto(def: SupplyOrderDef): void {
+    if (!this.autoBox) return;
+    const content = this.ctx.content;
+    const so = this.ctx.state.supply.standing?.[def.id];
+    const cargo = def.fixed ?? this.cargo;
+    const empty = bagTotal(cargo) <= 0;
+    const sig = `${def.id}:${JSON.stringify(so ?? null)}:${this.autoDays}:${empty}`;
+    if (sig === this.autoSig) return;
+    this.autoSig = sig;
+    clear(this.autoBox);
+    this.autoBox.append(el('div', { class: 'logi-col-title', text: t('logi.auto') }), el('div', { class: 'res-sub', text: t('logi.autoHint') }));
+    if (so) {
+      const items = bagEntries(so.cargo).map(([r, n]) => `${formatNumber(n)} ${content.resource(r).short}`).join(', ');
+      this.autoBox.append(
+        el('div', { class: 'auto-active', text: t('logi.autoActive', { cargo: items, n: so.belowDays }) }),
+        el('button', { class: 'btn', text: t('logi.autoStop'), onClick: () => this.ctx.commands.push({ type: 'clearStandingOrder', orderId: def.id }) }),
+      );
+      return;
+    }
+    if (def.passengers && !def.cargo && !def.fixed) {
+      this.autoBox.append(el('div', { class: 'res-sub', text: t('logi.autoNone') }));
+      return;
+    }
+    const days = el('span', { class: 'res-qty', text: t('logi.autoDays', { n: this.autoDays }) });
+    this.autoBox.append(
+      el('div', { class: 'res-ctrl auto-row' }, [
+        el('button', { class: 'btn step', text: '−', onClick: () => { this.autoDays = Math.max(1, this.autoDays - 1); this.renderAuto(def); } }),
+        days,
+        el('button', { class: 'btn step', text: '+', onClick: () => { this.autoDays = Math.min(15, this.autoDays + 1); this.renderAuto(def); } }),
+        el('button', {
+          class: 'btn primary',
+          text: t('logi.autoOn'),
+          attrs: empty ? { disabled: '' } : {},
+          onClick: () => this.ctx.commands.push({ type: 'setStandingOrder', orderId: def.id, cargo: { ...cargo }, belowDays: this.autoDays }),
+        }),
+      ]),
+    );
   }
 
   private reasonText(reason: SupplyRejection, def: SupplyOrderDef): string {

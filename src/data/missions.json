@@ -5,7 +5,7 @@
     "vehicleSpeedKmh": 25,
     "vehicleCapacity": 5,
     "minHealth": 40,
-    "assemblyTimeoutMin": 90,
+    "assemblyTimeoutMin": 150,
     "fuelPerKmPerVehicle": 0.8,
     "vehicleProtection": 0.6,
     "vehicleSuccessBonus": 0.05,
@@ -41,7 +41,8 @@
     "heli": {
       "speedKmh": 140,
       "fuelPerKm": 1.5
-    }
+    },
+    "briefingMin": 12
   },
   "callsigns": [
     "Alpha 1-1",

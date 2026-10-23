@@ -110,11 +110,25 @@ export function terrainKey(terrainId: string, variant: number): string {
   return `ter.${terrainId}.${variant}`;
 }
 
-/** Les bâtiments carrés n'ont qu'une orientation de sprite. */
-export function buildingKey(def: BuildingDef, rot: Rotation): string {
-  if (def.entrance) return `${def.visual.key}.r${rot}`;
+/** Bâtiments carrés dont le dessin dépend de l'orientation (porte, guérite, pièces d'artillerie, barbecue). */
+const ORIENTED_SQUARE = new Set(['gate', 'booth', 'howitzer', 'bbq']);
+
+/** Orientation de sprite utilisée pour un bâtiment tourné de « rot » quarts de tour. */
+function spriteRotation(def: BuildingDef, rot: Rotation): Rotation {
+  if (def.entrance) return rot;
   const square = def.footprint[0] === def.footprint[1];
-  return `${def.visual.key}.r${square ? 0 : rot % 2}`;
+  if (!square) return (rot % 2) as Rotation;
+  if (!def.rotatable || !ORIENTED_SQUARE.has(def.visual.style)) return 0;
+  return (def.visual.style === 'gate' ? rot % 2 : rot) as Rotation;
+}
+
+export function buildingKey(def: BuildingDef, rot: Rotation): string {
+  return `${def.visual.key}.r${spriteRotation(def, rot)}`;
+}
+
+/** Orientations de sprite à générer pour ce bâtiment. */
+export function buildingRotations(def: BuildingDef): Rotation[] {
+  return [...new Set(([0, 1, 2, 3] as Rotation[]).map((r) => spriteRotation(def, r)))];
 }
 
 export interface BuildingGeometry {

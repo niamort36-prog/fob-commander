@@ -4,7 +4,7 @@
     "name": "Camion logistique FMTV",
     "kind": "road",
     "speed": 0.9,
-    "capacity": 800,
+    "capacity": 1200,
     "passengers": 8,
     "visual": {
       "style": "truck",
@@ -102,7 +102,7 @@
     "desc": "Véhicule résistant aux mines. Transporte 5 soldats en mission : trajets bien plus rapides et meilleure protection. Consomme du carburant.",
     "kind": "base",
     "role": "patrol",
-    "speed": 1.0,
+    "speed": 1,
     "passengers": 5,
     "price": 15000,
     "upkeepPerDay": {
@@ -193,7 +193,7 @@
     "id": "pmc_suv",
     "name": "Land Cruiser blindé (société privée)",
     "kind": "road",
-    "speed": 1.0,
+    "speed": 1,
     "visual": {
       "style": "suv",
       "color": "#2e2f2b",

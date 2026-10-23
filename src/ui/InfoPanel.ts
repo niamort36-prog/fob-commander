@@ -120,6 +120,7 @@ export class InfoPanel {
     if (def.gate) {
       rows.push([t('info.gate'), t(def.gate.vehicles ? 'info.gateVehicles' : 'info.gatePeople')]);
       rows.push([t('info.guarded'), t(this.ctx.sim.supply.gateGuarded(b.id) ? 'info.guardedYes' : 'info.guardedNo')]);
+      rows.push([t('info.civilAccess'), t(b.civilAccess === false ? 'info.civilClosed' : 'info.civilOpen')]);
     }
     // Poste de garde : fouille des civils à l'entrée de la base
     if (st.checkpoint && b.state !== 'construction') {
@@ -181,6 +182,15 @@ export class InfoPanel {
           })
         : '',
       this.modulesSection(b.id),
+      // Porte : autoriser ou interdire le passage des civils (visiteurs, arrivants)
+      def.gate
+        ? el('button', {
+            class: 'btn wide',
+            text: t(b.civilAccess === false ? 'info.civilAllow' : 'info.civilForbid'),
+            title: t('info.civilHint'),
+            onClick: () => this.ctx.commands.push({ type: 'setCivilAccess', buildingId: b.id, allowed: b.civilAccess === false }),
+          })
+        : '',
       el('button', {
         class: 'btn danger wide',
         text: t('info.demolish', { refund: formatNumber(refund.funds ?? 0) }),

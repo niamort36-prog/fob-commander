@@ -53,15 +53,15 @@
     "amateurMealQuality": 0.6
   },
   "economy": {
-    "dailyBudget": 2400,
+    "dailyBudget": 3200,
     "lowStockDays": 3,
     "baseCapacity": {
-      "water": 1000,
-      "food": 2000,
-      "ammo": 2000,
-      "fuel": 2000,
-      "parts": 500,
-      "medical": 300,
+      "water": 1500,
+      "food": 3000,
+      "ammo": 3000,
+      "fuel": 3000,
+      "parts": 700,
+      "medical": 400,
       "power": 0
     }
   },

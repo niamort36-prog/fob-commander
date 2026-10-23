@@ -32,6 +32,8 @@ export type GameSpeed = 0 | 1 | 2 | 4 | 8;
 export type BuildingStatus = 'construction' | 'active' | 'damaged' | 'disabled';
 
 export interface BuildingInstance {
+  /** Porte : accès autorisé aux civils (absent = autorisé). */
+  civilAccess?: boolean;
   id: Id;
   defId: string;
   pos: GridPos; // case en haut (coin nord) de l'emprise
@@ -95,6 +97,8 @@ export interface AgentActivity {
   quality?: number;
   /** File d'attente devant un service saturé : activité attendue. */
   queueFor?: string;
+  /** Départ en mission : passage au TOC pour recevoir les ordres. */
+  briefing?: boolean;
 }
 
 /** Charge portée par un agent ou un chariot élévateur. */
@@ -166,6 +170,14 @@ export interface Zone {
 export interface PassengerRequest {
   type: string; // → personnel.json
   count: number;
+}
+
+/** Commande automatique (par moyen de transport). */
+export interface StandingOrder {
+  orderId: string;
+  cargo: ResourceBag;
+  /** Seuil d'autonomie (jours) sous lequel la commande est relancée. */
+  belowDays: number;
 }
 
 export type OrderStatus = 'pending' | 'en_route' | 'unloading' | 'leaving' | 'delivered' | 'cancelled';
@@ -475,6 +487,11 @@ export interface Entrant {
   searched: boolean;
   /** Pression ennemie à son arrivée (0..1) : force et discrétion de la menace. */
   power?: number;
+  /** Conducteur descendu de son véhicule pour se promener ; il y remonte pour repartir. */
+  walking?: boolean;
+  returning?: boolean;
+  /** Prochaine promenade (tick). */
+  nextWander?: number;
 }
 
 export interface CheckpointState {
@@ -643,6 +660,8 @@ export interface MissionInstance {
   riders?: Record<Id, Id[]>;
   /** Soldats déjà montés à bord (avant le départ du convoi). */
   boarded?: Id[];
+  /** Soldats ayant reçu leurs ordres au TOC. */
+  briefed?: Id[];
   /** Retour : soldats encore à bord, qui descendent quand leur véhicule est garé. */
   disembarkPending?: boolean;
 }
@@ -712,7 +731,11 @@ export interface GameState {
   };
   agents: Record<Id, Agent>;
   groups: Record<Id, UnitGroup>;
-  supply: { orders: Record<Id, SupplyOrder> };
+  supply: {
+    orders: Record<Id, SupplyOrder>;
+    /** Commandes automatiques : relancées dès qu'une ressource transportée passe sous un seuil d'autonomie. */
+    standing?: Record<string, StandingOrder>;
+  };
   vehicles: Record<Id, Vehicle>;
   progression: {
     reputation: number;

@@ -18,7 +18,7 @@ describe('SupplySystem — ravitaillement', () => {
     const ctx = makeGame();
     expect(ctx.sim.supply.check('convoy', { food: 100 }, [])).toBe('requires');
     buildNow(ctx, 'unloading_zone', CENTER);
-    expect(ctx.sim.supply.check('convoy', { food: 1000 }, [])).toBe('capacity');
+    expect(ctx.sim.supply.check('convoy', { food: 5000 }, [])).toBe('capacity');
     expect(ctx.sim.supply.check('convoy', {}, [])).toBe('empty');
     expect(ctx.sim.supply.check('convoy', {}, [{ type: 'sf', count: 1 }])).toBe('locked');
     expect(ctx.sim.supply.check('convoy', {}, [{ type: 'infantry', count: 20 }])).toBe('passengers');
@@ -30,7 +30,8 @@ describe('SupplySystem — ravitaillement', () => {
     const ctx = makeGame();
     const def = ctx.content.supplyOrder('convoy');
     const cost = ctx.sim.supply.orderCost(def, { food: 100, ammo: 50 }, [{ type: 'infantry', count: 2 }]);
-    expect(cost).toBe(def.fee + 100 * 2 + 50 * 4 + 2 * 400);
+    const prices = ctx.content.supply.unitPrices;
+    expect(cost).toBe(def.fee + 100 * (prices.food ?? 0) + 50 * (prices.ammo ?? 0) + 2 * 400);
   });
 
   it('le camion-citerne roule jusqu’à la cuve et la remplit par pompage', () => {

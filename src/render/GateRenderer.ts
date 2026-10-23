@@ -7,7 +7,7 @@ import Phaser from 'phaser';
 import type { BuildingDef } from '../core/ContentTypes';
 import type { GameContext } from '../core/GameContext';
 import type { BuildingInstance, Id } from '../core/GameState';
-import { gateAlongX, hexToInt, shade } from '../assets/PlaceholderFactory';
+import { gateAlongX, hexToInt, prism, shade } from '../assets/PlaceholderFactory';
 import { BuildSystem } from '../systems/BuildSystem';
 import type { IsoMath } from './IsoMath';
 import { objectDepth } from './depth';
@@ -127,6 +127,36 @@ export class GateRenderer {
     else {
       leaf(p, 1);
       leaf(p + L, -1);
+    }
+    // Pilier de devant (et traverse du portail) redessinés par-dessus les battants : ceux-ci
+    // pivotent derrière lui au lieu de le traverser
+    const P = (gx: number, gy: number, z: number): { x: number; y: number } => {
+      const s = this.iso.toScreen(b.pos.x + gx, b.pos.y + gy);
+      return { x: s.x, y: s.y - z };
+    };
+    const color = hexToInt(def.visual.color);
+    const height = def.visual.height;
+    const [x0, y0, x1, y1] = alongX ? [w - p, 0.15, w, 0.85] : [0.15, h - p, 0.85, h];
+    prism(g, P, x0, y0, x1, y1, 0, height, color);
+    const top = [P(x0 + 0.03, y0 + 0.03, height), P(x1 - 0.03, y0 + 0.03, height), P(x1 - 0.03, y1 - 0.03, height), P(x0 + 0.03, y1 - 0.03, height)];
+    g.fillStyle(shade(color, 1.2), 1);
+    g.fillPoints(top, true);
+    // Porte interdite aux civils : panneau « sens interdit » sur le pilier
+    if (b.civilAccess === false) {
+      const c = P((x0 + x1) / 2, (y0 + y1) / 2, height + 6);
+      g.fillStyle(0xc0302a, 1);
+      g.fillCircle(c.x, c.y, 3.5);
+      g.fillStyle(0xf0ece0, 1);
+      g.fillRect(Math.round(c.x) - 2, Math.round(c.y) - 0.5, 4, 1.5);
+    }
+    if (leaves === 2) {
+      const z0 = height + 2;
+      const a = alongX ? P(p / 2, 0.5, z0) : P(0.5, p / 2, z0);
+      const c = alongX ? P(w - p / 2, 0.5, z0) : P(0.5, h - p / 2, z0);
+      g.lineStyle(3, shade(metal, 0.7), 1);
+      g.lineBetween(a.x, a.y, c.x, c.y);
+      g.lineStyle(1, shade(metal, 1.3), 0.8);
+      g.lineBetween(a.x, a.y - 1, c.x, c.y - 1);
     }
   }
 

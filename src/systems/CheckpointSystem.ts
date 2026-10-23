@@ -164,21 +164,73 @@ export class CheckpointSystem implements System {
     return null;
   }
 
-  /** Destination dans la base : devant le TOC (ou au centre). */
+  /**
+   * Destination dans la base, dans les zones autorisées aux civils : les véhicules se garent sur
+   * les places libres de la zone de livraison, les piétons vont devant le TOC (ou au plus près).
+   */
   private destination(vehicle: boolean): GridPos[] {
+    if (vehicle) {
+      const spots = this.ctx.sim.visits.deliveryParking();
+      if (spots.length) return spots;
+    }
     const meet = this.ctx.sim.visits.meetPoint();
     const out: GridPos[] = [];
-    for (let r = vehicle ? 1 : 0; r <= (vehicle ? 5 : 3); r++) {
+    for (let r = vehicle ? 1 : 0; r <= (vehicle ? 6 : 4); r++) {
       for (let dx = -r; dx <= r; dx++) {
         for (let dy = -r; dy <= r; dy++) {
           if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
           const x = meet.x + dx;
           const y = meet.y + dy;
+          if (!this.nav.civilAllowed(x, y)) continue;
           if (vehicle ? this.nav.drivable(x, y) : this.nav.walkable(x, y)) out.push({ x, y });
         }
       }
     }
     return out;
+  }
+
+  /**
+   * Voiture piégée non décelée : elle force le passage vers le cœur de la base (TOC), sans tenir
+   * compte des portes interdites aux civils ; si aucun chemin n'y mène, elle va aussi loin que
+   * possible (case atteignable la plus proche du TOC).
+   */
+  private deepestReach(from: GridPos): GridPos[] {
+    const s = this.ctx.state;
+    const toc = Object.values(s.fob.buildings).find((b) => b.defId === 'toc' && b.state !== 'construction');
+    const z = s.fob.zone;
+    const target = toc ? this.ctx.sim.agents.buildingCenter(toc) : { x: Math.floor(z.x + z.width / 2), y: Math.floor(z.y + z.height / 2) };
+    const nav = this.nav;
+    const w = nav.width;
+    const seen = new Uint8Array(w * nav.height);
+    const queue = [from.y * w + from.x];
+    seen[queue[0]] = 1;
+    let best = from;
+    let bestD = Math.hypot(from.x - target.x, from.y - target.y);
+    for (let q = 0; q < queue.length && q < 20000; q++) {
+      const i = queue[q];
+      const x = i % w;
+      const y = (i - x) / w;
+      const d = Math.hypot(x - target.x, y - target.y);
+      if (d < bestD) {
+        bestD = d;
+        best = { x, y };
+      }
+      for (const [dx, dy] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ]) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (!nav.drivable(nx, ny)) continue;
+        const j = ny * w + nx;
+        if (seen[j]) continue;
+        seen[j] = 1;
+        queue.push(j);
+      }
+    }
+    return [best];
   }
 
   // ------------------------------------------------------------ Arrivées
@@ -227,7 +279,7 @@ export class CheckpointSystem implements System {
     const check = post ? this.checkCell(post, vehicle) : null;
     const dests = this.destination(vehicle);
     const entry = s.fob.entry;
-    const find = (from: GridPos, goals: GridPos[]): GridPos[] | null => (vehicle ? this.nav.findVehiclePath(from, goals) : this.nav.findPath(from, goals));
+    const find = (from: GridPos, goals: GridPos[]): GridPos[] | null => this.nav.findCivilPath(from, goals, vehicle);
     // Trajet jusqu'au poste (s'il existe), sinon directement jusqu'au TOC
     const first = check ? find(entry, [check]) : dests.length ? find(entry, dests) : null;
     if (!first || first.length === 0) return null;
@@ -280,7 +332,7 @@ export class CheckpointSystem implements System {
   /** Avance d'un pas ; renvoie true à l'arrivée. */
   private move(e: Entrant): boolean {
     const v = this.vehicleOf(e);
-    if (e.vehicleId) {
+    if (e.vehicleId && !e.walking) {
       if (!v) return true;
       const done = v.path.length === 0 || this.ctx.sim.supply.driveStep(v);
       e.pos = { x: v.pos.x, y: v.pos.y };
@@ -306,15 +358,38 @@ export class CheckpointSystem implements System {
     return e.path.length === 0;
   }
 
-  private setPath(e: Entrant, goals: GridPos[]): boolean {
+  /** Itinéraire de l'arrivant (à pied ou en véhicule) ; « force » : voiture piégée qui ignore les interdits. */
+  private setPath(e: Entrant, goals: GridPos[], force = false): boolean {
     if (!goals.length) return false;
-    const v = this.vehicleOf(e);
+    const v = e.walking ? undefined : this.vehicleOf(e);
     const from = { x: Math.floor(e.pos.x), y: Math.floor(e.pos.y) };
-    const path = v ? this.nav.findVehiclePath(from, goals) : this.nav.findPath(from, goals);
+    const path = force && v ? this.nav.findVehiclePath(from, goals) : this.nav.findCivilPath(from, goals, !!v);
     if (!path) return false;
     if (v) v.path = path;
     else e.path = path;
     return true;
+  }
+
+  /** Arrivé en véhicule : le conducteur descend pour se promener. */
+  private dismount(e: Entrant): void {
+    const v = this.vehicleOf(e);
+    if (!v) return;
+    const at = { x: Math.floor(v.pos.x), y: Math.floor(v.pos.y) };
+    const cell = this.nav.randomCivilCellNear(at, 1.5, () => this.ctx.random()) ?? this.nav.randomWalkableNear(at, 1, () => this.ctx.random()) ?? at;
+    e.walking = true;
+    e.pos = { x: cell.x + 0.5, y: cell.y + 0.5 };
+    e.prevPos = { ...e.pos };
+    e.path = [];
+  }
+
+  /** Promenade dans les zones autorisées aux civils, autour de son point d'arrivée. */
+  private wander(e: Entrant): void {
+    if (e.path.length > 0 || this.now < (e.nextWander ?? 0)) return;
+    e.nextWander = this.now + this.ticks(this.rand(6, 16));
+    const v = this.vehicleOf(e);
+    const anchor = v ? { x: Math.floor(v.pos.x), y: Math.floor(v.pos.y) } : e.dest;
+    const cell = this.nav.randomCivilCellNear(anchor, 7, () => this.ctx.random());
+    if (cell) this.setPath(e, [cell]);
   }
 
   private inZone(e: Entrant): boolean {
@@ -343,12 +418,43 @@ export class CheckpointSystem implements System {
         if (e.threat === 'gunman') return this.openFire(e);
         if (e.threat === 'vbied') return this.detonate(e, false);
         e.phase = 'business';
+        if (e.vehicleId) this.dismount(e);
         e.until = this.now + this.ticks(e.threat === 'vest' ? this.cfg.vest.waitMin : this.rand(this.cfg.stayMin[0], this.cfg.stayMin[1]));
         break;
       }
       case 'business':
         if (e.threat === 'vest' && (this.now >= e.until || this.agentsNear(e.pos, 2.5) >= this.cfg.vest.triggerAgents)) return this.detonate(e, false);
-        if (this.now >= e.until) this.leave(e);
+        this.move(e);
+        if (e.returning) {
+          // Revenu à son véhicule : il remonte et repart
+          const v = this.vehicleOf(e);
+          if (!v || (e.path.length === 0 && Math.hypot(e.pos.x - v.pos.x, e.pos.y - v.pos.y) < 2.2)) {
+            e.walking = false;
+            e.returning = false;
+            if (v) e.pos = { x: v.pos.x, y: v.pos.y };
+            this.leave(e);
+          } else if (e.path.length === 0 && !this.setPath(e, [{ x: Math.floor(v.pos.x), y: Math.floor(v.pos.y) }])) {
+            // Chemin du retour coupé (porte fermée entre-temps) : il remonte tout de même
+            e.returning = false;
+            e.walking = false;
+            e.pos = { x: v.pos.x, y: v.pos.y };
+            this.leave(e);
+          }
+          break;
+        }
+        if (this.now >= e.until) {
+          if (e.walking && e.vehicleId) {
+            e.returning = true;
+            const v = this.vehicleOf(e);
+            if (v) {
+              e.path = [];
+              const back = this.nav.randomWalkableNear({ x: Math.floor(v.pos.x), y: Math.floor(v.pos.y) }, 1, () => this.ctx.random());
+              if (!back || !this.setPath(e, [back])) e.path = [];
+            }
+          } else this.leave(e);
+          break;
+        }
+        this.wander(e);
         break;
       case 'leaving':
         if (this.move(e)) this.remove(e);
@@ -375,6 +481,12 @@ export class CheckpointSystem implements System {
     const post = e.postId ? this.ctx.state.fob.buildings[e.postId] : null;
     if (e.threat && this.ctx.random() < this.detectChance(post ?? null) * this.stealth(e)) return this.caught(e);
     e.phase = 'inside';
+    // Voiture piégée passée : elle fonce vers le cœur de la base, en forçant les interdits
+    if (e.threat === 'vbied' && e.vehicleId) {
+      const from = { x: Math.floor(e.pos.x), y: Math.floor(e.pos.y) };
+      if (!this.setPath(e, this.deepestReach(from), true)) return this.detonate(e, false);
+      return;
+    }
     // Destination dans la base ; si le véhicule ne peut pas entrer, l'affaire se règle au poste
     const dests = this.destination(!!e.vehicleId);
     if (!this.setPath(e, dests)) {

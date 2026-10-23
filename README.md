@@ -619,6 +619,26 @@ Sur 30 jours simulés, une base complète (projets civils compris) garde 6 000 �
 - Le bandeau porte aussi les boutons **Logistique**, **Personnel** et **Besoins** (qui clignote
   et compte les besoins non couverts). Une partie reprise (chargement, continuer) démarre en pause.
 
+## Accès des civils, visiteurs et commandes automatiques
+
+- **Portes et portails** : la fiche d'une porte propose « Interdire / Autoriser le passage des
+  civils ». Une porte interdite (panneau rouge sur le pilier) ferme aux visiteurs et aux civils
+  fouillés toute la zone derrière elle ; le personnel passe toujours. Seule une voiture piégée non
+  décelée force le passage pour aller le plus loin possible vers le TOC.
+- **Visiteurs** (événements et civils du poste de garde) : leurs véhicules se garent par défaut sur
+  les places libres de la **zone de livraison** ; ils en descendent et se promènent dans les zones
+  qui leur sont autorisées, puis remontent et repartent.
+- **Briefing** : avant une mission, chaque soldat passe au **TOC** recevoir ses ordres (environ 12
+  min), puis rejoint son véhicule ou le point de départ.
+- **Commande automatique** (écran logistique, bon de commande) : une commande se relance d'elle-même
+  dès qu'une ressource transportée passe sous un seuil d'autonomie (4 jours par défaut), une seule
+  à la fois par moyen de transport.
+- **Orientation** : porte piétonne, guérite, batterie d'obusiers et coin barbecue se dessinent
+  désormais dans l'orientation choisie (R) ; le battant du portail ne passe plus devant le pilier.
+- **Économie rééquilibrée** : budget quotidien 3 200 $, marchandises moins chères (rations 1,5 $,
+  munitions 3 $, pièces 8 $, médical 6 $), transports moins chers (convoi 600 $), camion de 1 200
+  palettes, stockage de base agrandi, entraînement au tir moins gourmand en munitions.
+
 ## Missions motorisées : embarquement
 
 Quand une mission part en véhicules terrestres, chaque soldat est attribué à un véhicule : il

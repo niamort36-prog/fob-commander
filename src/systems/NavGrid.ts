@@ -34,6 +34,11 @@ export class NavGrid implements CostGrid {
    * ouverture existante, puis une porte, et en dernier recours un mur à souffler.
    */
   readonly enemy: { width: number; height: number; cost: Float32Array } = { width: 0, height: 0, cost: new Float32Array(0) };
+  /** Civils (visiteurs, arrivants fouillés) : les portes fermées aux civils leur sont infranchissables. */
+  readonly civilWalk: { width: number; height: number; cost: Float32Array } = { width: 0, height: 0, cost: new Float32Array(0) };
+  readonly civilDrive: { width: number; height: number; cost: Float32Array } = { width: 0, height: 0, cost: new Float32Array(0) };
+  /** Cases accessibles aux civils depuis l'entrée de la carte (zones autorisées). */
+  private civilZone = new Uint8Array(0);
   /** Case → porte ou tronçon de mur à forcer. */
   private breach = new Map<number, string>();
   private dirty = true;
@@ -100,7 +105,76 @@ export class NavGrid implements CostGrid {
     }
     for (let i = 0; i < n; i++) e.cost[i] = this.cost[i];
     for (const [i, id] of this.breach) e.cost[i] = content.building(fob.buildings[id].defId).gate ? GATE_BREACH_COST : WALL_BREACH_COST;
+    // Grilles des civils : portes fermées aux civils infranchissables
+    const cw = this.civilWalk;
+    const cd = this.civilDrive;
+    for (const g of [cw, cd]) {
+      g.width = fob.width;
+      g.height = fob.height;
+      if (g.cost.length !== n) g.cost = new Float32Array(n);
+    }
+    cw.cost.set(this.cost);
+    cd.cost.set(v.cost);
+    for (const [i, id] of this.breach) {
+      const b = fob.buildings[id];
+      if (content.building(b.defId).gate && b.civilAccess === false) {
+        cw.cost[i] = Infinity;
+        cd.cost[i] = Infinity;
+      }
+    }
+    this.computeCivilZone();
     this.dirty = false;
+  }
+
+  /** Zone autorisée aux civils : cases atteignables à pied depuis l'entrée sans passer une porte fermée. */
+  private computeCivilZone(): void {
+    const { width, height } = this;
+    const n = width * height;
+    if (this.civilZone.length !== n) this.civilZone = new Uint8Array(n);
+    else this.civilZone.fill(0);
+    const entry = this.ctx.state.fob.entry;
+    if (!this.inBounds(entry.x, entry.y)) return;
+    const queue = [entry.y * width + entry.x];
+    this.civilZone[queue[0]] = 1;
+    for (let q = 0; q < queue.length; q++) {
+      const i = queue[q];
+      const x = i % width;
+      const y = (i - x) / width;
+      for (const [dx, dy] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ]) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+        const j = ny * width + nx;
+        if (this.civilZone[j] || !Number.isFinite(this.civilWalk.cost[j])) continue;
+        this.civilZone[j] = 1;
+        queue.push(j);
+      }
+    }
+  }
+
+  /** Case autorisée aux civils (atteignable sans franchir une porte qui leur est fermée). */
+  civilAllowed(x: number, y: number): boolean {
+    return this.inBounds(x, y) && this.civilZone[y * this.width + x] === 1;
+  }
+
+  /** Itinéraire d'un civil, à pied ou en véhicule, en respectant les portes fermées aux civils. */
+  findCivilPath(start: GridPos, goals: readonly GridPos[], vehicle = false): GridPos[] | null {
+    return this.astar.find(vehicle ? this.civilDrive : this.civilWalk, start, goals, this.ctx.content.balance.agents.maxPathNodes);
+  }
+
+  /** Case autorisée aux civils, dégagée, au hasard dans un rayon (promenade). */
+  randomCivilCellNear(center: GridPos, radius: number, random: () => number): GridPos | null {
+    for (let i = 0; i < 20; i++) {
+      const x = Math.round(center.x + (random() * 2 - 1) * radius);
+      const y = Math.round(center.y + (random() * 2 - 1) * radius);
+      if (this.civilAllowed(x, y) && this.cost[y * this.width + x] <= 1) return { x, y };
+    }
+    return null;
   }
 
   inBounds(x: number, y: number): boolean {
