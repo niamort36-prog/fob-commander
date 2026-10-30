@@ -849,5 +849,11 @@
   "info.civilForbid": "Interdire le passage aux civils",
   "info.civilHint": "Les visiteurs et les civils fouillés au poste de garde ne passent pas une porte interdite : les zones derrière leur sont fermées.",
   "log.gateCivilOpen": "{name} : passage autorisé aux civils.",
-  "log.gateCivilClosed": "{name} : passage interdit aux civils."
+  "log.gateCivilClosed": "{name} : passage interdit aux civils.",
+  "cheat.title": "CODES DE TRICHE",
+  "cheat.placeholder": "Entrez un code…",
+  "cheat.submit": "Valider",
+  "cheat.unknown": "Code inconnu.",
+  "cheat.applied": "Code accepté : +{funds} $",
+  "log.cheat": "Code de triche « {code} » : +{funds} $."
 }

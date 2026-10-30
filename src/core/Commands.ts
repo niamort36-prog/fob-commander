@@ -36,7 +36,8 @@ export type Command =
   | { type: 'recruitAuxiliaries'; villageId: string; count: number }
   | { type: 'campaignAck'; continueSandbox?: boolean }
   | { type: 'setSpeed'; speed: GameSpeed }
-  | { type: 'togglePause' };
+  | { type: 'togglePause' }
+  | { type: 'cheatCode'; code: string };
 
 export class CommandQueue {
   private queue: Command[] = [];

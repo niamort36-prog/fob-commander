@@ -4,12 +4,14 @@
  * et évaluation quotidienne du commandement (réputation, budget, déblocages).
  */
 import { buildingStats } from '../core/buildingStats';
+import type { Command } from '../core/Commands';
 import type { GameContext } from '../core/GameContext';
 import { RESOURCE_IDS, emptyResourceRecord, type BuildingInstance, type ResourceBag, type ResourceId } from '../core/GameState';
 import { pushLog } from '../core/Log';
 import { bagEntries, gain } from '../core/resources';
 import type { System } from './System';
 import { installedModules } from './modules';
+import { formatNumber, t } from '../utils/i18n';
 
 /** Capacité « illimitée » sérialisable en JSON (Infinity ne l'est pas). */
 export const UNCAPPED = Number.MAX_SAFE_INTEGER;
@@ -32,6 +34,22 @@ export interface Evaluation {
 export class EconomySystem implements System {
   readonly id = 'economy';
   private readonly pendingShortages = new Set<ResourceId>();
+
+  /** Code de triche (Options) : accorde ses ressources à chaque saisie ; insensible à la casse. */
+  handleCommand(cmd: Command): boolean {
+    if (cmd.type !== 'cheatCode') return false;
+    const codes = this.ctx.content.balance.cheats?.codes ?? {};
+    const key = Object.keys(codes).find((k) => k.toLowerCase() === cmd.code.trim().toLowerCase());
+    if (!key) {
+      this.ctx.bus.emit('ui:toast', { text: t('cheat.unknown'), kind: 'error' });
+      return true;
+    }
+    gain(this.ctx.state, codes[key]);
+    const funds = codes[key].funds ?? 0;
+    pushLog(this.ctx, 'good', 'log.cheat', { code: key, funds: formatNumber(funds) });
+    this.ctx.bus.emit('ui:toast', { text: t('cheat.applied', { funds: formatNumber(funds) }), kind: 'good' });
+    return true;
+  }
 
   constructor(private readonly ctx: GameContext) {
     ctx.bus.on('time:hour', () => this.hourly());

@@ -57,6 +57,25 @@ export class OptionsPanel {
         }
       }
     }
+    // Codes de triche (en partie uniquement) : saisie puis Entrée ou « Valider »
+    if (this.ctx.hasGame) {
+      const input = el('input', { class: 'cheat-input', attrs: { type: 'text', maxlength: '32', placeholder: t('cheat.placeholder'), autocomplete: 'off', spellcheck: 'false' } });
+      const submit = (): void => {
+        if (!input.value.trim()) return;
+        this.ctx.commands.push({ type: 'cheatCode', code: input.value });
+        input.value = '';
+        input.focus();
+      };
+      input.addEventListener('keydown', (e) => {
+        e.stopPropagation(); // les touches ne pilotent pas le jeu pendant la saisie
+        if (e.key === 'Enter') submit();
+      });
+      input.addEventListener('keyup', (e) => e.stopPropagation());
+      body.append(
+        el('div', { class: 'section-title', text: t('cheat.title') }),
+        el('div', { class: 'option-row cheat-row' }, [input, el('button', { class: 'btn', text: t('cheat.submit'), onClick: submit })]),
+      );
+    }
     body.append(
       el('div', { class: 'row' }, [
         el('button', {

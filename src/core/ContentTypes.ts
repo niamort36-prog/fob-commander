@@ -524,6 +524,8 @@ export interface BalanceDef {
     pointsProject?: number;
   };
   career: CareerConfig;
+  /** Codes de triche : ressources accordées à chaque saisie. */
+  cheats?: { codes: Record<string, ResourceBag> };
   requirements: { maxPenalty: number; graceDays: number; items: RequirementDef[] };
   /** Incidents liés à l'alcool autour des bars trop rapprochés. */
   leisure: { basePerHour: number; perNeighbourPerHour: number; brawlHealth: [number, number]; hangoverSleep: number; damageParts: number };

@@ -673,6 +673,12 @@ Plein écran (bouton Logistique ou touche L, Échap pour fermer), en quatre ongl
   livrée), son statut et un bouton pour voir le véhicule sur la carte.
 - **Véhicules de la base** et **Équipement individuel** : cartes d'achat illustrées.
 
+## Codes de triche
+
+Options (en partie) → **Codes de triche** : saisir un code puis Entrée ou « Valider ». `NoWeaponSway`
+donne 20 000 $ à chaque saisie (insensible à la casse). Les codes se règlent dans
+`balance.json` → `cheats.codes`.
+
 ## Ajouter du contenu (sans toucher au code)
 
 - **Bâtiment** : ajouter une entrée dans `src/data/buildings.json` (catégorie, emprise, coût, entretien,

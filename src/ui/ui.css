@@ -918,3 +918,5 @@
 .auto-box { margin-top: 8px; border: 1px dashed var(--border-hi); padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; }
 .auto-active { color: var(--good); font-size: 17px; }
 .auto-row { flex-wrap: wrap; }
+.cheat-row { display: flex; gap: 6px; }
+.cheat-input { flex: 1; min-width: 0; font-family: inherit; font-size: 18px; background: rgba(0, 0, 0, 0.3); color: var(--text); border: 1px solid var(--border-hi); padding: 3px 6px; }

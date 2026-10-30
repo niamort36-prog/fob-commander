@@ -329,5 +329,13 @@
     ],
     "hangoverSleep": 30,
     "damageParts": 6
+  },
+  "cheats": {
+    "_doc": "Codes de triche (Options → Codes de triche) : ressources ajoutées à chaque saisie du code (insensible à la casse).",
+    "codes": {
+      "NoWeaponSway": {
+        "funds": 20000
+      }
+    }
   }
 }
